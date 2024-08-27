@@ -1,17 +1,18 @@
 {
   "version": "0.1.0",
-  "description": "An example Snap written in TypeScript.",
-  "proposedName": "TypeScript Example",
+  "description": "Bringing human trust to trustless systems.",
+  "proposedName": "Intuition",
   "repository": {
     "type": "git",
     "url": "https://github.com/MetaMask/template-snap-monorepo.git"
   },
   "source": {
-    "shasum": "XltpH4uyJHTMyOZd7z2yc6Sj4cq64pn3lKxl4KiucHw=",
+    "shasum": "EOM3VvNv+QzNYYjzoramuyEI42BikmedFaf/lvTCNQI=",
     "location": {
       "npm": {
         "filePath": "dist/bundle.js",
-        "packageName": "snap",
+        "iconPath": "src/images/logo.svg",
+        "packageName": "intuition-snap",
         "registry": "https://registry.npmjs.org/"
       }
     }

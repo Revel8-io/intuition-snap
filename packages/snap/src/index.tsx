@@ -1,5 +1,5 @@
 import { OnRpcRequestHandler, getImageComponent, getImageData } from '@metamask/snaps-sdk';
-import { Box, Text, Bold, Heading, Image } from '@metamask/snaps-sdk/jsx';
+import { Box, Text, Bold, Heading, Image, Link } from '@metamask/snaps-sdk/jsx';
 import type { OnHomePageHandler } from "@metamask/snaps-sdk";
 import { AtomResponse, AccountResponse } from "./types";
 import { formatEther } from 'viem';
@@ -117,6 +117,7 @@ export const onHomePage: OnHomePageHandler = async () => {
       <Box>
         {i7nAccountsData.map((acc) => {
           const usd = acc.data?.prices?.usd ? acc.data?.prices?.usd : 1;
+
           const positions = acc.data?.positions ? acc.data?.positions?.map((position) => {
             return (
               <Box>
@@ -126,25 +127,44 @@ export const onHomePage: OnHomePageHandler = async () => {
               </Box>
             )
           }) : (<Text>No positions</Text>);
+
+          const triples = acc.atom?.triples ? acc.atom?.triples?.map((triple) => {
+            return (
+              <Box>
+                <Text>{triple.label} - ${(parseFloat(formatEther(triple.vault.totalShares))
+                  * parseFloat(formatEther(triple.vault.currentSharePrice!))
+                  * usd).toFixed(2)}</Text>
+              </Box>
+            )
+          }) : (<Text>No triples</Text>);
+
           return (
             <Box>
               {acc.image !== undefined && (
                 <Image
                   src={acc.image}
-                  alt="A random image"
+                  alt="Account"
                 />
               )}
+              <Link href={"https://i7n.app/acc/" + acc.account}>
+                Account
+              </Link>
+              {acc.data?.account?.atomId !== undefined && <Link href={"https://i7n.app/a/" + acc.data.account.atomId}>
+                Atom
+              </Link>}
               <Heading>Active positions</Heading>
               <Box>
                 {positions}
               </Box>
+
+              <Heading>Mentioned in</Heading>
+              <Box>
+                {triples}
+              </Box>
+
             </Box>
           )
         })}
-
-
-
-
       </Box>
     ),
   };
