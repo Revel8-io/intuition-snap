@@ -1,6 +1,8 @@
-import type { OnRpcRequestHandler } from '@metamask/snaps-sdk';
-import { Box, Text, Bold } from '@metamask/snaps-sdk/jsx';
-
+import { OnRpcRequestHandler, getImageComponent, getImageData } from '@metamask/snaps-sdk';
+import { Box, Text, Bold, Heading, Image } from '@metamask/snaps-sdk/jsx';
+import type { OnHomePageHandler } from "@metamask/snaps-sdk";
+import { AtomResponse, AccountResponse } from "./types";
+import { formatEther } from 'viem';
 /**
  * Handle incoming JSON-RPC requests, sent through `wallet_invokeSnap`.
  *
@@ -15,6 +17,10 @@ export const onRpcRequest: OnRpcRequestHandler = async ({
   origin,
   request,
 }) => {
+  const Comp = await getImageComponent("https://i7n.app/?f=png", {
+    width: 400,
+  })
+
   switch (request.method) {
     case 'hello':
       return snap.request({
@@ -29,6 +35,11 @@ export const onRpcRequest: OnRpcRequestHandler = async ({
               <Text>
                 This custom confirmation is just for display purposes.
               </Text>
+              <Image
+                src={Comp.value}
+                alt="A random image"
+              />
+
               <Text>
                 But you can edit the snap source code to make it do something,
                 if you want to!
@@ -40,4 +51,101 @@ export const onRpcRequest: OnRpcRequestHandler = async ({
     default:
       throw new Error('Method not found.');
   }
+};
+
+export const onHomePage: OnHomePageHandler = async () => {
+  const accounts = await ethereum.request<string[]>({
+    method: 'eth_requestAccounts',
+  });
+
+  if (!accounts || accounts.length === 0) {
+    return {
+      content: (
+        <Box>
+          <Heading>Connect your wallet</Heading>
+          <Text>
+            To use this snap, connect your wallet to MetaMask.
+          </Text>
+        </Box>
+      ),
+    };
+  }
+
+  const i7nAccounts = accounts.map(async (acc: any) => {
+
+    const result: {
+      account: string,
+      data?: AccountResponse,
+      atom?: AtomResponse
+      image?: string
+    } = {
+      account: acc,
+    }
+
+    try {
+      const res = await fetch("https://i7n.app/acc/" + acc + "/json")
+
+      if (res.ok) {
+        result.data = await res.json() as AccountResponse;
+        if (result.data?.account?.atomId) {
+          try {
+            const atomRes = await fetch("https://i7n.app/a/" + result.data.account.atomId + "/json")
+            if (atomRes.ok) {
+              result.atom = await atomRes.json() as AtomResponse;
+              result.image = (await getImageComponent("https://i7n.app/a/" + result.data.account.atomId + "/png", {
+                width: 200,
+                height: 100,
+              })).value;
+
+            }
+          } catch (e) {
+            console.error(e);
+          }
+        }
+
+      }
+    } catch (e) {
+      console.error(e);
+    }
+
+    return result;
+  });
+  const i7nAccountsData = await Promise.all(i7nAccounts);
+
+  return {
+    content: (
+      <Box>
+        {i7nAccountsData.map((acc) => {
+          const usd = acc.data?.prices?.usd ? acc.data?.prices?.usd : 1;
+          const positions = acc.data?.positions ? acc.data?.positions?.map((position) => {
+            return (
+              <Box>
+                <Text>{position.atom?.label || position.triple?.label || ''} - ${(parseFloat(formatEther(position.shares))
+                  * parseFloat(formatEther(position.vault.currentSharePrice!))
+                  * usd).toFixed(2)}</Text>
+              </Box>
+            )
+          }) : (<Text>No positions</Text>);
+          return (
+            <Box>
+              {acc.image !== undefined && (
+                <Image
+                  src={acc.image}
+                  alt="A random image"
+                />
+              )}
+              <Heading>Active positions</Heading>
+              <Box>
+                {positions}
+              </Box>
+            </Box>
+          )
+        })}
+
+
+
+
+      </Box>
+    ),
+  };
 };
