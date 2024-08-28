@@ -106,8 +106,9 @@ export const renderAccounts = async (i7nAccountsData: {
 
       const positions = acc.data?.positions ? acc.data?.positions?.map((position) => {
         return (
-          <Box>
-            <Text>{position.atom?.label || position.triple?.label || ''} - ${(parseFloat(formatEther(position.shares))
+          <Box direction='horizontal' alignment='space-between'>
+            <Text>{position.atom?.label || position.triple?.label || ''}</Text>
+            <Text>${(parseFloat(formatEther(position.shares))
               * parseFloat(formatEther(position.vault.currentSharePrice!))
               * usd).toFixed(2)}</Text>
           </Box>
@@ -116,8 +117,9 @@ export const renderAccounts = async (i7nAccountsData: {
 
       const triples = acc.atom?.triples ? acc.atom?.triples?.map((triple) => {
         return (
-          <Box>
-            <Text>{triple.label} - ${(parseFloat(formatEther(triple.vault.totalShares))
+          <Box direction='horizontal' alignment='space-between'>
+            <Text>{triple.label}</Text>
+            <Text>${(parseFloat(formatEther(triple.vault.totalShares))
               * parseFloat(formatEther(triple.vault.currentSharePrice!))
               * usd).toFixed(2)}</Text>
           </Box>
@@ -132,12 +134,14 @@ export const renderAccounts = async (i7nAccountsData: {
               alt="Account"
             />
           )}
-          <Link href={"https://i7n.app/acc/" + acc.account}>
-            Account
-          </Link>
-          {acc.data?.account?.atomId !== undefined && <Link href={"https://i7n.app/a/" + acc.data.account.atomId}>
-            Atom
-          </Link>}
+          <Box direction='horizontal' alignment='space-between'>
+            <Link href={"https://i7n.app/acc/" + acc.account}>
+              Account
+            </Link>
+            {acc.data?.account?.atomId !== undefined && <Link href={"https://i7n.app/a/" + acc.data.account.atomId}>
+              Atom
+            </Link>}
+          </Box>
           <Heading>Active positions</Heading>
           <Box>
             {positions}
