@@ -4,9 +4,9 @@
   "description": "Bringing human trust to trustless systems.",
   "repository": {
     "type": "git",
-    "url": "https://github.com/MetaMask/template-snap-monorepo.git"
+    "url": "https://github.com/0xIntuition/intuition-snap.git"
   },
-  "license": "(MIT-0 OR Apache-2.0)",
+  "license": "Apache-2.0",
   "main": "./dist/bundle.js",
   "files": [
     "dist/",
