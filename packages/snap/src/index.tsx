@@ -139,7 +139,7 @@ export const renderAccounts = async (i7nAccountsData: {
       const triples = acc.data.account.atom.asSubject.map((triple: any) => {
         return (
           <Box direction='horizontal' alignment='space-between'>
-            <Text>{triple.predicate.id === 4 ? triple.predicate.emoji : triple.predicate.label} {triple.object.label}</Text>
+            <Text>{triple.predicate.id === '4' ? triple.predicate.emoji : triple.predicate.label} {triple.object.label}</Text>
             <Text>{triple.vault?.positionCount.toString()}</Text>
           </Box>
         )
