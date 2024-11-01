@@ -1,8 +1,6 @@
 import { OnRpcRequestHandler, getImageComponent, getImageData, OnTransactionHandler } from '@metamask/snaps-sdk';
 import { Box, Text, Bold, Heading, Image, Link } from '@metamask/snaps-sdk/jsx';
 import type { OnHomePageHandler } from "@metamask/snaps-sdk";
-import { AtomResponse, AccountResponse } from "./types";
-import { formatEther } from 'viem';
 /**
  * Handle incoming JSON-RPC requests, sent through `wallet_invokeSnap`.
  *
@@ -55,99 +53,125 @@ export const onRpcRequest: OnRpcRequestHandler = async ({
 
 
 const getAccountData = async (acc: string) => {
-
   const result: {
     account: string,
-    data?: AccountResponse,
-    atom?: AtomResponse
+    data?: any,
     image?: string
   } = {
     account: acc,
   }
 
   try {
-    const res = await fetch("https://i7n.app/acc/" + acc + "/json")
-
-    if (res.ok) {
-      result.data = await res.json() as AccountResponse;
-      if (result.data?.account?.atomId) {
-        try {
-          const atomRes = await fetch("https://i7n.app/a/" + result.data.account.atomId + "/json")
-          if (atomRes.ok) {
-            result.atom = await atomRes.json() as AtomResponse;
-            result.image = (await getImageComponent("https://i7n.app/a/" + result.data.account.atomId + "/png", {
-              width: 200,
-              height: 100,
-            })).value;
-
-          }
-        } catch (e) {
-          console.error(e);
+    const res = await fetch('https://api.i7n.app/v1/graphql', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        query: `
+query Account($address: String!) {
+  account(id: $address) {
+    atom {
+      id
+      label
+      image
+      followers: asObject(where: {subjectId: {_eq: 11}, predicateId: {_eq: 3}}) {
+        id
+        label
+        vault {
+          positionCount
         }
       }
-
+      asSubject(
+        where: {vault: {positionCount: {_gt: 0}}}
+        order_by: {vault: {positionCount: desc}}
+      ) {
+        object {
+          label
+        }
+        predicate {
+          id
+          label
+          emoji
+        }
+        vault {
+          positionCount
+        }
+      }
     }
+  }
+  following_aggregate(args: { address: $address }) {
+    aggregate {
+      count
+    }
+  }
+}
+      `,
+        variables: {
+          address: acc,
+        },
+      }),
+    })
+    const json = await res.json();
+    result.data = json.data;
+    if (json.data?.account?.atom?.image) {
+      result.image = (await getImageComponent(json.data?.account?.atom?.image, {
+        width: 50,
+        height: 50,
+      })).value
+    }
+
   } catch (e) {
     console.error(e);
   }
-
   return result;
 }
 
+
 export const renderAccounts = async (i7nAccountsData: {
   account: string;
-  data?: AccountResponse;
-  atom?: AtomResponse;
+  data?: any;
   image?: string;
 }[]) => {
   return (<Box>
     {i7nAccountsData.map((acc) => {
-      const usd = acc.data?.prices?.usd ? acc.data?.prices?.usd : 1;
 
-      const positions = acc.data?.positions ? acc.data?.positions?.map((position) => {
+      const triples = acc.data.account.atom.asSubject.map((triple: any) => {
         return (
           <Box direction='horizontal' alignment='space-between'>
-            <Text>{position.atom?.label || position.triple?.label || ''}</Text>
-            <Text>${(parseFloat(formatEther(position.shares))
-              * parseFloat(formatEther(position.vault.currentSharePrice!))
-              * usd).toFixed(2)}</Text>
+            <Text>{triple.predicate.id === 4 ? triple.predicate.emoji : triple.predicate.label} {triple.object.label}</Text>
+            <Text>{triple.vault?.positionCount.toString()}</Text>
           </Box>
         )
-      }) : (<Text>No positions</Text>);
-
-      const triples = acc.atom?.triples ? acc.atom?.triples?.map((triple) => {
-        return (
-          <Box direction='horizontal' alignment='space-between'>
-            <Text>{triple.label}</Text>
-            <Text>${(parseFloat(formatEther(triple.vault.totalShares))
-              * parseFloat(formatEther(triple.vault.currentSharePrice!))
-              * usd).toFixed(2)}</Text>
-          </Box>
-        )
-      }) : (<Text>No triples</Text>);
+      });
 
       return (
         <Box>
-          {acc.image !== undefined && (
-            <Image
-              src={acc.image}
-              alt="Account"
-            />
-          )}
           <Box direction='horizontal' alignment='space-between'>
+            {acc.image !== undefined && (
+              <Image
+                src={acc.image}
+                alt="Account"
+              />
+            )}
+            <Heading>{acc.data?.account?.atom?.label}</Heading>
+          </Box>
+
+          <Box direction='horizontal' alignment='space-between'>
+            <Text>Following: {acc.data.following_aggregate?.aggregate?.count?.toString()}</Text>
             <Link href={"https://i7n.app/acc/" + acc.account}>
               Account
             </Link>
-            {acc.data?.account?.atomId !== undefined && <Link href={"https://i7n.app/a/" + acc.data.account.atomId}>
+          </Box>
+          <Box direction='horizontal' alignment='space-between'>
+
+            <Text>Followers: {acc.data?.account?.atom?.followers[0]?.vault?.positionCount.toString()}</Text>
+            {acc.data?.account.atom?.id !== undefined && <Link href={"https://i7n.app/a/" + acc.data?.account.atom?.id}>
               Atom
             </Link>}
-          </Box>
-          <Heading>Active positions</Heading>
-          <Box>
-            {positions}
-          </Box>
 
-          <Heading>Mentioned in</Heading>
+          </Box>
+          {acc.data.account.atom.asSubject.length > 0 && <Heading>Claims</Heading>}
           <Box>
             {triples}
           </Box>
