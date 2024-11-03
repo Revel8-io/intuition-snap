@@ -19,7 +19,7 @@ The Intuition Snap provides a decentralized, community-driven layer of trust for
 
 ## Snaps is Pre-Release Software
 
-To use Intuition, you’ll need to install [MetaMask Flask](https://metamask.io/flask/), a developer-focused version of MetaMask that provides early access to upcoming features like Snaps. Since Snaps is currently in pre-release, it is intended for testing and development, so please exercise caution when using it with real assets.
+To use the Intuition Snap, you’ll need to install [MetaMask Flask](https://metamask.io/flask/), a developer-focused version of MetaMask that provides early access to upcoming features like Snaps. Since Snaps is currently in pre-release, it is intended for testing and development, so please exercise caution when using it with real assets.
 
 ## Setup
 
