@@ -55,11 +55,13 @@ export const onRpcRequest: OnRpcRequestHandler = async ({
 const getAccountData = async (acc: string, from?: string | null) => {
   const result: {
     account: string,
-    data?: any,
+    atom?: any,
     image?: string
-    claims?: any
+    claims: any
+    followingCount?: string
   } = {
     account: acc,
+    claims: [],
   }
 
   try {
@@ -114,15 +116,16 @@ query Account($address: String!) {
       }),
     })
     const json = await res.json();
-    result.data = json.data;
-    if (json.data?.account?.atom?.image) {
-      result.image = (await getImageComponent(json.data?.account?.atom?.image, {
+    result.atom = json.data.account.atom;
+    result.followingCount = json.data.following_aggregate?.aggregate?.count?.toString();
+    if (result.atom?.image) {
+      result.image = (await getImageComponent(result.atom?.image, {
         width: 50,
         height: 50,
       })).value
     }
     console.log('json', json);
-    if (from !== undefined && from !== null && json.data?.account?.atom?.id !== undefined) {
+    if (from !== undefined && from !== null && result.atom?.id !== undefined) {
 
       const res2 = await fetch('https://api.i7n.app/v1/graphql', {
         method: 'POST',
@@ -214,14 +217,15 @@ query ClaimsFromFollowingAboutSubject($address: String!, $subjectId: numeric!) {
 
 export const renderAccounts = async (i7nAccountsData: {
   account: string;
-  data?: any;
+  atom?: any;
   image?: string;
   claims: any[];
+  followingCount?: string;
 }[]) => {
   return (<Box>
     {i7nAccountsData.map((acc) => {
 
-      const globalTriples = acc.data.account.atom.asSubject.map((triple: any) => {
+      const globalTriples = acc.atom.asSubject.map((triple: any) => {
         const emoji = triple.predicate.id === '4' ? triple.predicate.emoji : '🗣️';
 
         return (
@@ -285,6 +289,10 @@ export const renderAccounts = async (i7nAccountsData: {
           claimsAgainstCount: claimsAgainst.length,
         });
       });
+      // Sort triples by claims count
+      triples.sort((a, b) => {
+        return b.claimsForCount - a.claimsForCount;
+      });
 
       const followingTriples = triples.map((t: any) => {
         const emoji = t.triple.predicate.id === '4' ? t.triple.predicate.emoji : '🗣️';
@@ -293,7 +301,7 @@ export const renderAccounts = async (i7nAccountsData: {
 
           <Card
             title={`${emoji} ${t.triple.predicate.id === '4' ? '' : t.triple.predicate.label} ${t.triple.object.label}`}
-            value={t.triple.vault?.positionCount.toString()}
+            value={t.claimsForCount.toString()}
           />
         )
       });
@@ -306,31 +314,29 @@ export const renderAccounts = async (i7nAccountsData: {
 
       return (
         <Box>
-          <Box direction='horizontal' alignment='space-between'>
-            {acc.image !== undefined && (
-              <Image
-                src={acc.image}
-                alt="Account"
-              />
-            )}
-            <Heading>{acc.data?.account?.atom?.label}</Heading>
-          </Box>
+
+          <Card
+            title={acc.atom.label}
+            description={`did:i7n:8543:${acc.atom.id}`}
+            image={acc.image}
+            value=''
+          />
 
           <Box direction='horizontal' alignment='space-between'>
-            <Text>Following: {acc.data.following_aggregate?.aggregate?.count?.toString()}</Text>
+            <Text>Following: {acc.followingCount || ''}</Text>
             <Link href={"https://i7n.app/acc/" + acc.account}>
               Account
             </Link>
           </Box>
           <Box direction='horizontal' alignment='space-between'>
 
-            <Text>Followers: {acc.data?.account?.atom?.followers[0]?.vault?.positionCount.toString()}</Text>
-            {acc.data?.account.atom?.id !== undefined && <Link href={"https://i7n.app/a/" + acc.data?.account.atom?.id}>
+            <Text>Followers: {acc.atom?.followers[0]?.vault?.positionCount.toString()}</Text>
+            {acc.atom?.id !== undefined && <Link href={"https://i7n.app/a/" + acc.atom?.id}>
               Atom
             </Link>}
 
           </Box>
-          {acc.claims?.length > 0 && <Heading>From Accounts You’re Following</Heading>}
+          {acc.claims !== undefined && acc.claims?.length > 0 && <Heading>From Accounts You’re Following</Heading>}
           <Section>
             {followingTriples}
           </Section>
