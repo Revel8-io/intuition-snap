@@ -1,5 +1,5 @@
 import { OnRpcRequestHandler, getImageComponent, getImageData, OnTransactionHandler } from '@metamask/snaps-sdk';
-import { Box, Text, Bold, Heading, Image, Link } from '@metamask/snaps-sdk/jsx';
+import { Box, Text, Bold, Heading, Image, Link, Button, Card, Section } from '@metamask/snaps-sdk/jsx';
 import type { OnHomePageHandler } from "@metamask/snaps-sdk";
 /**
  * Handle incoming JSON-RPC requests, sent through `wallet_invokeSnap`.
@@ -52,11 +52,12 @@ export const onRpcRequest: OnRpcRequestHandler = async ({
 };
 
 
-const getAccountData = async (acc: string) => {
+const getAccountData = async (acc: string, from?: string | null) => {
   const result: {
     account: string,
     data?: any,
     image?: string
+    claims?: any
   } = {
     account: acc,
   }
@@ -120,6 +121,89 @@ query Account($address: String!) {
         height: 50,
       })).value
     }
+    console.log('json', json);
+    if (from !== undefined && from !== null && json.data?.account?.atom?.id !== undefined) {
+
+      const res2 = await fetch('https://api.i7n.app/v1/graphql', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          query: `
+query ClaimsFromFollowingAboutSubject($address: String!, $subjectId: numeric!) {
+  claims_from_following(
+    args: { address: $address }
+    where: { subjectId: { _eq: $subjectId } }
+  ) {
+    shares
+    counterShares
+    triple {
+      id
+      vaultId
+      counterVaultId
+      label
+      subject {
+        emoji
+        label
+        image
+        id
+      }
+      predicate {
+        emoji
+        label
+        image
+        id
+      }
+      object {
+        emoji
+        label
+        image
+        id
+      }
+      counterVault {
+        id
+        positionCount
+        totalShares
+        currentSharePrice
+        myPosition: positions(
+          limit: 1
+          where: { accountId: { _eq: $address } }
+        ) {
+          shares
+          accountId
+        }
+      }
+      vault {
+        id
+        positionCount
+        totalShares
+        currentSharePrice
+        myPosition: positions(
+          limit: 1
+          where: { accountId: { _eq: $address } }
+        ) {
+          shares
+          accountId
+        }
+      }
+    }
+    account {
+      id
+      label
+    }
+  }
+}
+      `,
+          variables: {
+            address: from.toLowerCase(),
+            subjectId: json.data?.account?.atom?.id,
+          },
+        }),
+      })
+      const json2 = await res2.json();
+      result.claims = json2.data.claims_from_following;
+    }
 
   } catch (e) {
     console.error(e);
@@ -132,18 +216,93 @@ export const renderAccounts = async (i7nAccountsData: {
   account: string;
   data?: any;
   image?: string;
+  claims: any[];
 }[]) => {
   return (<Box>
     {i7nAccountsData.map((acc) => {
 
-      const triples = acc.data.account.atom.asSubject.map((triple: any) => {
+      const globalTriples = acc.data.account.atom.asSubject.map((triple: any) => {
+        const emoji = triple.predicate.id === '4' ? triple.predicate.emoji : '🗣️';
+
         return (
-          <Box direction='horizontal' alignment='space-between'>
-            <Text>{triple.predicate.id === '4' ? triple.predicate.emoji : triple.predicate.label} {triple.object.label}</Text>
-            <Text>{triple.vault?.positionCount.toString()}</Text>
-          </Box>
+          <Card
+            title={`${emoji} ${triple.predicate.id === '4' ? '' : triple.predicate.label} ${triple.object.label}`}
+            value={triple.vault?.positionCount.toString()}
+          />
+
         )
       });
+
+      type Triple = {
+        id: string,
+        vaultId: string,
+        counterVaultId: string,
+        label: string,
+        subject: {
+          emoji: string,
+          label: string,
+          image: string,
+          id: string,
+        },
+        predicate: {
+          emoji: string,
+          label: string,
+          image: string,
+          id: string,
+        },
+        object: {
+          emoji: string,
+          label: string,
+          image: string,
+          id: string,
+        },
+      }
+
+      const triples: Array<{
+        triple: Triple,
+        claimsForCount: number,
+        claimsAgainstCount: number,
+      }> = [];
+
+      // Group claims by triple ID
+      const tripleGroups = acc.claims.reduce((account: { [key: string]: any[] }, claim: any) => {
+        const tripleId = claim.triple.id;
+        if (!account[tripleId]) {
+          account[tripleId] = [];
+        }
+        account[tripleId]?.push(claim);
+        return account;
+      }, {});
+
+      // Process each unique triple
+      Object.entries(tripleGroups).forEach(([tripleId, claims]) => {
+        const claimsFor = claims.filter(claim => claim.shares > 0);
+        const claimsAgainst = claims.filter(claim => claim.counterShares > 0);
+
+        triples.push({
+          triple: claims[0].triple,
+          claimsForCount: claimsFor.length,
+          claimsAgainstCount: claimsAgainst.length,
+        });
+      });
+
+      const followingTriples = triples.map((t: any) => {
+        const emoji = t.triple.predicate.id === '4' ? t.triple.predicate.emoji : '🗣️';
+
+        return (
+
+          <Card
+            title={`${emoji} ${t.triple.predicate.id === '4' ? '' : t.triple.predicate.label} ${t.triple.object.label}`}
+            value={t.triple.vault?.positionCount.toString()}
+          />
+        )
+      });
+      /*
+          {acc.data.account.atom.asSubject.length > 0 && <Heading>🌐 Global</Heading>}
+          <Section>
+            {globalTriples}
+          </Section>
+       */
 
       return (
         <Box>
@@ -171,10 +330,11 @@ export const renderAccounts = async (i7nAccountsData: {
             </Link>}
 
           </Box>
-          {acc.data.account.atom.asSubject.length > 0 && <Heading>Claims</Heading>}
-          <Box>
-            {triples}
-          </Box>
+          {acc.claims?.length > 0 && <Heading>From Accounts You’re Following</Heading>}
+          <Section>
+            {followingTriples}
+          </Section>
+
 
         </Box>
       )
@@ -200,7 +360,7 @@ export const onHomePage: OnHomePageHandler = async () => {
     };
   }
 
-  const i7nAccounts = accounts.map(acc => getAccountData(acc || ''));
+  const i7nAccounts = accounts.map(acc => getAccountData(acc || '', acc || ''));
   const i7nAccountsData = await Promise.all(i7nAccounts);
 
   return {
@@ -212,7 +372,8 @@ export const onHomePage: OnHomePageHandler = async () => {
 export const onTransaction: OnTransactionHandler = async ({
   transaction,
 }) => {
-  const i7nAccounts = [transaction.to].map(acc => getAccountData(acc || ''));
+  // const i7nAccounts = [transaction.to, transaction.from].map((to, from) => getAccountData(to || '', from));
+  const i7nAccounts = [getAccountData(transaction.to, transaction.from)]
   const i7nAccountsData = await Promise.all(i7nAccounts);
   return {
     content: await renderAccounts(i7nAccountsData),
