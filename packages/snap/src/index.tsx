@@ -118,6 +118,16 @@ export const renderAccounts = async (i7nAccountsData: {
 }[]) => {
   return (<Box>
     {i7nAccountsData.map((acc) => {
+      if (acc.atom === undefined) {
+        return (
+          <Box>
+            <Heading>Account not found</Heading>
+            <Text>
+              The account {acc.account} was not found on intuition.
+            </Text>
+          </Box>
+        )
+      }
 
       const globalTriples = acc.atom?.asSubject?.map((triple: any) => {
         const emoji = triple.predicate.id === '4' ? triple.predicate.emoji : '🗣️';
@@ -188,8 +198,8 @@ export const renderAccounts = async (i7nAccountsData: {
 
           {acc.atom?.type !== 'Unknown' && (<Box>
             <Card
-              title={acc.atom.label}
-              description={`did:i7n:8543:${acc.atom.id}`}
+              title={acc.atom?.label || ''}
+              description={`did:i7n:8543:${acc.atom?.id || ''}`}
               image={acc.image}
               value={''}
             />
@@ -211,7 +221,7 @@ export const renderAccounts = async (i7nAccountsData: {
             {followingTriples}
           </Section>
 
-          {acc.atom.asSubject?.length > 0 && <Heading>From everyone</Heading>}
+          {acc.atom !== undefined && acc.atom?.asSubject?.length > 0 && <Heading>From everyone</Heading>}
           <Section>
             {globalTriples}
           </Section>
