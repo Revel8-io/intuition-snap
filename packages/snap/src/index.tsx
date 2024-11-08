@@ -76,7 +76,7 @@ const getAccountData = async (acc: string, from: string | null, chainId: string)
       }
 
     }
-    result.followingCount = json.data.following_aggregate?.aggregate?.count?.toString();
+    result.followingCount = json.data?.following_aggregate?.aggregate?.count?.toString();
     if (result.atom?.image) {
       result.image = (await getImageComponent(result.atom?.image, {
         width: 50,
@@ -121,9 +121,8 @@ export const renderAccounts = async (i7nAccountsData: {
       if (acc.atom === undefined) {
         return (
           <Box>
-            <Heading>Account not found</Heading>
             <Text>
-              The account {acc.account} was not found on intuition.
+              No information about this on intuition, yet.
             </Text>
           </Box>
         )
