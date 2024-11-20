@@ -27,11 +27,11 @@ To get started with the Intuition Snap, follow these steps:
 
 1. **Install MetaMask Flask**:
    - [MetaMask Flask](https://metamask.io/flask/) is a special developer version of MetaMask that allows you to use Snaps. Download and install it to access upcoming features.
-   
+
 2. **Clone the Intuition Snap Repository**:
    - Open your terminal and clone this repository:
      ```shell
-     git clone https://github.com/yourusername/intuition-snap.git
+     git clone https://github.com/0xIntuition/intuition-snap.git
      cd intuition-snap
      ```
 
