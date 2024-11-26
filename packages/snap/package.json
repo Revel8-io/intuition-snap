@@ -1,6 +1,6 @@
 {
   "name": "intuition-snap",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Bringing human trust to trustless systems.",
   "repository": {
     "type": "git",
@@ -10,6 +10,7 @@
   "main": "./dist/bundle.js",
   "files": [
     "dist/",
+    "src/images/logo.svg",
     "snap.manifest.json"
   ],
   "scripts": {
