@@ -1,5 +1,5 @@
 {
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Bringing human trust to trustless systems.",
   "proposedName": "Intuition",
   "repository": {
@@ -7,7 +7,7 @@
     "url": "https://github.com/0xIntuition/intuition-snap.git"
   },
   "source": {
-    "shasum": "u/2Mpk/VKhdSWRkRNutUw4rNTQtIeQt+dGffr9mDeqc=",
+    "shasum": "rP/4xIuf/8NPCwpIvaRPySJhri40d2c3jxYvOuklOcM=",
     "location": {
       "npm": {
         "filePath": "dist/bundle.js",

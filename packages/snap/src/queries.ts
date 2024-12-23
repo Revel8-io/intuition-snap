@@ -1,21 +1,21 @@
 export const getAccountQuery = `
 query Account($address: String!) {
   account(id: $address) {
+    id
+    label
+    image
     atom {
       id
-      label
-      image
-type
-      followers: asObject(where: {subjectId: {_eq: 11}, predicateId: {_eq: 3}}) {
+      type
+      followers: as_object_triples(where: {subject_id: {_eq: 11}, predicate_id: {_eq: 3}}) {
         id
-        label
         vault {
-          positionCount
+          position_count
         }
       }
-      asSubject(
-        where: {vault: {positionCount: {_gt: 0}}}
-        order_by: {vault: {positionCount: desc}}
+      as_subject_triples(
+        where: {vault: {position_count: {_gt: 0}}}
+        order_by: {vault: {position_count: desc}}
       ) {
         object {
           label
@@ -26,7 +26,7 @@ type
           emoji
         }
         vault {
-          positionCount
+          position_count
         }
       }
     }
@@ -42,50 +42,50 @@ type
 export const searchAtomsQuery = `
 query SearchAtoms($uri: String) {
   atoms(where: { data: { _eq: $uri } }) {
-id
-      label
-      image
-type
-      followers: asObject(where: {subjectId: {_eq: 11}, predicateId: {_eq: 3}}) {
+    id
+    label
+    image
+    type
+    followers: as_object_triples(
+      where: { subject_id: { _eq: 11 }, predicate_id: { _eq: 3 } }
+    ) {
+      id
+      vault {
+        position_count
+      }
+    }
+    as_subject_triples(
+      where: { vault: { position_count: { _gt: 0 } } }
+      order_by: { vault: { position_count: desc } }
+    ) {
+      object {
+        label
+      }
+      predicate {
         id
         label
-        vault {
-          positionCount
-        }
+        emoji
       }
-      asSubject(
-        where: {vault: {positionCount: {_gt: 0}}}
-        order_by: {vault: {positionCount: desc}}
-      ) {
-        object {
-          label
-        }
-        predicate {
-          id
-          label
-          emoji
-        }
-        vault {
-          positionCount
-        }
+      vault {
+        position_count
       }
-
+    }
   }
-}`;
+}
+`;
 
 export const getClaimsFromFollowingQuery = `
 query ClaimsFromFollowingAboutSubject($address: String!, $subjectId: numeric!) {
   claims_from_following(
     args: { address: $address }
-    where: { subjectId: { _eq: $subjectId } }
+    where: { subject_id: { _eq: $subjectId } }
   ) {
     shares
-    counterShares
+    counter_shares
     triple {
       id
-      vaultId
-      counterVaultId
-      label
+      vault_id
+      counter_vault_id
       subject {
         emoji
         label
@@ -104,30 +104,30 @@ query ClaimsFromFollowingAboutSubject($address: String!, $subjectId: numeric!) {
         image
         id
       }
-      counterVault {
+      counter_vault {
         id
-        positionCount
-        totalShares
-        currentSharePrice
+        position_count
+        total_shares
+        current_share_price
         myPosition: positions(
           limit: 1
-          where: { accountId: { _eq: $address } }
+          where: { account_id: { _eq: $address } }
         ) {
           shares
-          accountId
+          account_id
         }
       }
       vault {
         id
-        positionCount
-        totalShares
-        currentSharePrice
+        position_count
+        total_shares
+        current_share_price
         myPosition: positions(
           limit: 1
-          where: { accountId: { _eq: $address } }
+          where: { account_id: { _eq: $address } }
         ) {
           shares
-          accountId
+          account_id
         }
       }
     }

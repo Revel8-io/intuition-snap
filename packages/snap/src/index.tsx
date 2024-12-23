@@ -3,11 +3,12 @@ import { Box, Text, Heading, Link, Section, Card } from '@metamask/snaps-sdk/jsx
 import type { OnHomePageHandler } from "@metamask/snaps-sdk";
 import { getAccountQuery, getClaimsFromFollowingQuery, searchAtomsQuery } from "./queries";
 
+const backendUrl = 'https://dev.base.intuition-api.com/v1/graphql';
+
 type Triple = {
   id: string,
-  vaultId: string,
-  counterVaultId: string,
-  label: string,
+  vault_id: string,
+  counter_vault_id: string,
   subject: {
     emoji: string,
     label: string,
@@ -33,6 +34,7 @@ const getAccountData = async (acc: string, from: string | null, chainId: string)
     account: string,
     atom?: any,
     image?: string
+    label?: string
     claims: any
     followingCount?: string
     chainId?: string
@@ -43,7 +45,7 @@ const getAccountData = async (acc: string, from: string | null, chainId: string)
   }
 
   try {
-    const res = await fetch('https://api.i7n.app/v1/graphql', {
+    const res = await fetch(backendUrl, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -56,9 +58,11 @@ const getAccountData = async (acc: string, from: string | null, chainId: string)
       }),
     })
     const json = await res.json();
+    result.image = json.data?.account?.image;
+    result.label = json.data?.account?.label;
     result.atom = json.data?.account?.atom;
     if (result.atom === undefined) {
-      const res = await fetch('https://api.i7n.app/v1/graphql', {
+      const res = await fetch(backendUrl, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -77,14 +81,14 @@ const getAccountData = async (acc: string, from: string | null, chainId: string)
 
     }
     result.followingCount = json.data?.following_aggregate?.aggregate?.count?.toString();
-    if (result.atom?.image) {
-      result.image = (await getImageComponent(result.atom?.image, {
+    if (result.image) {
+      result.image = (await getImageComponent(result.image, {
         width: 50,
         height: 50,
       })).value
     }
     if (from !== undefined && from !== null && result.atom?.id !== undefined) {
-      const res2 = await fetch('https://api.i7n.app/v1/graphql', {
+      const res2 = await fetch(backendUrl, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -112,6 +116,7 @@ export const renderAccounts = async (i7nAccountsData: {
   account: string;
   atom?: any;
   image?: string;
+  label?: string;
   claims: any[];
   followingCount?: string;
   chainId?: string;
@@ -128,13 +133,13 @@ export const renderAccounts = async (i7nAccountsData: {
         )
       }
 
-      const globalTriples = acc.atom?.asSubject?.map((triple: any) => {
+      const globalTriples = acc.atom?.as_subject_triples?.map((triple: any) => {
         const emoji = triple.predicate.id === '4' ? triple.predicate.emoji : '🗣️';
 
         return (
           <Card
             title={`${emoji} ${triple.predicate.id === '4' ? '' : triple.predicate.label} ${triple.object.label}`}
-            value={triple.vault?.positionCount.toString()}
+            value={triple.vault?.position_count.toString()}
           />
 
         )
@@ -197,7 +202,7 @@ export const renderAccounts = async (i7nAccountsData: {
 
           {acc.atom?.type !== 'Unknown' && (<Box>
             <Card
-              title={acc.atom?.label || ''}
+              title={acc.label || ''}
               description={`did:i7n:8543:${acc.atom?.id || ''}`}
               image={acc.image}
               value={''}
@@ -209,7 +214,7 @@ export const renderAccounts = async (i7nAccountsData: {
               </Link>
             </Box>
             <Box direction='horizontal' alignment='space-between'>
-              {acc.atom?.followers.length > 0 && <Text>Followers: {acc.atom?.followers[0]?.vault?.positionCount.toString()}</Text>}
+              {acc.atom?.followers.length > 0 && <Text>Followers: {acc.atom?.followers[0]?.vault?.position_count.toString()}</Text>}
               {acc.atom?.id !== undefined && <Link href={"https://i7n.app/a/" + acc.atom?.id}>
                 Atom
               </Link>}
@@ -220,7 +225,7 @@ export const renderAccounts = async (i7nAccountsData: {
             {followingTriples}
           </Section>
 
-          {acc.atom !== undefined && acc.atom?.asSubject?.length > 0 && <Heading>From everyone</Heading>}
+          {acc.atom !== undefined && acc.atom?.as_subject_triples?.length > 0 && <Heading>From everyone</Heading>}
           <Section>
             {globalTriples}
           </Section>
