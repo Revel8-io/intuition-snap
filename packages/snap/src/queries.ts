@@ -1,39 +1,54 @@
+export const checkAccountAtomExistenceQuery = `
+query CheckAccountAtomExistence($address: String!) {
+  account(id: $address) {
+    atom_id
+  }
+}
+`;
+
 export const getAccountQuery = `
 query Account($address: String!) {
   account(id: $address) {
     id
     label
     image
+    atom_id
     atom {
-      id
+      term_id
       type
-      followers: as_object_triples(where: {subject_id: {_eq: 11}, predicate_id: {_eq: 3}}) {
-        id
-        vault {
-          position_count
+      label
+      image
+      data
+      emoji
+      followers: as_object_triples(
+        where: { subject_id: { _eq: 11 }, predicate_id: { _eq: 3 } }
+      ) {
+        term_id
+        term {
+          vaults(where: { curve_id: { _eq: "1" } }) {
+            position_count
+          }
         }
       }
       as_subject_triples(
-        where: {vault: {position_count: {_gt: 0}}}
-        order_by: {vault: {position_count: desc}}
+        where: { term: { vaults: { position_count: { _gt: 0 } } } }
+        order_by: { term: { total_market_cap: desc } }
       ) {
+        term_id
+        term {
+          vaults(where: { curve_id: { _eq: "1" } }) {
+            position_count
+          }
+        }
         object {
           label
         }
         predicate {
-          id
+          term_id
           label
           emoji
         }
-        vault {
-          position_count
-        }
       }
-    }
-  }
-  following_aggregate(args: { address: $address }) {
-    aggregate {
-      count
     }
   }
 }
@@ -42,32 +57,38 @@ query Account($address: String!) {
 export const searchAtomsQuery = `
 query SearchAtoms($uri: String) {
   atoms(where: { data: { _eq: $uri } }) {
-    id
+    term_id
     label
     image
     type
     followers: as_object_triples(
       where: { subject_id: { _eq: 11 }, predicate_id: { _eq: 3 } }
     ) {
-      id
-      vault {
-        position_count
+      term_id
+      term {
+        vaults(where: { curve_id: { _eq: "1" } }) {
+          position_count
+        }
       }
     }
     as_subject_triples(
-      where: { vault: { position_count: { _gt: 0 } } }
-      order_by: { vault: { position_count: desc } }
+      where: { term: { vaults: { position_count: { _gt: 0 } } } }
+      order_by: { term: { total_market_cap: desc } }
     ) {
+      term_id
       object {
         label
+        term_id
       }
       predicate {
-        id
+        term_id
         label
         emoji
       }
-      vault {
-        position_count
+      term {
+        vaults(where: { curve_id: { _eq: "1" } }) {
+          position_count
+        }
       }
     }
   }

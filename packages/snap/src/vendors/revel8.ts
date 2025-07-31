@@ -1,8 +1,9 @@
 export const REVEL8 = {
   name: 'Revel8',
-  getNoAccountAtomInfo: (account: string, chainId?: string) => {
+  getNoAccountAtomInfo: (address: string, chainId: string) => {
+    console.log('getNoAccountAtomInfo', address, chainId);
     return {
-      url: `https://localhost:3001/redirect/complete_address_trustworhy_triple?address=${account}&chainId=${chainId}`,
+      url: `https://localhost:3000/redirect/complete_address_trustworthy_triple?address=${address}&chain_id=${chainId}`,
     };
   },
 };
