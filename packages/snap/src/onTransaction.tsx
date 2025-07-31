@@ -10,6 +10,8 @@ import {
   getAccountType,
   AccountType,
   renderNoAccount,
+  renderAccountNoAtom,
+  renderAccountAtomNoTriple,
 } from './account';
 
 export const onTransaction: OnTransactionHandler = async ({
@@ -27,8 +29,20 @@ export const onTransaction: OnTransactionHandler = async ({
 
   switch (accountType) {
     case AccountType.NoAccount:
+      console.log('AccountType.NoAccount', to, chainId);
       return {
         content: renderNoAccount(to, chainId),
+      };
+    case AccountType.AccountNoAtom:
+      console.log('AccountType.AccountNoAtom', to, chainId);
+      return {
+        // same as renderNoAccount
+        content: renderAccountNoAtom(to, chainId),
+      };
+    case AccountType.AccountAtomNoTriple:
+      console.log('AccountType.AccountAtomNoTriple', to, chainId);
+      return {
+        content: renderAccountAtomNoTriple(accountData.account, chainId),
       };
     default:
       return null;

@@ -7,8 +7,8 @@ query CheckAccountAtomExistence($address: String!) {
 `;
 
 export const getAccountQuery = `
-query Account($address: String!) {
-  account(id: $address) {
+query Account($address: String!, $caipAddress: String!) {
+  accounts(where: { id: { _in: [$address, $caipAddress] } }, limit: 1) {
     id
     label
     image
@@ -155,6 +155,38 @@ query ClaimsFromFollowingAboutSubject($address: String!, $subjectId: numeric!) {
     account {
       id
       label
+    }
+  }
+}
+`;
+
+// will take in predicate_id and object_id
+// then will look for instances of account being used
+// as the subject for the triple and select the triple with the highest
+// total market cap
+export const getTripleExistsQuery = `
+query TripleExists($subjectId: numeric!, $predicateId: numeric!, $objectId: numeric!) {
+  triples(where: {
+    subject_id: { _eq: $subjectId },
+    predicate_id: { _eq: $predicateId },
+    object_id: { _eq: $objectId }
+  }) {
+    term_id
+    subject_id
+    predicate_id
+    object_id
+    block_number
+    created_at
+    creator_id
+    term {
+      vaults {
+        term_id
+        market_cap
+        position_count
+        total_shares
+        current_share_price
+        curve_id
+      }
     }
   }
 }

@@ -1,4 +1,3 @@
-import { getImageComponent } from '@metamask/snaps-sdk';
 import {
   Box,
   Text,
@@ -9,26 +8,17 @@ import {
   Address,
 } from '@metamask/snaps-sdk/jsx';
 import axios from 'axios';
-import { getAddress } from 'viem';
 
 import { backendUrl } from './config';
 import {
   getAccountQuery,
-  getClaimsFromFollowingQuery,
+  getAccountTrustQuery,
+  getTripleExistsQuery,
   searchAtomsQuery,
 } from './queries';
 import { VENDORS } from './vendors';
-
-type GetAccountDataOutput = {
-  account: string;
-  atom?: any;
-  image?: string;
-  label?: string;
-  claims: any;
-  followingCount?: string;
-  chainId?: string;
-  isContract?: boolean;
-};
+import { getChainConfigByChainId } from './config';
+import { addressToCaip10 } from './util';
 
 export const getAccountData = async (
   destinationAddress: string,
@@ -36,34 +26,73 @@ export const getAccountData = async (
   chainId: string,
 ) => {
   console.log('getAccountData', destinationAddress, fromAddress, chainId);
-
+  const caipAddress = addressToCaip10(destinationAddress, chainId);
   try {
     const accountPromise = axios.post(backendUrl, {
       query: getAccountQuery,
       variables: {
         address: destinationAddress,
+        caipAddress,
       },
     });
     const codePromise = ethereum.request({
       method: 'eth_getCode',
       params: [destinationAddress, 'latest'],
     });
-    const [accounResponse, accountType] = await Promise.all([
+    const [accountResponse, accountType] = await Promise.all([
       accountPromise,
       codePromise,
     ]);
-    console.log('accounResponse', JSON.stringify(accounResponse));
+    console.log('accountResponse', JSON.stringify(accountResponse));
     console.log('accountType', accountType);
     const {
       data: {
-        data: { account },
+        data: { accounts },
       },
-    } = accounResponse;
-    console.log('account', account);
+    } = accountResponse;
+    console.log('accounts', accounts);
     const isContract = accountType !== '0x';
-    if (!account) {
+    if (accounts.length === 0) {
+      console.log('no accounts found');
       return { account: null, isContract };
     }
+
+    if (accounts[0].atom_id === null) {
+      console.log('account has no atom');
+      return { account: accounts[0], isContract };
+    }
+
+    // account exists, now check if atom exists
+    const { atom_id: atomId } = accounts[0];
+    console.log('atomId', atomId);
+    const chainConfig = getChainConfigByChainId(chainId);
+    if (!chainConfig) {
+      throw new Error(
+        `Chain config not found for chainId: ${chainId} (${typeof chainId})`,
+      );
+    }
+    console.log('chainConfig', chainConfig);
+    const { IS_ATOM_ID, MALICIOUS_ATOM_ID } = chainConfig;
+    const payload = {
+      subjectId: atomId,
+      predicateId: IS_ATOM_ID,
+      objectId: MALICIOUS_ATOM_ID,
+    };
+    console.log('payload', payload);
+    const { data: accountTrustData } = await axios.post(backendUrl, {
+      query: getTripleExistsQuery,
+      variables: payload,
+    });
+    console.log('accountTrustData', JSON.stringify(accountTrustData));
+    const { triples } = accountTrustData.data;
+    console.log('triples', triples);
+    if (true) {
+      console.log('triple does not exist');
+      return { account: accounts[0], triple: null, isContract };
+    }
+
+    // if account and atom exist, but no triple
+
     // if (output.atom === undefined) {
     //   // if no atom controlled by account
     //   const address = getAddress(destinationAddress);
@@ -81,6 +110,7 @@ export const getAccountData = async (
     //   console.log('ATOM EXISTS FOR ADDRESS', destinationAddress);
     //   output.atom = searchAtomsData.data.atoms[0];
     // }
+    console.log('USING FALLBACK');
     return { account: null, isContract };
   } catch (e) {
     console.error('getAccountData error', JSON.stringify(e));
@@ -249,13 +279,23 @@ export const renderAccounts = async (
 
 export enum AccountType {
   NoAccount = 'NO_ACCOUNT',
+  AccountNoAtom = 'ACCOUNT_NO_ATOM',
+  AccountAtomNoTriple = 'ACCOUNT_ATOM_NO_TRIPLE',
 }
 
 export const getAccountType = (accountData: any): AccountType => {
+  console.log('getAccountType accountData', accountData);
   const { account } = accountData;
   if (account === null) {
     return AccountType.NoAccount;
   }
+  if (account.atom_id === null) {
+    return AccountType.AccountNoAtom;
+  }
+  if (true /* account.triple === null */) {
+    return AccountType.AccountAtomNoTriple;
+  }
+  console.log('getAccountType FALLBACK: AccountType.NoAccount');
   return AccountType.NoAccount; // default
 };
 
@@ -275,6 +315,38 @@ export const renderNoAccount = (address: string, chainId: string) => {
       <Text>
         No information about this account on intuition, yet! {address}
       </Text>
+      {links.map((linkComponent) => linkComponent)}
+    </Box>
+  );
+};
+
+export const renderAccountNoAtom = renderNoAccount;
+
+// need to complete the triple, we already have atom_id
+export const renderAccountAtomNoTriple = (
+  account: {
+    atom: any;
+    triple: any;
+    isContract: boolean;
+  },
+  chainId: string,
+) => {
+  console.log('renderAccountAtomNoTriple', JSON.stringify(account), chainId);
+  const links = [];
+  for (const vendor of Object.values(VENDORS)) {
+    const { name, getAccountAtomNoTripleInfo } = vendor;
+    const { url } = getAccountAtomNoTripleInfo(account, chainId);
+    console.log('url', url);
+    console.log('vendor', vendor);
+    console.log('name', name);
+    links.push(
+      <Link href={url}>Is this address trustworthy? Vote on {name}</Link>,
+    );
+  }
+  console.log('links', links);
+  return (
+    <Box>
+      <Text>Atom exists for {account.id}</Text>
       {links.map((linkComponent) => linkComponent)}
     </Box>
   );
