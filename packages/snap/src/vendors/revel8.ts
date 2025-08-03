@@ -1,7 +1,11 @@
+import axios from 'axios';
 import { getChainConfigByChainId } from '../config';
 
 export const REVEL8 = {
   name: 'Revel8',
+  getExchangeRates: async () => {
+    return await axios.get('http://localhost:3333/exchange-rates');
+  },
   getNoAccountAtomInfo: (address: string, chainId: string) => {
     return {
       url: `https://localhost:3000/redirect/complete_address_trustworthy_triple?address=${address}&chain_id=${chainId}`,
@@ -19,6 +23,15 @@ export const REVEL8 = {
     const { atom_id: atomId } = account;
     return {
       url: `https://localhost:3000/atoms/${atomId}?modal=complete_triple&chain_id=${chainId}&atom_ids=${atomId},${IS_ATOM_ID},${MALICIOUS_ATOM_ID}`,
+    };
+  },
+  getAccountAtomTripleInfo: (
+    account: any,
+    tripleId: string,
+    chainId: string,
+  ) => {
+    return {
+      supportUrl: '',
     };
   },
 };

@@ -51,6 +51,9 @@ query Account($address: String!, $caipAddress: String!) {
       }
     }
   }
+  chainlink_prices(limit: 1, order_by: { id: desc }) {
+    usd
+  }
 }
 `;
 
@@ -91,6 +94,13 @@ query SearchAtoms($uri: String) {
         }
       }
     }
+  }
+  backup_chainlink_prices: chainlink_prices(
+    limit: 1,
+    order_by: { id: desc },
+    where: { usd: { _is_null: false } }
+  ) {
+    usd
   }
 }
 `;
@@ -164,8 +174,8 @@ query ClaimsFromFollowingAboutSubject($address: String!, $subjectId: numeric!) {
 // then will look for instances of account being used
 // as the subject for the triple and select the triple with the highest
 // total market cap
-export const getTripleExistsQuery = `
-query TripleExists($subjectId: numeric!, $predicateId: numeric!, $objectId: numeric!) {
+export const getTripleExistsWithPositionAggregatesQuery = `
+query TripleExistsWithPositionAggregates($subjectId: numeric!, $predicateId: numeric!, $objectId: numeric!) {
   triples(where: {
     subject_id: { _eq: $subjectId },
     predicate_id: { _eq: $predicateId },
@@ -175,19 +185,107 @@ query TripleExists($subjectId: numeric!, $predicateId: numeric!, $objectId: nume
     subject_id
     predicate_id
     object_id
-    block_number
-    created_at
     creator_id
+    counter_term_id
+
+    # Main vault (support) market data
     term {
-      vaults {
+      vaults(where: { curve_id: { _eq: "1" } }) {
         term_id
         market_cap
         position_count
-        total_shares
-        current_share_price
         curve_id
       }
     }
+
+    # Counter vault (oppose) market data
+    counter_term {
+      vaults(where: { curve_id: { _eq: "1" } }) {
+        term_id
+        market_cap
+        position_count
+        curve_id
+      }
+    }
+
+    # Triple-specific aggregated market data
+    triple_term {
+      term_id
+      counter_term_id
+      total_market_cap
+      total_position_count
+    }
+
+    # Detailed triple vault data per curve
+    triple_vault {
+      term_id
+      counter_term_id
+      curve_id
+      position_count
+      market_cap
+    }
+
+    positions_aggregate {
+      aggregate {
+        count
+        sum {
+          shares
+        }
+        avg {
+          shares
+        }
+      }
+    }
+
+    counter_positions_aggregate {
+      aggregate {
+        count
+        sum {
+          shares
+        }
+        avg {
+          shares
+        }
+      }
+    }
+
+    positions(
+      order_by: { shares: desc }
+      limit: 10
+    ) {
+      id
+      account_id
+      term_id
+      curve_id
+      account {
+        id
+        label
+      }
+    }
+
+    counter_positions(
+      order_by: { shares: desc }
+      limit: 10
+    ) {
+      id
+      account_id
+      term_id
+      curve_id
+      account {
+        id
+        label
+      }
+    }
+  }
+  chainlink_prices(limit: 1, order_by: { id: desc }) {
+    usd
+  }
+  backup_chainlink_prices: chainlink_prices(
+    limit: 1,
+    order_by: { id: desc },
+    where: { usd: { _is_null: false } }
+  ) {
+    usd
   }
 }
 `;

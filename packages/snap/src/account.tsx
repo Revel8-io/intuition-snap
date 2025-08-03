@@ -6,6 +6,11 @@ import {
   Section,
   Card,
   Address,
+  Row,
+  Value,
+  Container,
+  Footer,
+  Button,
 } from '@metamask/snaps-sdk/jsx';
 import axios from 'axios';
 
@@ -15,10 +20,12 @@ import {
   getAccountTrustQuery,
   getTripleExistsQuery,
   searchAtomsQuery,
+  getTripleExistsWithPositionAggregatesQuery,
 } from './queries';
 import { VENDORS } from './vendors';
 import { getChainConfigByChainId } from './config';
 import { addressToCaip10 } from './util';
+import { formatUnits, parseUnits } from 'viem';
 
 export const getAccountData = async (
   destinationAddress: string,
@@ -43,54 +50,46 @@ export const getAccountData = async (
       accountPromise,
       codePromise,
     ]);
-    console.log('accountResponse', JSON.stringify(accountResponse));
-    console.log('accountType', accountType);
     const {
       data: {
         data: { accounts },
       },
     } = accountResponse;
-    console.log('accounts', accounts);
     const isContract = accountType !== '0x';
     if (accounts.length === 0) {
-      console.log('no accounts found');
       return { account: null, isContract };
     }
 
     if (accounts[0].atom_id === null) {
-      console.log('account has no atom');
       return { account: accounts[0], isContract };
     }
 
     // account exists, now check if atom exists
     const { atom_id: atomId } = accounts[0];
-    console.log('atomId', atomId);
     const chainConfig = getChainConfigByChainId(chainId);
     if (!chainConfig) {
       throw new Error(
         `Chain config not found for chainId: ${chainId} (${typeof chainId})`,
       );
     }
-    console.log('chainConfig', chainConfig);
     const { IS_ATOM_ID, MALICIOUS_ATOM_ID } = chainConfig;
     const payload = {
       subjectId: atomId,
       predicateId: IS_ATOM_ID,
       objectId: MALICIOUS_ATOM_ID,
     };
-    console.log('payload', payload);
     const { data: accountTrustData } = await axios.post(backendUrl, {
-      query: getTripleExistsQuery,
+      query: getTripleExistsWithPositionAggregatesQuery,
       variables: payload,
     });
-    console.log('accountTrustData', JSON.stringify(accountTrustData));
     const { triples } = accountTrustData.data;
-    console.log('triples', triples);
-    if (true) {
-      console.log('triple does not exist');
+    if (triples.length === 0) {
       return { account: accounts[0], triple: null, isContract };
     }
 
+    if (triples.length > 0) {
+      return { account: accounts[0], triple: triples[0], isContract };
+    }
     // if account and atom exist, but no triple
 
     // if (output.atom === undefined) {
@@ -281,19 +280,23 @@ export enum AccountType {
   NoAccount = 'NO_ACCOUNT',
   AccountNoAtom = 'ACCOUNT_NO_ATOM',
   AccountAtomNoTriple = 'ACCOUNT_ATOM_NO_TRIPLE',
+  AccountAtomTriple = 'ACCOUNT_ATOM_TRIPLE',
 }
 
 export const getAccountType = (accountData: any): AccountType => {
   console.log('getAccountType accountData', accountData);
-  const { account } = accountData;
+  const { account, triple } = accountData;
   if (account === null) {
     return AccountType.NoAccount;
   }
   if (account.atom_id === null) {
     return AccountType.AccountNoAtom;
   }
-  if (true /* account.triple === null */) {
+  if (triple === null) {
     return AccountType.AccountAtomNoTriple;
+  }
+  if (triple) {
+    return AccountType.AccountAtomTriple;
   }
   console.log('getAccountType FALLBACK: AccountType.NoAccount');
   return AccountType.NoAccount; // default
@@ -349,5 +352,77 @@ export const renderAccountAtomNoTriple = (
       <Text>Atom exists for {account.id}</Text>
       {links.map((linkComponent) => linkComponent)}
     </Box>
+  );
+};
+
+export const renderAccountAtomTriple = (
+  account,
+  triple,
+  isContract,
+  chainId,
+  chainlink_prices = [{ usd: 3500 }],
+) => {
+  const {
+    term,
+    counter_term,
+    triple_term,
+    triple_vault,
+    positions_aggregate,
+    counter_positions_aggregate,
+  } = triple;
+
+  const links = [];
+  // for (const vendor of Object.values(VENDORS)) {
+  //   const { name, getNoAccountAtomInfo } = vendor;
+  //   const { url } = getNoAccountAtomInfo(address, chainId);
+  //   console.log('url', url);
+  //   console.log('vendor', vendor);
+  //   links.push(<Link href={url}>Create atom on {name}</Link>);
+  // }
+  const totalMarketCap = triple_term.total_market_cap;
+
+  const totalMarketCapEth = parseFloat(
+    formatUnits(BigInt(totalMarketCap), 18),
+  ).toFixed(6);
+
+  const supportMarketCap = triple_term.total_market_cap;
+
+  const supportMarketCapEth = parseFloat(
+    formatUnits(BigInt(supportMarketCap), 18),
+  ).toFixed(6);
+  const supportMarketCapFiat = chainlink_prices[0].usd * supportMarketCapEth;
+
+  const opposeMarketCap = counter_term.vaults[0].market_cap;
+
+  const opposeMarketCapEth = parseFloat(
+    formatUnits(BigInt(opposeMarketCap), 18),
+  ).toFixed(6);
+  const opposeMarketCapFiat = chainlink_prices[0].usd * opposeMarketCapEth;
+
+  const supportPositionCount = triple.positions.length;
+
+  const opposePositionCount = triple.counter_positions.length;
+  return (
+    <Container backgroundColor="default">
+      <Box>
+        <Heading>Is trustworthy:</Heading>
+        <Row label={`Support (${supportPositionCount})`}>
+          <Value
+            value={`${supportMarketCapEth} ETH`}
+            extra={`$${supportMarketCapFiat.toFixed(2)} `}
+          />
+        </Row>
+        <Row label={`Oppose (${opposePositionCount})`}>
+          <Value
+            value={`${opposeMarketCapEth} ETH`}
+            extra={`$${opposeMarketCapFiat.toFixed(2)} `}
+          />
+        </Row>
+      </Box>
+      <Footer>
+        <Button variant="destructive">Cancel1</Button>
+        <Button>Confirm2</Button>
+      </Footer>
+    </Container>
   );
 };
