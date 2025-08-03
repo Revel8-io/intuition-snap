@@ -12,6 +12,7 @@ import {
   renderNoAccount,
   renderAccountNoAtom,
   renderAccountAtomNoTriple,
+  renderAccountAtomTriple,
 } from './account';
 
 export const onTransaction: OnTransactionHandler = async ({
@@ -27,6 +28,7 @@ export const onTransaction: OnTransactionHandler = async ({
   console.log('accountData', accountData, chainId);
   const accountType = getAccountType(accountData);
 
+  const { account, triple, isContract } = accountData;
   switch (accountType) {
     case AccountType.NoAccount:
       console.log('AccountType.NoAccount', to, chainId);
@@ -42,7 +44,11 @@ export const onTransaction: OnTransactionHandler = async ({
     case AccountType.AccountAtomNoTriple:
       console.log('AccountType.AccountAtomNoTriple', to, chainId);
       return {
-        content: renderAccountAtomNoTriple(accountData.account, chainId),
+        content: renderAccountAtomNoTriple(account, chainId),
+      };
+    case AccountType.AccountAtomTriple:
+      return {
+        content: renderAccountAtomTriple(account, triple, isContract, chainId),
       };
     default:
       return null;
