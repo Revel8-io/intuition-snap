@@ -1,7 +1,4 @@
-import type {
-  OnTransactionHandler,
-  OnHomePageHandler,
-} from '@metamask/snaps-sdk';
+import type { OnHomePageHandler } from '@metamask/snaps-sdk';
 import { Box, Text, Heading } from '@metamask/snaps-sdk/jsx';
 
 import { getAccountData, renderAccounts } from './account';

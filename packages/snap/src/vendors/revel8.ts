@@ -1,37 +1,34 @@
-import axios from 'axios';
-import { getChainConfigByChainId } from '../config';
+import { getChainConfigByChainId, type ChainConfig } from '../config';
+import type { Account } from '../types';
 
-export const REVEL8 = {
+const origin = 'https://localhost:3000';
+
+export const revel8 = {
   name: 'Revel8',
-  getExchangeRates: async () => {
-    return await axios.get('http://localhost:3333/exchange-rates');
-  },
   getNoAccountAtomInfo: (address: string, chainId: string) => {
     return {
-      url: `https://localhost:3000/redirect/complete_address_trustworthy_triple?address=${address}&chain_id=${chainId}`,
+      url: `${origin}/redirect/complete_address_trustworthy_triple?address=${address}&chain_id=${chainId}`,
     };
   },
-  getAccountAtomNoTripleInfo: (account: any, chainId: string) => {
+  getAccountAtomNoTripleInfo: (account: Account, chainId: string) => {
     const chainConfig = getChainConfigByChainId(chainId);
     if (!chainConfig) {
       throw new Error(
         `Chain config not found for chainId: ${chainId} (${typeof chainId})`,
       );
     }
-    const { IS_ATOM_ID, MALICIOUS_ATOM_ID } = chainConfig;
-    console.log('getAccountAtomNoTripleInfo account', JSON.stringify(account));
+    const { isAtomId, maliciousAtomId } = chainConfig as ChainConfig;
     const { atom_id: atomId } = account;
     return {
-      url: `https://localhost:3000/atoms/${atomId}?modal=complete_triple&chain_id=${chainId}&atom_ids=${atomId},${IS_ATOM_ID},${MALICIOUS_ATOM_ID}`,
+      url: `${origin}/atoms/${atomId}?modal=complete_triple&chain_id=${chainId}&atom_ids=${atomId},${isAtomId},${maliciousAtomId}`,
     };
   },
   getAccountAtomTripleInfo: (
-    account: any,
     tripleId: string,
-    chainId: string,
+    _chainId?: string, // needed or no?
   ) => {
     return {
-      supportUrl: '',
+      stakeTripleUrl: `${origin}/triples/${tripleId}?modal=stake_triple&direction=support`,
     };
   },
 };

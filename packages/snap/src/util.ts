@@ -1,3 +1,5 @@
+import { formatUnits } from 'viem';
+
 export const addressToCaip10 = (
   // input params formatted to fit MetaMask tx params
   address: string, // `0x${string}`,
@@ -19,4 +21,14 @@ export const caip10AddressToEvm = (address: string): string => {
     result = lastPart;
   }
   return result;
+};
+
+export const stringToDecimal = (
+  value: string,
+  inputDecimals: number,
+): number => {
+  const valueAsBigInt = BigInt(value);
+  const valueAsDecimal = formatUnits(valueAsBigInt, inputDecimals);
+  const output: number = parseFloat(valueAsDecimal);
+  return output;
 };
