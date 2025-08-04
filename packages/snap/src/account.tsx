@@ -21,6 +21,13 @@ export type GetAccountDataResult = {
   isContract?: boolean;
 };
 
+export enum AccountType {
+  NoAccount = 'NoAccount',
+  AccountNoAtom = 'AccountNoAtom',
+  AccountAtomNoTriple = 'AccountAtomNoTriple',
+  AccountAtomTriple = 'AccountAtomTriple',
+}
+
 export const getAccountData = async (
   destinationAddress: string,
   _fromAddress: string | null,
@@ -99,13 +106,6 @@ export const getAccountData = async (
     console.error('getAccountData error', JSON.stringify(error));
   }
 };
-
-export enum AccountType {
-  NoAccount = 'NoAccount',
-  AccountNoAtom = 'AccountNoAtom',
-  AccountAtomNoTriple = 'AccountAtomNoTriple',
-  AccountAtomTriple = 'AccountAtomTriple',
-}
 
 export const getAccountType = (accountData: any): AccountType => {
   const { account, triple } = accountData;
