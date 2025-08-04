@@ -22,8 +22,8 @@ export type GetAccountDataResult = {
 };
 
 export enum AccountType {
-  NoAccount = 'NoAccount',
-  AccountNoAtom = 'AccountNoAtom',
+  NoAccount = 'NoAccount', // only need this one or AccountNoAtom
+  AccountNoAtom = 'AccountNoAtom', // only need this or NoAccount
   AccountAtomNoTriple = 'AccountAtomNoTriple',
   AccountAtomTriple = 'AccountAtomTriple',
 }

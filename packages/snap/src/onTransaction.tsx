@@ -10,7 +10,6 @@ import {
   getAccountType,
   AccountType,
   renderNoAccount,
-  renderAccountNoAtom,
   renderAccountAtomNoTriple,
   renderAccountAtomTriple,
   type GetAccountDataResult,
@@ -32,9 +31,8 @@ export const onTransaction: OnTransactionHandler = async ({
   const { account, triple } = accountData as GetAccountDataResult;
   switch (accountType) {
     case AccountType.NoAccount:
-      return { content: renderNoAccount(to, chainId) };
     case AccountType.AccountNoAtom:
-      return { content: renderAccountNoAtom(to, chainId) };
+      return { content: renderNoAccount(to, chainId) };
     case AccountType.AccountAtomNoTriple:
       return {
         content: renderAccountAtomNoTriple(account as Account, chainId),
