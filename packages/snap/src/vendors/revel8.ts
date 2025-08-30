@@ -17,10 +17,10 @@ export const revel8 = {
         `Chain config not found for chainId: ${chainId} (${typeof chainId})`,
       );
     }
-    const { isAtomId, maliciousAtomId } = chainConfig as ChainConfig;
+    const { isAtomId, trustworthyAtomId } = chainConfig as ChainConfig;
     const { atom_id: atomId } = account;
     return {
-      url: `${origin}/atoms/${atomId}?modal=complete_triple&chain_id=${chainId}&atom_ids=${atomId},${isAtomId},${maliciousAtomId}`,
+      url: `${origin}/atoms/${atomId}?modal=complete_triple&chain_id=${chainId}&atom_ids=${atomId},${isAtomId},${trustworthyAtomId}`,
     };
   },
   getAccountAtomTripleInfo: (
