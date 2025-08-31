@@ -5,12 +5,12 @@ const origin = 'https://localhost:3000';
 
 export const revel8 = {
   name: 'Revel8',
-  getNoAccountAtomInfo: (address: string, chainId: string) => {
+  getNoAccountAtomData: (address: string, chainId: string) => {
     return {
       url: `${origin}/redirect/complete_address_trustworthy_triple?address=${address}&chain_id=${chainId}`,
     };
   },
-  getAccountAtomNoTripleInfo: (account: Account, chainId: string) => {
+  getAccountAtomNoTrustData: (account: Account, chainId: string) => {
     const chainConfig = getChainConfigByChainId(chainId);
     if (!chainConfig) {
       throw new Error(
@@ -23,7 +23,7 @@ export const revel8 = {
       url: `${origin}/atoms/${atomId}?modal=complete_triple&chain_id=${chainId}&atom_ids=${atomId},${isAtomId},${trustworthyAtomId}`,
     };
   },
-  getAccountAtomTripleInfo: (
+  getAccountAtomTrustData: (
     tripleId: string,
     _chainId?: string, // needed or no?
   ) => {

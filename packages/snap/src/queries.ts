@@ -1,3 +1,19 @@
+import axios from 'axios';
+import { chainConfig } from './config';
+
+export const i7nAxios = axios.create({
+  baseURL: chainConfig.backendUrl,
+});
+
+export const graphQLQuery = async (query: string, variables: any) => {
+  const { data } = await i7nAxios.post('', {
+    query,
+    variables,
+  });
+  console.log('graphQLQuery data', JSON.stringify(data, null, 2));
+  return data;
+};
+
 export const checkAccountAtomExistenceQuery = `
 query CheckAccountAtomExistence($address: String!) {
   account(id: $address) {
@@ -20,35 +36,6 @@ query Account($address: String!, $caipAddress: String!) {
       image
       data
       emoji
-      followers: as_object_triples(
-        where: { subject_id: { _eq: 11 }, predicate_id: { _eq: 3 } }
-      ) {
-        term_id
-        term {
-          vaults(where: { curve_id: { _eq: "1" } }) {
-            position_count
-          }
-        }
-      }
-      as_subject_triples(
-        where: { term: { vaults: { position_count: { _gt: 0 } } } }
-        order_by: { term: { total_market_cap: desc } }
-      ) {
-        term_id
-        term {
-          vaults(where: { curve_id: { _eq: "1" } }) {
-            position_count
-          }
-        }
-        object {
-          label
-        }
-        predicate {
-          term_id
-          label
-          emoji
-        }
-      }
     }
   }
   chainlink_prices(limit: 1, order_by: { id: desc }) {
@@ -175,4 +162,61 @@ query TripleWithPositionAggregates($subjectId: numeric!, $predicateId: numeric!,
     usd
   }
 }
+`;
+
+export const getListWithHighestStakeQuery = `
+  query GetTriplesWithHighestStake($subjectId: numeric!, $predicateId: numeric!) {
+    triples(
+      where: {
+        subject_id: { _eq: $subjectId },
+        predicate_id: { _eq: $predicateId }
+      },
+      order_by: { triple_term: { total_market_cap: desc } }
+    ) {
+      term_id
+      subject_id
+      predicate_id
+      object_id
+      creator_id
+      counter_term_id
+
+      # Triple-specific aggregated market data (stake information)
+      triple_term {
+        term_id
+        counter_term_id
+        total_market_cap
+        total_position_count
+      }
+
+      # Individual vault data
+      term {
+        vaults(where: { curve_id: { _eq: "1" } }) {
+          term_id
+          market_cap
+          position_count
+          curve_id
+        }
+      }
+
+      counter_term {
+        vaults(where: { curve_id: { _eq: "1" } }) {
+          term_id
+          market_cap
+          position_count
+          curve_id
+        }
+      }
+
+      # Object information for context
+      object {
+        label
+        image
+        data
+      }
+    }
+
+    chainlink_prices(limit: 1, order_by: { id: desc }) {
+      usd
+    }
+  }
 `;

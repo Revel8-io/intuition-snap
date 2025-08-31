@@ -12,7 +12,8 @@ export type Atom = {
 export type Account = {
   id: string;
   label: string;
-  image: null;
+  image?: string;
+  nickname?: string;
   atom_id: string;
 };
 
@@ -42,19 +43,19 @@ export type Triple = {
 
 export type Vendor = {
   name: string;
-  getNoAccountAtomInfo?: (
+  getNoAccountAtomData?: (
     address: string,
     chainId: string,
   ) => {
     url: string;
   };
-  getAccountAtomNoTripleInfo?: (
+  getAccountAtomNoTrustData?: (
     account: any,
     chainId: string,
   ) => {
     url: string;
   };
-  getAccountAtomTripleInfo?: (
+  getAccountAtomTrustData?: (
     tripleId: string,
     chainId?: string,
   ) => {

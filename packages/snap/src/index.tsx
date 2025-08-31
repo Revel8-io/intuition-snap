@@ -1,7 +1,7 @@
 import type { OnHomePageHandler } from '@metamask/snaps-sdk';
 import { Box, Text, Heading } from '@metamask/snaps-sdk/jsx';
 
-import { getAccountData, renderAccounts } from './account';
+import { getAccountData } from './account';
 
 export const onHomePage: OnHomePageHandler = async () => {
   const accounts = await ethereum.request<string[]>({
@@ -29,7 +29,7 @@ export const onHomePage: OnHomePageHandler = async () => {
   const i7nAccountsData = await Promise.all(i7nAccounts);
 
   return {
-    content: await renderAccounts(i7nAccountsData),
+    content: <div>Hello</div>,
   };
 };
 

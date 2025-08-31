@@ -13,7 +13,9 @@ export type ChainConfig = {
   chain: typeof base | typeof baseSepolia;
   ethRpcUrl: string;
   isAtomId: string;
-  maliciousAtomId: string;
+  trustworthyAtomId: string;
+  relatedImagesAtomId: string;
+  relatedNicknamesAtomId: string;
   backendUrl: string;
 };
 
@@ -29,9 +31,12 @@ export const BASE_MAINNET = {
   currencySymbol: 'ETH',
   decimalPrecision: 18,
   chain: base,
-  maliciousAtomId: '0', // todo: need to be created
+  trustworthyAtomId: '0', // todo: need to be created
   isAtomId: '0', // todo: need to be created
-  ethRpcUrl: process.env.BASE_MAINNET_ETH_RPC_URL as string,
+  relatedImagesAtomId: '0',
+  relatedNicknamesAtomId: '0',
+  ethRpcUrl:
+    'https://base-mainnet.g.alchemy.com/v2/xww_HDMOC0nGOVJL-HtXWxn2oqXOtK5v',
 };
 
 export const BASE_SEPOLIA = {
@@ -46,12 +51,18 @@ export const BASE_SEPOLIA = {
   currencySymbol: 'ETH',
   decimalPrecision: 18,
   chain: baseSepolia,
-  maliciousAtomId: '25202',
-  isAtomId: '24793',
-  ethRpcUrl: process.env.BASE_SEPOLIA_ETH_RPC_URL as string,
+  isAtomId: '26811',
+  trustworthyAtomId: '26858',
+  relatedImagesAtomId: '26848',
+  relatedNicknamesAtomId: '26813',
+  ethRpcUrl:
+    'https://base-sepolia.g.alchemy.com/v2/xww_HDMOC0nGOVJL-HtXWxn2oqXOtK5v',
 };
 
 export const CHAIN_CONFIGS = [BASE_MAINNET, BASE_SEPOLIA];
+
+export const chainConfig =
+  /* process.env.NODE_ENV === 'production' ? BASE_MAINNET : */ BASE_SEPOLIA;
 
 export const getChainConfigByChainId = (
   chainId: number | string,

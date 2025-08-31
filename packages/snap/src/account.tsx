@@ -1,16 +1,21 @@
 import {
   Box,
   Text,
-  Heading,
   Link,
   Row,
   Value,
   Container,
+  Image,
+  Address,
 } from '@metamask/snaps-sdk/jsx';
-import axios from 'axios';
 
 import { type ChainConfig, getChainConfigByChainId } from './config';
-import { getAccountQuery, getTripleWithPositionsDataQuery } from './queries';
+import {
+  getAccountQuery,
+  getListWithHighestStakeQuery,
+  getTripleWithPositionsDataQuery,
+  graphQLQuery,
+} from './queries';
 import type { Account, TripleWithPositions } from './types';
 import { addressToCaip10, stringToDecimal } from './util';
 import { VENDORS } from './vendors';
@@ -19,18 +24,18 @@ export type GetAccountDataResult = {
   account: Account | null;
   triple: TripleWithPositions | null;
   isContract?: boolean;
+  nickname?: string;
 };
 
 export enum AccountType {
-  NoAccount = 'NoAccount', // only need this one or AccountNoAtom
-  AccountNoAtom = 'AccountNoAtom', // only need this or NoAccount
-  AccountAtomNoTriple = 'AccountAtomNoTriple',
-  AccountAtomTriple = 'AccountAtomTriple',
+  NoAccount = 'NoAccount',
+  AccountNoAtom = 'AccountNoAtom',
+  AccountAtomNoTrustData = 'AccountAtomNoTrustData',
+  AccountAtomTrustData = 'AccountAtomTrustData',
 }
 
 export const getAccountData = async (
   destinationAddress: string,
-  _fromAddress: string | null,
   chainId: string,
 ): Promise<GetAccountDataResult | undefined> => {
   const caipAddress = addressToCaip10(destinationAddress, chainId);
@@ -40,14 +45,16 @@ export const getAccountData = async (
       `Chain config not found for chainId: ${chainId} (${typeof chainId})`,
     );
   }
-  const { backendUrl } = chainConfig as ChainConfig;
   try {
-    const accountPromise = axios.post(backendUrl, {
-      query: getAccountQuery,
-      variables: {
-        address: destinationAddress,
-        caipAddress,
-      },
+    console.log(
+      'getAccountData destinatinoAddress',
+      destinationAddress,
+      'caipAddress',
+      caipAddress,
+    );
+    const accountPromise = graphQLQuery(getAccountQuery, {
+      address: destinationAddress,
+      caipAddress,
     });
     const codePromise = ethereum.request({
       method: 'eth_getCode',
@@ -57,50 +64,85 @@ export const getAccountData = async (
       accountPromise,
       codePromise,
     ]);
+    console.log('accountResponse', JSON.stringify(accountResponse, null, 2));
     const {
-      data: {
-        data: { accounts },
-      },
+      data: { accounts },
     } = accountResponse;
     const isContract = accountType !== '0x';
     if (accounts.length === 0) {
+      console.log('getAccountData accounts is empty');
       return { account: null, triple: null, isContract };
     }
 
     if (accounts[0].atom_id === null) {
+      console.log('getAccountData accounts[0].atom_id is null');
       return { account: accounts[0], triple: null, isContract };
     }
 
     // account exists, now check if atom exists
     const { atom_id: atomId } = accounts[0];
+    console.log('getAccountData atomId', atomId);
     const chainConfig = getChainConfigByChainId(chainId);
     if (!chainConfig) {
       throw new Error(
         `Chain config not found for chainId: ${chainId} (${typeof chainId})`,
       );
     }
-    const { isAtomId, maliciousAtomId } = chainConfig as ChainConfig;
-    const payload = {
+    const {
+      isAtomId,
+      trustworthyAtomId,
+      relatedImagesAtomId,
+      relatedNicknamesAtomId,
+    } = chainConfig as ChainConfig;
+    const trustQuery = graphQLQuery(getTripleWithPositionsDataQuery, {
       subjectId: atomId,
       predicateId: isAtomId,
-      objectId: maliciousAtomId,
-    };
-    const {
-      data: { data: triples },
-    }: { data: { data: TripleWithPositions[] } } = await axios.post(
-      backendUrl,
-      {
-        query: getTripleWithPositionsDataQuery,
-        variables: payload,
-      },
-    );
-    if (triples.length === 0) {
-      return { account: accounts[0], triple: null, isContract };
+      objectId: trustworthyAtomId,
+    });
+    const imageQuery = graphQLQuery(getListWithHighestStakeQuery, {
+      subjectId: atomId,
+      predicateId: relatedImagesAtomId,
+    });
+    const nicknameQuery = graphQLQuery(getListWithHighestStakeQuery, {
+      subjectId: atomId,
+      predicateId: relatedNicknamesAtomId,
+    });
+    const [trustResponse, imageResponse, nicknameResponse] = await Promise.all([
+      trustQuery,
+      imageQuery,
+      nicknameQuery,
+    ]);
+    console.log('getAccountData trustQueryResponse', trustResponse);
+    console.log('getAccountData imageResponse', imageResponse);
+    console.log('getAccountData nicknameResponse', nicknameResponse);
+    const trustTriple = trustResponse.data.triples[0];
+    const imageTriple = imageResponse.data.triples[0];
+    const nicknameTriple = nicknameResponse.data.triples[0];
+    const nickname = nicknameTriple?.object?.label;
+    const image = imageTriple?.object?.image;
+    console.log('getAccountData trustTriple', trustTriple);
+    if (!trustTriple) {
+      console.log(
+        'getAccountData triples is empty, accounts[0] is',
+        accounts[0],
+      );
+      return {
+        account: accounts[0],
+        triple: null,
+        isContract,
+        nickname,
+      };
     }
 
-    if (triples.length > 0) {
-      return { account: accounts[0], triple: triples[0] || null, isContract };
+    if (trustTriple) {
+      return {
+        account: accounts[0],
+        triple: trustTriple || null,
+        nickname,
+        isContract,
+      };
     }
+    console.log('getAccountData end of function');
     return { account: null, triple: null, isContract };
   } catch (error: any) {
     console.error('getAccountData error', JSON.stringify(error));
@@ -109,6 +151,8 @@ export const getAccountData = async (
 
 export const getAccountType = (accountData: any): AccountType => {
   const { account, triple } = accountData;
+  console.log('getAccountType accounData', accountData);
+
   if (account === null) {
     return AccountType.NoAccount;
   }
@@ -116,10 +160,11 @@ export const getAccountType = (accountData: any): AccountType => {
     return AccountType.AccountNoAtom;
   }
   if (triple === null) {
-    return AccountType.AccountAtomNoTriple;
+    console.log('getAccountType triple is null');
+    return AccountType.AccountAtomNoTrustData;
   }
   if (triple) {
-    return AccountType.AccountAtomTriple;
+    return AccountType.AccountAtomTrustData;
   }
   return AccountType.NoAccount; // default
 };
@@ -127,11 +172,11 @@ export const getAccountType = (accountData: any): AccountType => {
 export const renderNoAccount = (address: string, chainId: string) => {
   const links = [];
   for (const vendor of Object.values(VENDORS)) {
-    const { name, getNoAccountAtomInfo } = vendor;
-    if (!getNoAccountAtomInfo) {
+    const { name, getNoAccountAtomData } = vendor;
+    if (!getNoAccountAtomData) {
       continue;
     }
-    const { url } = getNoAccountAtomInfo(address, chainId);
+    const { url } = getNoAccountAtomData(address, chainId);
     links.push(<Link href={url}>Create atom on {name}</Link>);
   }
 
@@ -148,26 +193,28 @@ export const renderNoAccount = (address: string, chainId: string) => {
 export const renderAccountNoAtom = renderNoAccount;
 
 // need to complete the triple, we already have atom_id
-export const renderAccountAtomNoTriple = (
+export const renderAccountAtomNoTrustData = (
   account: Account,
   chainId: string,
 ) => {
   const links = [];
 
   for (const vendor of Object.values(VENDORS)) {
-    const { name, getAccountAtomNoTripleInfo } = vendor;
-    if (!getAccountAtomNoTripleInfo) {
+    const { name, getAccountAtomNoTrustData } = vendor;
+    if (!getAccountAtomNoTrustData) {
       continue;
     }
-    const { url } = getAccountAtomNoTripleInfo(account, chainId);
+    const { url } = getAccountAtomNoTrustData(account, chainId);
     links.push(
       <Link href={url}>Is this address trustworthy? Vote on {name}</Link>,
     );
   }
 
+  console.log('renderAccountAtomNoTrustData account', account);
   return (
     <Box>
       <Text>Atom exists for {account.id}</Text>
+      {!!account.nickname && <Text>Nickname: {account.nickname}</Text>}
       {links.map((linkComponent) => linkComponent)}
     </Box>
   );
@@ -175,8 +222,15 @@ export const renderAccountAtomNoTriple = (
 
 export const renderAccountAtomTriple = (
   tripleQueryResponse: TripleWithPositions,
+  accountData: GetAccountDataResult,
   chainlinkPrices: { usd: number } = { usd: 3500 },
 ) => {
+  console.log(
+    'renderAccountAtomTriple tripleQueryResponse',
+    tripleQueryResponse,
+    'accountData',
+    accountData,
+  );
   const { counter_term, term, positions, counter_positions, term_id } =
     tripleQueryResponse;
 
@@ -190,27 +244,42 @@ export const renderAccountAtomTriple = (
 
   const links = [];
   for (const vendor of Object.values(VENDORS)) {
-    const { name, getAccountAtomTripleInfo } = vendor;
-    if (!getAccountAtomTripleInfo) {
+    const { name, getAccountAtomTrustData } = vendor;
+    if (!getAccountAtomTrustData) {
       continue;
     }
-    const { stakeTripleUrl } = getAccountAtomTripleInfo(term_id);
+    const { stakeTripleUrl } = getAccountAtomTrustData(term_id);
     links.push(<Link href={stakeTripleUrl}>Voice your opinion on {name}</Link>);
   }
 
+  console.log(
+    'renderAccountAtomTriple accountData.account',
+    accountData.account,
+  );
   return (
     <Container>
       <Box>
-        <Heading>Is trustworthy:</Heading>
-        <Row label={`Support (${positions.length})`}>
+        {/* <Heading>Trustworthy:</Heading> */}
+        <Row label="Address">
+          <Address address={accountData.account?.id || ''} />
+        </Row>
+        {accountData.nickname && (
+          <Row label="Nickname">
+            <Value value={`"${accountData.nickname}"`} extra="" />
+          </Row>
+        )}
+        {/* <Row label="Nickname">
+          <Value value={accountData.nickname || ''} />
+        </Row> */}
+        <Row label={`Trustworthy (${positions.length})`}>
           <Value
-            value={`${supportMarketCapEth.toFixed(6)} ETH`}
+            value={`${supportMarketCapEth.toFixed(6)} Ξ`}
             extra={`$${supportMarketCapFiat.toFixed(2)} `}
           />
         </Row>
-        <Row label={`Oppose (${counter_positions.length})`}>
+        <Row label={`Not trustworthy (${counter_positions.length})`}>
           <Value
-            value={`${opposeMarketCapEth.toFixed(6)} ETH`}
+            value={`${opposeMarketCapEth.toFixed(6)} Ξ`}
             extra={`$${opposeMarketCapFiat.toFixed(2)} `}
           />
         </Row>
