@@ -199,13 +199,14 @@ export const renderNoAccount = (address: string, chainId: string) => {
       continue;
     }
     const { url } = getNoAccountAtomData(address, chainId);
-    links.push(<Link href={url}>Create atom on {name}</Link>);
+    links.push(<Link href={url}>{name}</Link>);
   }
 
   return (
     <Box>
       <Text>
-        No information about this account on intuition, yet! {address}
+        No information about this account on Intuition, yet! Click a link below
+        to contribute
       </Text>
       {links.map((linkComponent) => linkComponent)}
     </Box>
@@ -220,7 +221,6 @@ export const RenderAccountAtomNoTrustData = ({
   chainId,
   isContract,
   nickname,
-  triple,
 }: {
   account: Account;
   chainId: string;
