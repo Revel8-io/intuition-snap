@@ -3,6 +3,8 @@ import type { Account } from '../types';
 
 const origin = 'https://localhost:3000';
 
+
+
 export const revel8 = {
   name: 'Revel8',
   getNoAccountAtomData: (address: string, chainId: string) => {
@@ -10,7 +12,7 @@ export const revel8 = {
       url: `${origin}/redirect/complete_address_trustworthy_triple?address=${address}&chain_id=${chainId}`,
     };
   },
-  getAccountAtomNoTrustData: (account: Account, chainId: string) => {
+  getAccountAtomNoTrustData: (atomId: string | number, chainId: string) => {
     const chainConfig = getChainConfigByChainId(chainId);
     if (!chainConfig) {
       throw new Error(
@@ -18,7 +20,6 @@ export const revel8 = {
       );
     }
     const { isAtomId, trustworthyAtomId } = chainConfig as ChainConfig;
-    const { atom_id: atomId } = account;
     return {
       url: `${origin}/atoms/${atomId}?modal=complete_triple&chain_id=${chainId}&atom_ids=${atomId},${isAtomId},${trustworthyAtomId}`,
     };
@@ -29,6 +30,7 @@ export const revel8 = {
   ) => {
     return {
       stakeTripleUrl: `${origin}/triples/${tripleId}?modal=stake_triple&direction=support`,
+      url: `${origin}/triples/${tripleId}?modal=stake_triple&direction=support`,
     };
   },
 };

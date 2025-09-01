@@ -5,10 +5,9 @@ import {
   Row,
   Value,
   Container,
-  Image,
   Address,
+  Button,
 } from '@metamask/snaps-sdk/jsx';
-
 import { type ChainConfig, getChainConfigByChainId } from './config';
 import {
   getAccountQuery,
@@ -19,6 +18,29 @@ import {
 import type { Account, TripleWithPositions } from './types';
 import { addressToCaip10, stringToDecimal } from './util';
 import { VENDORS } from './vendors';
+
+// State management utilities
+export const getSnapState = async (): Promise<{ uiMode: string } | null> => {
+  return (await snap.request({
+    method: 'snap_manageState',
+    params: { operation: 'get' },
+  })) as { uiMode: string } | null;
+};
+
+export const setSnapState = async (newState: { uiMode: string }) => {
+  await snap.request({
+    method: 'snap_manageState',
+    params: { operation: 'update', newState },
+  });
+};
+
+export const getInterfaceContext = async (interfaceId: string) =>
+  await snap.request({
+    method: 'snap_getInterfaceContext',
+    params: {
+      id: interfaceId,
+    },
+  });
 
 export type GetAccountDataResult = {
   account: Account | null;
@@ -193,10 +215,25 @@ export const renderNoAccount = (address: string, chainId: string) => {
 export const renderAccountNoAtom = renderNoAccount;
 
 // need to complete the triple, we already have atom_id
-export const renderAccountAtomNoTrustData = (
-  account: Account,
-  chainId: string,
-) => {
+export const RenderAccountAtomNoTrustData = ({
+  account,
+  chainId,
+  isContract,
+  nickname,
+  triple,
+}: {
+  account: Account;
+  chainId: string;
+  isContract: boolean;
+  nickname: string;
+  triple: null;
+}) => {
+  console.log(
+    'RenderAccountAtomNoTrustData chainId',
+    chainId,
+    ' account',
+    account,
+  );
   const links = [];
 
   for (const vendor of Object.values(VENDORS)) {
@@ -211,22 +248,23 @@ export const renderAccountAtomNoTrustData = (
   }
 
   console.log('renderAccountAtomNoTrustData account', account);
+  console.log('renderAccountAtomNoTrustData nickname', nickname);
   return (
     <Box>
       <Text>Atom exists for {account.id}</Text>
-      {!!account.nickname && <Text>Nickname: {account.nickname}</Text>}
-      {links.map((linkComponent) => linkComponent)}
+      {!!nickname && <Text>Nickname: {nickname}</Text>}
+      <Button name="rate_accountAtomNoTrustData">Rate account</Button>
     </Box>
   );
 };
 
-export const renderAccountAtomTriple = (
+export const renderAccountAtomTrustData = (
   tripleQueryResponse: TripleWithPositions,
   accountData: GetAccountDataResult,
   chainlinkPrices: { usd: number } = { usd: 3500 },
 ) => {
   console.log(
-    'renderAccountAtomTriple tripleQueryResponse',
+    'renderAccountAtomTrustData tripleQueryResponse',
     tripleQueryResponse,
     'accountData',
     accountData,
@@ -253,7 +291,7 @@ export const renderAccountAtomTriple = (
   }
 
   console.log(
-    'renderAccountAtomTriple accountData.account',
+    'renderAccountAtomTrustData accountData.account',
     accountData.account,
   );
   return (

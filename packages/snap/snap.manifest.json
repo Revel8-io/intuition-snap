@@ -7,7 +7,7 @@
     "url": "https://github.com/0xIntuition/intuition-snap.git"
   },
   "source": {
-    "shasum": "QxQj/fTLTjukzeefoOKdClf3VppiTYFRVZsrhjTLelA=",
+    "shasum": "+vmxJpcklj7NKAGcMChfyL+8fKJSy+Ic8zlYuHnCe1w=",
     "location": {
       "npm": {
         "filePath": "dist/bundle.js",
@@ -19,6 +19,7 @@
   },
   "initialPermissions": {
     "snap_dialog": {},
+    "snap_manageState": {},
     "endowment:page-home": {},
     "endowment:transaction-insight": {},
     "endowment:ethereum-provider": {},
