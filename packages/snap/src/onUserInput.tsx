@@ -21,12 +21,17 @@ type OnUserInputProps = {
 export const onUserInput: OnUserInputHandler = async (
   props: OnUserInputProps,
 ) => {
+  console.group('onUserInput');
   if (!props.event.name) return;
-  console.log('onUserInput props', JSON.stringify(props, null, 2));
+  console.log('props', JSON.stringify(props));
   const [type, method] = props.event.name.split('_');
+  console.log('type', type);
+  console.log('method', method);
   const renderFn = components[type]?.[method];
-
-  const params = { ...props, context: props.context };
+  console.log('renderFn', renderFn);
+  const params = { ...props, context: props.context, type, method };
+  console.log('params', JSON.stringify(params));
+  console.groupEnd();
   await snap.request({
     method: 'snap_updateInterface',
     params: {

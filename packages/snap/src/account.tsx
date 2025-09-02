@@ -18,6 +18,8 @@ import {
 import type { Account, TripleWithPositions } from './types';
 import { addressToCaip10, stringToDecimal } from './util';
 import { VENDORS } from './vendors';
+import { AccountComponents } from './components';
+import { Identity } from './onTransaction';
 
 // State management utilities
 export const getSnapState = async (): Promise<any> => {
@@ -151,62 +153,25 @@ export const getAccountType = (accountData: any): AccountType => {
   return AccountType.NoAccount; // default
 };
 
-export const renderNoAccount = (address: string, chainId: string) => {
-  const links = [];
-  for (const vendor of Object.values(VENDORS)) {
-    const { name, getNoAccountAtomData } = vendor;
-    if (!getNoAccountAtomData) {
-      continue;
-    }
-    const { url } = getNoAccountAtomData(address, chainId);
-    links.push(<Link href={url}>{name}</Link>);
-  }
-
+export const renderNoAccount = ({
+  address,
+  chainId,
+}: {
+  address: string;
+  chainId: string;
+}) => {
   return (
     <Box>
       <Text>
         No information about this account on Intuition, yet! Click a link below
         to contribute:
       </Text>
-      {links.map((linkComponent) => linkComponent)}
+      <Button name="rate_noAccount">Create atom</Button>
     </Box>
   );
 };
 
 export const renderAccountNoAtom = renderNoAccount;
-
-// need to complete the triple, we already have atom_id
-export const RenderAccountAtomNoTrustData = ({
-  account,
-  chainId,
-  nickname,
-}: {
-  account: Account;
-  chainId: string;
-  nickname: string;
-}) => {
-  const links = [];
-
-  for (const vendor of Object.values(VENDORS)) {
-    const { name, getAccountAtomNoTrustData } = vendor;
-    if (!getAccountAtomNoTrustData) {
-      continue;
-    }
-    //
-    const { url } = getAccountAtomNoTrustData(account.atom_id, chainId);
-    links.push(
-      <Link href={url}>Is this address trustworthy? Vote on {name}</Link>,
-    );
-  }
-
-  return (
-    <Box>
-      <Text>Atom exists for {account.id}</Text>
-      {!!nickname && <Text>Nickname: {nickname}</Text>}
-      <Button name="rate_accountAtomNoTrustData">Rate account</Button>
-    </Box>
-  );
-};
 
 export const renderAccountAtomTrustData = (
   tripleQueryResponse: TripleWithPositions,
@@ -230,8 +195,8 @@ export const renderAccountAtomTrustData = (
     if (!getAccountAtomTrustData) {
       continue;
     }
-    const { stakeTripleUrl } = getAccountAtomTrustData(term_id);
-    links.push(<Link href={stakeTripleUrl}>Voice your opinion on {name}</Link>);
+    const { url } = getAccountAtomTrustData(term_id);
+    links.push(<Link href={url}>Voice your opinion on {name}</Link>);
   }
 
   return (
@@ -263,33 +228,24 @@ export const renderAccountAtomTrustData = (
   );
 };
 
-export const renderOnTransaction = (props) => {
+export const renderOnTransaction = (props: Identity) => {
+  console.log('renderOnTransaction props', JSON.stringify(props, null, 2));
   const combinedProps = { ...props, ...props.context };
-  const { triple, accountType, to, chainId, account, nickname } = combinedProps;
+  const { accountType } = combinedProps;
   let initialUI = null;
   switch (accountType) {
     case AccountType.NoAccount:
     case AccountType.AccountNoAtom:
-      initialUI = renderNoAccount(to, chainId);
+      initialUI = <AccountComponents.NoAccount {...combinedProps} />;
       break;
     case AccountType.AccountAtomNoTrustData:
-      initialUI = (
-        <RenderAccountAtomNoTrustData
-          account={account}
-          chainId={chainId}
-          nickname={nickname}
-        />
-      );
+      initialUI = <AccountComponents.AtomWihoutTrustData {...combinedProps} />;
       break;
     case AccountType.AccountAtomTrustData:
-      initialUI = renderAccountAtomTrustData(triple, { ...combinedProps });
+      initialUI = <AccountComponents.AtomWithTrustData {...combinedProps} />;
       break;
     default:
       initialUI = null;
   }
   return initialUI;
-};
-
-export const AccountComponents = {
-  renderOnTransaction,
 };

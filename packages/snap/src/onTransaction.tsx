@@ -11,11 +11,27 @@ import {
   setSnapState,
   renderOnTransaction,
 } from './account';
+import { Account, TripleWithPositions } from './types';
 
 export type NavigationContext = {
   address: string;
   chainId: string;
   initialUI: string | null;
+};
+
+export type OnTransactionContext = {
+  address: string;
+  chainId: `0x${string}`;
+  account: Account;
+  triple: TripleWithPositions | null;
+  nickname: string;
+  isContract: boolean;
+  initialUI?: any;
+};
+
+export type OnTransactionProps = {
+  context: OnTransactionContext;
+  method: string;
 };
 
 export const onTransaction: OnTransactionHandler = async ({
@@ -26,21 +42,21 @@ export const onTransaction: OnTransactionHandler = async ({
   chainId: ChainId;
 }) => {
   // MetaMask addresses come in as 0x______
-  let { to } = transaction;
-  // to = '0x0000000000000000400000000000000000000000';
+  let { to: address } = transaction;
+  address = '0x0000000000000000500000000000000000000000';
   console.log('onTransaction chainId', chainId);
 
-  const accountData = await getAccountData(to, chainId);
+  const accountData = await getAccountData(address, chainId);
   const accountType = getAccountType(accountData);
 
   const initialUI = renderOnTransaction({
     ...accountData,
     accountType,
-    to,
+    address,
     chainId,
   });
   const context: NavigationContext = {
-    address: to,
+    address,
     chainId,
     initialUI,
     accountType,

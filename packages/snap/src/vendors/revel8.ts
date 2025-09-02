@@ -1,11 +1,20 @@
 import { type Vendor } from '.';
 import { getChainConfigByChainId, type ChainConfig } from '../config';
-import { type OnTransactionProps } from '../cta';
+import { type OnTransactionProps } from '../onTransaction';
 
 const origin = 'https://localhost:3000';
 
 export const revel8: Vendor = {
   name: 'Revel8',
+  noAccount: (params: OnTransactionProps) => {
+    console.log('revel8->noAccount params', params);
+    const {
+      context: { address, chainId },
+    } = params;
+    return {
+      url: `${origin}/redirect/complete_address_trustworthy_triple?address=${address}&chain_id=${chainId}`,
+    };
+  },
   getNoAccountAtomData: (params: OnTransactionProps) => {
     const {
       context: { address, chainId },

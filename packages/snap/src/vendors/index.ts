@@ -1,5 +1,5 @@
 import { revel8 } from './revel8';
-import { type OnTransactionProps } from '../cta';
+import { type OnTransactionProps } from '../onTransaction';
 
 type VendorCtaResponse = {
   url: string;
@@ -7,6 +7,7 @@ type VendorCtaResponse = {
 
 export type Vendor = {
   name: string;
+  noAccount?: (props: OnTransactionProps) => VendorCtaResponse;
   getNoAccountAtomData?: (props: OnTransactionProps) => VendorCtaResponse;
   getAccountAtomNoTrustData?: (props: OnTransactionProps) => VendorCtaResponse;
   getAccountAtomTrustData?: (props: OnTransactionProps) => VendorCtaResponse;
