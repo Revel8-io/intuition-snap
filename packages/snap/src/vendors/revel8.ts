@@ -29,7 +29,6 @@ export const revel8 = {
     _chainId?: string, // needed or no?
   ) => {
     return {
-      stakeTripleUrl: `${origin}/triples/${tripleId}?modal=stake_triple&direction=support`,
       url: `${origin}/triples/${tripleId}?modal=stake_triple&direction=support`,
     };
   },

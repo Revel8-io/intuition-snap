@@ -206,7 +206,7 @@ export const renderNoAccount = (address: string, chainId: string) => {
     <Box>
       <Text>
         No information about this account on Intuition, yet! Click a link below
-        to contribute
+        to contribute:
       </Text>
       {links.map((linkComponent) => linkComponent)}
     </Box>
@@ -297,7 +297,6 @@ export const renderAccountAtomTrustData = (
   return (
     <Container>
       <Box>
-        {/* <Heading>Trustworthy:</Heading> */}
         <Row label="Address">
           <Address address={accountData.account?.id || ''} />
         </Row>
@@ -306,9 +305,6 @@ export const renderAccountAtomTrustData = (
             <Value value={`"${accountData.nickname}"`} extra="" />
           </Row>
         )}
-        {/* <Row label="Nickname">
-          <Value value={accountData.nickname || ''} />
-        </Row> */}
         <Row label={`Trustworthy (${positions.length})`}>
           <Value
             value={`${supportMarketCapEth.toFixed(6)} Ξ`}
@@ -321,8 +317,44 @@ export const renderAccountAtomTrustData = (
             extra={`$${opposeMarketCapFiat.toFixed(2)} `}
           />
         </Row>
-        {links.map((linkComponent) => linkComponent)}
+        <Button name="rate_accountAtomTrustData">Rate account</Button>
       </Box>
     </Container>
   );
+};
+
+export const renderOnTransaction = (props) => {
+  const combinedProps = { ...props, ...props.context };
+  console.log(
+    'renderOnTransaction combinedProps',
+    JSON.stringify(combinedProps, null, 2),
+  );
+  const { triple, accountType, to, chainId, address } = combinedProps;
+  console.log('renderOnTransaction triple', triple);
+  let initialUI = null;
+  console.log('renderOnTransaction accountType', accountType);
+  switch (accountType) {
+    case AccountType.NoAccount:
+    case AccountType.AccountNoAtom:
+      console.log('onTransaction AccountType.NoAccount');
+      initialUI = renderNoAccount(to, chainId);
+      break;
+    case AccountType.AccountAtomNoTrustData:
+      console.log('onTransaction AccountType.AccountAtomNoTrustData');
+      initialUI = (
+        <RenderAccountAtomNoTrustData address={address} chainId={chainId} />
+      );
+      break;
+    case AccountType.AccountAtomTrustData:
+      console.log('onTransaction AccountType.AccountAtomTrustData');
+      initialUI = renderAccountAtomTrustData(triple, { ...combinedProps });
+      break;
+    default:
+      initialUI = null;
+  }
+  return initialUI;
+};
+
+export const AccountComponents = {
+  renderOnTransaction,
 };
