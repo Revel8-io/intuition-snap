@@ -23,7 +23,7 @@ export const accountAtomNoTrustData = (props) => {
   });
   return (
     <Box>
-      <Text>Rate this account on:</Text>
+      <Text>Choose an app to complete your action:</Text>
       {links}
       <Button name="account_renderOnTransaction">Back</Button>
     </Box>

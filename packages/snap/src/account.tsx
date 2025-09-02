@@ -20,11 +20,11 @@ import { addressToCaip10, stringToDecimal } from './util';
 import { VENDORS } from './vendors';
 
 // State management utilities
-export const getSnapState = async (): Promise<{ uiMode: string } | null> => {
-  return (await snap.request({
+export const getSnapState = async (): Promise<any> => {
+  return await snap.request({
     method: 'snap_manageState',
     params: { operation: 'get' },
-  })) as { uiMode: string } | null;
+  });
 };
 
 export const setSnapState = async (newState: { uiMode: string }) => {
@@ -33,14 +33,6 @@ export const setSnapState = async (newState: { uiMode: string }) => {
     params: { operation: 'update', newState },
   });
 };
-
-export const getInterfaceContext = async (interfaceId: string) =>
-  await snap.request({
-    method: 'snap_getInterfaceContext',
-    params: {
-      id: interfaceId,
-    },
-  });
 
 export type GetAccountDataResult = {
   account: Account | null;
@@ -68,12 +60,6 @@ export const getAccountData = async (
     );
   }
   try {
-    console.log(
-      'getAccountData destinatinoAddress',
-      destinationAddress,
-      'caipAddress',
-      caipAddress,
-    );
     const accountPromise = graphQLQuery(getAccountQuery, {
       address: destinationAddress,
       caipAddress,
@@ -86,68 +72,45 @@ export const getAccountData = async (
       accountPromise,
       codePromise,
     ]);
-    console.log('accountResponse', JSON.stringify(accountResponse, null, 2));
     const {
       data: { accounts },
     } = accountResponse;
     const isContract = accountType !== '0x';
     if (accounts.length === 0) {
-      console.log('getAccountData accounts is empty');
       return { account: null, triple: null, isContract };
     }
 
     if (accounts[0].atom_id === null) {
-      console.log('getAccountData accounts[0].atom_id is null');
       return { account: accounts[0], triple: null, isContract };
     }
 
     // account exists, now check if atom exists
     const { atom_id: atomId } = accounts[0];
-    console.log('getAccountData atomId', atomId);
     const chainConfig = getChainConfigByChainId(chainId);
     if (!chainConfig) {
       throw new Error(
         `Chain config not found for chainId: ${chainId} (${typeof chainId})`,
       );
     }
-    const {
-      isAtomId,
-      trustworthyAtomId,
-      relatedImagesAtomId,
-      relatedNicknamesAtomId,
-    } = chainConfig as ChainConfig;
+    const { isAtomId, trustworthyAtomId, relatedNicknamesAtomId } =
+      chainConfig as ChainConfig;
     const trustQuery = graphQLQuery(getTripleWithPositionsDataQuery, {
       subjectId: atomId,
       predicateId: isAtomId,
       objectId: trustworthyAtomId,
     });
-    const imageQuery = graphQLQuery(getListWithHighestStakeQuery, {
-      subjectId: atomId,
-      predicateId: relatedImagesAtomId,
-    });
     const nicknameQuery = graphQLQuery(getListWithHighestStakeQuery, {
       subjectId: atomId,
       predicateId: relatedNicknamesAtomId,
     });
-    const [trustResponse, imageResponse, nicknameResponse] = await Promise.all([
+    const [trustResponse, nicknameResponse] = await Promise.all([
       trustQuery,
-      imageQuery,
       nicknameQuery,
     ]);
-    console.log('getAccountData trustQueryResponse', trustResponse);
-    console.log('getAccountData imageResponse', imageResponse);
-    console.log('getAccountData nicknameResponse', nicknameResponse);
     const trustTriple = trustResponse.data.triples[0];
-    const imageTriple = imageResponse.data.triples[0];
     const nicknameTriple = nicknameResponse.data.triples[0];
     const nickname = nicknameTriple?.object?.label;
-    const image = imageTriple?.object?.image;
-    console.log('getAccountData trustTriple', trustTriple);
     if (!trustTriple) {
-      console.log(
-        'getAccountData triples is empty, accounts[0] is',
-        accounts[0],
-      );
       return {
         account: accounts[0],
         triple: null,
@@ -164,7 +127,6 @@ export const getAccountData = async (
         isContract,
       };
     }
-    console.log('getAccountData end of function');
     return { account: null, triple: null, isContract };
   } catch (error: any) {
     console.error('getAccountData error', JSON.stringify(error));
@@ -173,7 +135,6 @@ export const getAccountData = async (
 
 export const getAccountType = (accountData: any): AccountType => {
   const { account, triple } = accountData;
-  console.log('getAccountType accounData', accountData);
 
   if (account === null) {
     return AccountType.NoAccount;
@@ -182,7 +143,6 @@ export const getAccountType = (accountData: any): AccountType => {
     return AccountType.AccountNoAtom;
   }
   if (triple === null) {
-    console.log('getAccountType triple is null');
     return AccountType.AccountAtomNoTrustData;
   }
   if (triple) {
@@ -219,21 +179,12 @@ export const renderAccountNoAtom = renderNoAccount;
 export const RenderAccountAtomNoTrustData = ({
   account,
   chainId,
-  isContract,
   nickname,
 }: {
   account: Account;
   chainId: string;
-  isContract: boolean;
   nickname: string;
-  triple: null;
 }) => {
-  console.log(
-    'RenderAccountAtomNoTrustData chainId',
-    chainId,
-    ' account',
-    account,
-  );
   const links = [];
 
   for (const vendor of Object.values(VENDORS)) {
@@ -241,14 +192,13 @@ export const RenderAccountAtomNoTrustData = ({
     if (!getAccountAtomNoTrustData) {
       continue;
     }
-    const { url } = getAccountAtomNoTrustData(account, chainId);
+    //
+    const { url } = getAccountAtomNoTrustData(account.atom_id, chainId);
     links.push(
       <Link href={url}>Is this address trustworthy? Vote on {name}</Link>,
     );
   }
 
-  console.log('renderAccountAtomNoTrustData account', account);
-  console.log('renderAccountAtomNoTrustData nickname', nickname);
   return (
     <Box>
       <Text>Atom exists for {account.id}</Text>
@@ -263,12 +213,6 @@ export const renderAccountAtomTrustData = (
   accountData: GetAccountDataResult,
   chainlinkPrices: { usd: number } = { usd: 3500 },
 ) => {
-  console.log(
-    'renderAccountAtomTrustData tripleQueryResponse',
-    tripleQueryResponse,
-    'accountData',
-    accountData,
-  );
   const { counter_term, term, positions, counter_positions, term_id } =
     tripleQueryResponse;
 
@@ -290,10 +234,6 @@ export const renderAccountAtomTrustData = (
     links.push(<Link href={stakeTripleUrl}>Voice your opinion on {name}</Link>);
   }
 
-  console.log(
-    'renderAccountAtomTrustData accountData.account',
-    accountData.account,
-  );
   return (
     <Container>
       <Box>
@@ -325,28 +265,23 @@ export const renderAccountAtomTrustData = (
 
 export const renderOnTransaction = (props) => {
   const combinedProps = { ...props, ...props.context };
-  console.log(
-    'renderOnTransaction combinedProps',
-    JSON.stringify(combinedProps, null, 2),
-  );
-  const { triple, accountType, to, chainId, address } = combinedProps;
-  console.log('renderOnTransaction triple', triple);
+  const { triple, accountType, to, chainId, account, nickname } = combinedProps;
   let initialUI = null;
-  console.log('renderOnTransaction accountType', accountType);
   switch (accountType) {
     case AccountType.NoAccount:
     case AccountType.AccountNoAtom:
-      console.log('onTransaction AccountType.NoAccount');
       initialUI = renderNoAccount(to, chainId);
       break;
     case AccountType.AccountAtomNoTrustData:
-      console.log('onTransaction AccountType.AccountAtomNoTrustData');
       initialUI = (
-        <RenderAccountAtomNoTrustData address={address} chainId={chainId} />
+        <RenderAccountAtomNoTrustData
+          account={account}
+          chainId={chainId}
+          nickname={nickname}
+        />
       );
       break;
     case AccountType.AccountAtomTrustData:
-      console.log('onTransaction AccountType.AccountAtomTrustData');
       initialUI = renderAccountAtomTrustData(triple, { ...combinedProps });
       break;
     default:

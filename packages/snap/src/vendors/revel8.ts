@@ -1,9 +1,6 @@
 import { getChainConfigByChainId, type ChainConfig } from '../config';
-import type { Account } from '../types';
 
 const origin = 'https://localhost:3000';
-
-
 
 export const revel8 = {
   name: 'Revel8',

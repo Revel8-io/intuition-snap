@@ -9,18 +9,9 @@ import type {
 import {
   getAccountData,
   getAccountType,
-  AccountType as Type,
-  renderNoAccount,
-  renderAccountAtomNoTrustData,
-  renderAccountAtomTrustData,
-  type GetAccountDataResult,
   setSnapState,
-  RenderAccountAtomNoTrustData,
   renderOnTransaction,
 } from './account';
-import { VENDORS } from './vendors';
-import { Account, TripleWithPositions } from './types';
-import { Box, Button, Text } from '@metamask/snaps-sdk/jsx';
 import { rate } from './cta';
 import { AccountComponents as account } from './account';
 
@@ -28,6 +19,11 @@ type NavigationContext = {
   address: string;
   chainId: string;
   initialUI: string | null;
+};
+
+const components = {
+  account,
+  rate,
 };
 
 export const onTransaction: OnTransactionHandler = async ({
@@ -39,7 +35,7 @@ export const onTransaction: OnTransactionHandler = async ({
 }) => {
   // MetaMask addresses come in as 0x______
   let { to } = transaction;
-  to = '0x0000000000000000400000000000000000000000';
+  // to = '0x0000000000000000400000000000000000000000';
   console.log('onTransaction chainId', chainId);
 
   const accountData = await getAccountData(to, chainId);
@@ -81,23 +77,14 @@ type OnUserInputProps = {
   id: string;
 };
 
-const components = {
-  account,
-  rate,
-};
-
 export const onUserInput: OnUserInputHandler = async (
   props: OnUserInputProps,
 ) => {
-  // Handle your specific "Rate account" button
   if (!props.event.name) return;
-  console.log('Rate account button clicked! props.context', props.context);
   const [type, method] = props.event.name.split('_');
-  console.log('onUserInput type', type, 'method', method);
   const renderFn = components[type]?.[method];
 
   const params = { ...props, context: props.context };
-  console.log('onUserInput params', params);
   await snap.request({
     method: 'snap_updateInterface',
     params: {
