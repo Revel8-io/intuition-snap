@@ -3,7 +3,6 @@ import type {
   EIP1559Transaction,
   LegacyTransaction,
   OnTransactionHandler,
-  OnUserInputHandler,
 } from '@metamask/snaps-sdk';
 
 import {
@@ -12,18 +11,11 @@ import {
   setSnapState,
   renderOnTransaction,
 } from './account';
-import { rate } from './cta';
-import { AccountComponents as account } from './account';
 
-type NavigationContext = {
+export type NavigationContext = {
   address: string;
   chainId: string;
   initialUI: string | null;
-};
-
-const components = {
-  account,
-  rate,
 };
 
 export const onTransaction: OnTransactionHandler = async ({
@@ -67,29 +59,4 @@ export const onTransaction: OnTransactionHandler = async ({
   return {
     id: interfaceId,
   };
-};
-
-type OnUserInputProps = {
-  event: {
-    name: string;
-  };
-  context: NavigationContext;
-  id: string;
-};
-
-export const onUserInput: OnUserInputHandler = async (
-  props: OnUserInputProps,
-) => {
-  if (!props.event.name) return;
-  const [type, method] = props.event.name.split('_');
-  const renderFn = components[type]?.[method];
-
-  const params = { ...props, context: props.context };
-  await snap.request({
-    method: 'snap_updateInterface',
-    params: {
-      id: props.id,
-      ui: renderFn(params),
-    },
-  });
 };
