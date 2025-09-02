@@ -1,24 +1,23 @@
 import { Box, Text, Link, Button } from '@metamask/snaps-sdk/jsx';
-import { VENDORS } from './vendors';
+import { VENDORS, type Vendor } from './vendors';
 
-export const noAccount = (props) => {};
+export type OnTransactionProps = {
+  context: {
+    address: string;
+    chainId: string;
+    account?: { atom_id: string };
+    initialUI?: any;
+    triple?: { term_id: string };
+  };
+  method: string;
+};
 
-export const accountNoAtom = (props) => {};
-
-export const accountAtomNoTrustData = (props) => {
-  console.log('accountAtomNoTrustData props', JSON.stringify(props, null, 2));
-  const {
-    context: {
-      address,
-      chainId,
-      account: { atom_id },
-    },
-  } = props;
-  const hexChainId = chainId.split(':')[1];
+export const CallToAction = (props: OnTransactionProps) => {
+  const { method } = props;
   const links = Object.values(VENDORS).map((vendor) => {
-    const { getAccountAtomNoTrustData } = vendor;
-    if (!getAccountAtomNoTrustData) return null;
-    const { url } = getAccountAtomNoTrustData(atom_id, hexChainId);
+    const renderFn = vendor[method as keyof Vendor];
+    if (!renderFn) return null;
+    const { url } = renderFn(props);
     return <Link href={url}>{vendor.name}</Link>;
   });
   return (
@@ -30,26 +29,8 @@ export const accountAtomNoTrustData = (props) => {
   );
 };
 
-export const accountAtomTrustData = (props) => {
-  console.log('accountAtomTrustData props', JSON.stringify(props, null, 2));
-  const {
-    context: { tripleId, chainId },
-  } = props;
-  const hexChainId = chainId.split(':')[1];
-  const links = Object.values(VENDORS).map((vendor) => {
-    const { getAccountAtomTrustData } = vendor;
-    if (!getAccountAtomTrustData) return null;
-    const { url } = getAccountAtomTrustData(tripleId, hexChainId);
-    return <Link href={url}>{vendor.name}</Link>;
-  });
-  return (
-    <Box>
-      <Text>Choose an app to complete your action:</Text>
-      {links}
-      <Button name="account_renderOnTransaction">Back</Button>
-    </Box>
-  );
-};
+const accountAtomNoTrustData = CallToAction;
+const accountAtomTrustData = CallToAction;
 
 export const rate = {
   accountAtomNoTrustData,

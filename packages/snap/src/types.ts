@@ -41,28 +41,6 @@ export type Triple = {
   };
 };
 
-export type Vendor = {
-  name: string;
-  getNoAccountAtomData?: (
-    address: string,
-    chainId: string,
-  ) => {
-    url: string;
-  };
-  getAccountAtomNoTrustData?: (
-    account: any,
-    chainId: string,
-  ) => {
-    url: string;
-  };
-  getAccountAtomTrustData?: (
-    tripleId: string,
-    chainId?: string,
-  ) => {
-    stakeTripleUrl: string;
-  };
-};
-
 export type TripleWithPositions = {
   term_id: string;
   subject_id: string;
