@@ -7,27 +7,21 @@ const origin = 'https://localhost:3000';
 
 export const revel8: Vendor = {
   name: 'Revel8',
-  noAccount: (params: OnTransactionProps) => {
+  noAccount: (params: Identity) => {
     console.log('revel8->noAccount params', params);
-    const {
-      context: { address, chainId },
-    } = params;
+    const { address, chainId } = params;
     return {
       url: `${origin}/redirect/complete_address_trustworthy_triple?address=${address}&chain_id=${chainId}`,
     };
   },
-  getNoAccountAtomData: (params: OnTransactionProps) => {
-    const {
-      context: { address, chainId },
-    } = params;
+  noAccountAtomData: (params: Identity) => {
+    const { address, chainId } = params;
     return {
       url: `${origin}/redirect/complete_address_trustworthy_triple?address=${address}&chain_id=${chainId}`,
     };
   },
-  getAccountAtomNoTrustData: (params: OnTransactionProps) => {
-    const {
-      context: { chainId, account },
-    } = params;
+  accountAtomNoTrustData: (params: Identity) => {
+    const { chainId, account } = params;
     if (!account)
       throw new Error('getAccountAtomNoTrustData account not found');
     const { atom_id: atomId } = account;

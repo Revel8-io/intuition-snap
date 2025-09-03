@@ -7,7 +7,7 @@ import { stringToDecimal } from '../util';
 
 export const NoAccount = (params: Identity) => {
   console.log('Account->NoAccount params', params);
-  const address = params.address || params.context.address;
+  const address = params.address;
   console.log('NoAccount address', address);
   if (!address) {
     throw new Error('Missing address');

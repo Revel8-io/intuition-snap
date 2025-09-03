@@ -9,9 +9,9 @@ type VendorCtaResponse = {
 export type Vendor = {
   name: string;
   noAccount?: (props: Identity) => VendorCtaResponse;
-  getNoAccountAtomData?: (props: Identity) => VendorCtaResponse;
-  getAccountAtomNoTrustData?: (props: Identity) => VendorCtaResponse;
-  getAccountAtomTrustData?: (props: Identity) => VendorCtaResponse;
+  noAccountAtomData?: (props: Identity) => VendorCtaResponse;
+  acountAtomNoTrustData?: (props: Identity) => VendorCtaResponse;
+  accountAtomTrustData?: (props: Identity) => VendorCtaResponse;
 };
 // change to array?
 export const VENDORS_LIST: Vendor[] = [revel8];
