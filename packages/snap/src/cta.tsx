@@ -1,22 +1,21 @@
 import { Box, Text, Link, Button } from '@metamask/snaps-sdk/jsx';
 import { VENDORS, type Vendor } from './vendors';
+import { Identity } from './types';
 
-type CallToActionProps = {
-  id: string;
-  event: any;
-  context: any;
+export type CallToActionProps = Identity & {
+  method: string;
 };
 
-export const CallToAction = (props) => {
+export const CallToAction = (props: CallToActionProps) => {
   console.group('CallToAction');
-  console.log('props', JSON.stringify(props));
+  console.log('props', JSON.stringify(props, null, 2));
   const { method } = props;
   console.log('method', method);
   const links = Object.values(VENDORS).map((vendor) => {
-    const renderFn = vendor[method as keyof Vendor];
-    if (!renderFn) return null;
-    console.log('vendor->renderFn', renderFn);
-    const { url } = renderFn(props);
+    const linkGenerator = vendor[method as keyof Vendor];
+    if (!linkGenerator) return;
+    console.log('vendor->linkGenerator', linkGenerator);
+    const { url } = linkGenerator(props);
     return <Link href={url}>{vendor.name}</Link>;
   });
   console.log('CallToAction links', links);

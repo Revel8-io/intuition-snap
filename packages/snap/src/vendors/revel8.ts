@@ -1,3 +1,4 @@
+import { Identity } from 'src/types';
 import { type Vendor } from '.';
 import { getChainConfigByChainId, type ChainConfig } from '../config';
 import { type OnTransactionProps } from '../onTransaction';
@@ -41,10 +42,8 @@ export const revel8: Vendor = {
       url: `${origin}/atoms/${atomId}?modal=complete_triple&chain_id=${chainId}&atom_ids=${atomId},${isAtomId},${trustworthyAtomId}`,
     };
   },
-  getAccountAtomTrustData: (params: OnTransactionProps) => {
-    const {
-      context: { triple },
-    } = params;
+  accountAtomTrustData: (params: Identity) => {
+    const { triple } = params;
     if (!triple) throw new Error('getAccountAtomTrustData triple not found');
     const { term_id: tripleId } = triple;
     return {

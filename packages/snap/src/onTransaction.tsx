@@ -11,17 +11,11 @@ import {
   setSnapState,
   renderOnTransaction,
 } from './account';
-import { Account, TripleWithPositions } from './types';
-
-export type NavigationContext = {
-  address: string;
-  chainId: string;
-  initialUI: string | null;
-};
+import { Account, Identity, TripleWithPositions } from './types';
 
 export type OnTransactionContext = {
-  address: string;
-  chainId: `0x${string}`;
+  address: `0x${string}`;
+  chainId: `epi155:${string}`;
   account: Account;
   triple: TripleWithPositions | null;
   nickname: string;
@@ -55,7 +49,7 @@ export const onTransaction: OnTransactionHandler = async ({
     address,
     chainId,
   });
-  const context: NavigationContext = {
+  const context: Identity = {
     address,
     chainId,
     initialUI,

@@ -9,6 +9,17 @@ export type Atom = {
   as_subject_triples: any[];
 };
 
+export type Identity = {
+  chainId: `epi155:${string}`;
+  isContract: boolean;
+  accountType: string;
+  address: `0x${string}`;
+  account?: Account;
+  triple?: TripleWithPositions | null;
+  nickname?: string;
+  initialUI?: any;
+};
+
 export type Account = {
   id: string;
   label: string;

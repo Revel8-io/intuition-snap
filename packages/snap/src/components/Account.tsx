@@ -1,14 +1,13 @@
 import { Address, Box, Button, Container, Link, Row, Text, Value } from "@metamask/snaps-sdk/jsx";
 import { VENDORS } from '../vendors';
 import { OnTransactionProps } from "../cta";
-import { Account, TripleWithPositions } from "src/types";
-import { GetAccountDataResult } from "src/account";
-import { stringToDecimal } from "../util";
+import { Account, Identity, TripleWithPositions } from 'src/types';
+import { GetAccountDataResult } from 'src/account';
+import { stringToDecimal } from '../util';
 
-
-
-export const NoAccount = (params: OnTransactionProps) => {
-  const address = params.address || params.context.address
+export const NoAccount = (params: Identity) => {
+  console.log('Account->NoAccount params', params);
+  const address = params.address || params.context.address;
   console.log('NoAccount address', address);
   if (!address) {
     throw new Error('Missing address');
@@ -23,9 +22,11 @@ export const NoAccount = (params: OnTransactionProps) => {
       <Button name="rate_noAccount">Create atom</Button>
     </Box>
   );
-}
+};
 
-export const AccountOnly = ({ address, chainId }) => {
+export const AccountOnly = (params: Identity) => {
+  console.log('Account->AccountOnly params', params);
+  const { address, chainId } = params;
   const links = [];
   for (const vendor of Object.values(VENDORS)) {
     const { name, getNoAccountAtomData } = vendor;
@@ -47,15 +48,9 @@ export const AccountOnly = ({ address, chainId }) => {
   );
 };
 
-export const AtomWihoutTrustData = ({
-  account,
-  chainId,
-  nickname,
-}: {
-  account: Account;
-  chainId: string;
-  nickname: string;
-}) => {
+export const AtomWihoutTrustData = (params: Identity) => {
+  console.log('Account->AtomWihoutTrustData params', params);
+  const { account, chainId, nickname } = params;
   const links = [];
 
   for (const vendor of Object.values(VENDORS)) {
@@ -79,37 +74,36 @@ export const AtomWihoutTrustData = ({
   );
 };
 
-export const AtomWithTrustData = ({ account, triple }) => {
-  const chainlinkPrices: { usd: number } = { usd: 3500 }
+export const AtomWithTrustData = (params: Identity) => {
+  console.log('AtomWithTrustData params', JSON.stringify(params, null, 2));
+  const { account, triple, nickname } = params;
+  const chainlinkPrices: { usd: number } = { usd: 3500 };
   const { counter_term, term, positions, counter_positions, term_id } = triple;
 
   const supportMarketCap = term.vaults[0]?.market_cap || '0';
   const supportMarketCapEth = stringToDecimal(supportMarketCap, 18);
   const supportMarketCapFiat = chainlinkPrices.usd * supportMarketCapEth;
-
   const opposeMarketCap = counter_term.vaults[0]?.market_cap || '0';
   const opposeMarketCapEth = stringToDecimal(opposeMarketCap, 18);
   const opposeMarketCapFiat = chainlinkPrices.usd * opposeMarketCapEth;
-
   const links = [];
   for (const vendor of Object.values(VENDORS)) {
     const { name, getAccountAtomTrustData } = vendor;
     if (!getAccountAtomTrustData) {
       continue;
     }
-    const { url } = getAccountAtomTrustData(term_id);
+    const { url } = getAccountAtomTrustData(params);
     links.push(<Link href={url}>Voice your opinion on {name}</Link>);
   }
-
   return (
     <Container>
       <Box>
         <Row label="Address">
-          <Address address={account.account?.id || ''} />
+          <Address address={account.id} />
         </Row>
-        {account.nickname && (
+        {nickname && (
           <Row label="Nickname">
-            <Value value={`"${account.nickname}"`} extra="" />
+            <Value value={`"${nickname}"`} extra="" />
           </Row>
         )}
         <Row label={`Trustworthy (${positions.length})`}>

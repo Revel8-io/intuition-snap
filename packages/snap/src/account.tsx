@@ -153,13 +153,7 @@ export const getAccountType = (accountData: any): AccountType => {
   return AccountType.NoAccount; // default
 };
 
-export const renderNoAccount = ({
-  address,
-  chainId,
-}: {
-  address: string;
-  chainId: string;
-}) => {
+export const renderNoAccount = () => {
   return (
     <Box>
       <Text>
