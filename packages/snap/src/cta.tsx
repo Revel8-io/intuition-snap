@@ -13,7 +13,7 @@ export const CallToAction = (props: CallToActionProps) => {
   console.log('method', method);
   const links = Object.values(VENDORS).map((vendor) => {
     const linkGenerator = vendor[method as keyof Vendor];
-    if (!linkGenerator) return;
+    if (!linkGenerator) return null;
     console.log('vendor->linkGenerator', linkGenerator);
     const { url } = linkGenerator(props);
     return <Link href={url}>{vendor.name}</Link>;

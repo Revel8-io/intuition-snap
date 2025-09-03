@@ -125,8 +125,8 @@ export const AtomWithTrustData = (params: Identity) => {
 };
 
 export const AccountComponents = {
+  NoAccount, // NoAccount and AccountNoAtom render the same UI
   AccountOnly,
-  NoAccount,
   AtomWihoutTrustData,
-  AtomWithTrustData
-}
+  AtomWithTrustData,
+};
