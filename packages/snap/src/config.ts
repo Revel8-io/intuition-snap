@@ -1,2 +1,2 @@
-export const backendUrl = 'https://prod.base.intuition-api.com/v1/graphql';
+export const backendUrl = 'https://testnet.intuition.sh/v1/graphql';
 

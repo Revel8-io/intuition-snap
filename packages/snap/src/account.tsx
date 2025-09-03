@@ -28,7 +28,8 @@ export const getAccountData = async (acc: string, from: string | null, chainId: 
       body: JSON.stringify({
         query: getAccountQuery,
         variables: {
-          address: acc,
+          address: getAddress(acc),
+          lowerAddress: acc,
         },
       }),
     })
@@ -66,23 +67,24 @@ export const getAccountData = async (acc: string, from: string | null, chainId: 
         height: 50,
       })).value
     }
-    if (from !== undefined && from !== null && result.atom?.id !== undefined) {
-      const res2 = await fetch(backendUrl, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          query: getClaimsFromFollowingQuery,
-          variables: {
-            address: from.toLowerCase(),
-            subjectId: result.atom?.id,
-          },
-        }),
-      })
-      const json2 = await res2.json();
-      result.claims = json2.data?.claims_from_following || [];
-    }
+    // FIXME
+    // if (from !== undefined && from !== null && result.atom?.term_id !== undefined) {
+    //   const res2 = await fetch(backendUrl, {
+    //     method: 'POST',
+    //     headers: {
+    //       'Content-Type': 'application/json',
+    //     },
+    //     body: JSON.stringify({
+    //       query: getClaimsFromFollowingQuery,
+    //       variables: {
+    //         address: from,
+    //         subjectId: result.atom?.term_id,
+    //       },
+    //     }),
+    //   })
+    //   const json2 = await res2.json();
+    //   result.claims = json2.data?.positions_from_following || [];
+    // }
 
   } catch (e) {
     console.error(e);
@@ -113,12 +115,12 @@ export const renderAccounts = async (i7nAccountsData: {
       }
 
       const globalTriples = acc.atom?.as_subject_triples?.map((triple: any) => {
-        const emoji = triple.predicate.id === '4' ? triple.predicate.emoji : '🗣️';
+        const emoji = triple.predicate.term_id === '0x49487b1d5bf2734d497d6d9cfcd72cdfbaefb4d4f03ddc310398b24639173c9d' ? triple.predicate.emoji : '🗣️';
 
         return (
           <Card
-            title={`${emoji} ${triple.predicate.id === '4' ? '' : triple.predicate.label} ${triple.object.label}`}
-            value={triple.vault?.position_count.toString()}
+            title={`${emoji} ${triple.predicate.term_id === '0x49487b1d5bf2734d497d6d9cfcd72cdfbaefb4d4f03ddc310398b24639173c9d' ? '' : triple.predicate.label} ${triple.object.label}`}
+            value={triple.triple_vault?.position_count.toString()}
           />
 
         )
@@ -127,12 +129,11 @@ export const renderAccounts = async (i7nAccountsData: {
       const triples: Array<{
         triple: Triple,
         claimsForCount: number,
-        claimsAgainstCount: number,
       }> = [];
 
       // Group claims by triple ID
       const tripleGroups = acc.claims.reduce((account: { [key: string]: any[] }, claim: any) => {
-        const tripleId = claim.triple.id;
+        const tripleId = claim.term.triple.term.id;
         if (!account[tripleId]) {
           account[tripleId] = [];
         }
@@ -143,12 +144,10 @@ export const renderAccounts = async (i7nAccountsData: {
       // Process each unique triple
       Object.entries(tripleGroups).forEach(([tripleId, claims]) => {
         const claimsFor = claims.filter(claim => claim.shares > 0);
-        const claimsAgainst = claims.filter(claim => claim.counterShares > 0);
 
         triples.push({
-          triple: claims[0].triple,
+          triple: claims[0].term.triple,
           claimsForCount: claimsFor.length,
-          claimsAgainstCount: claimsAgainst.length,
         });
       });
       // Sort triples by claims count
@@ -157,12 +156,12 @@ export const renderAccounts = async (i7nAccountsData: {
       });
 
       const followingTriples = triples.map((t: any) => {
-        const emoji = t.triple.predicate.id === '4' ? t.triple.predicate.emoji : '🗣️';
+        const emoji = t.triple.predicate.term_id === '0x49487b1d5bf2734d497d6d9cfcd72cdfbaefb4d4f03ddc310398b24639173c9d' ? t.triple.predicate.emoji : '🗣️';
 
         return (
 
           <Card
-            title={`${emoji} ${t.triple.predicate.id === '4' ? '' : t.triple.predicate.label} ${t.triple.object.label}`}
+            title={`${emoji} ${t.triple.predicate.term_id === '0x49487b1d5bf2734d497d6d9cfcd72cdfbaefb4d4f03ddc310398b24639173c9d' ? '' : t.triple.predicate.label} ${t.triple.object.label}`}
             value={t.claimsForCount.toString()}
           />
         )
@@ -187,20 +186,20 @@ export const renderAccounts = async (i7nAccountsData: {
             />
             <Box direction='horizontal' alignment='space-between'>
               <Text>Following: {acc.followingCount || ''}</Text>
-              <Link href={"https://beta.portal.intuition.systems/app/profile/" + acc.account}>
+              <Link href={"https://www.staging.portal.intuition.systems/newexplore/atom/" + acc.atom.term_id}>
                 Account
               </Link>
             </Box>
             <Box direction='horizontal' alignment='space-between'>
-              {acc.atom?.followers.length > 0 && <Text>Followers: {acc.atom?.followers[0]?.vault?.position_count.toString()}</Text>}
+              {acc.atom?.followers.length > 0 && <Text>Followers: {acc.atom?.followers[0]?.triple_vault?.position_count.toString()}</Text>}
             </Box></Box>)}
 
           {acc.claims !== undefined && acc.claims?.length > 0 && <Heading>From Accounts You’re Following</Heading>}
-          <Section>
+          {/**<Section>
             {followingTriples}
-          </Section>
+          </Section>*/}
 
-          {acc.atom !== undefined && acc.atom?.as_subject_triples?.length > 0 && <Heading>From everyone</Heading>}
+          {acc.atom !== undefined && acc.atom?.as_subject_triples?.length > 0 && <Heading>Claims</Heading>}
           <Section>
             {globalTriples}
           </Section>
