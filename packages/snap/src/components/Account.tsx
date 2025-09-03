@@ -1,8 +1,6 @@
 import { Address, Box, Button, Container, Link, Row, Text, Value } from "@metamask/snaps-sdk/jsx";
 import { VENDORS } from '../vendors';
-import { OnTransactionProps } from "../cta";
-import { Account, Identity, TripleWithPositions } from 'src/types';
-import { GetAccountDataResult } from 'src/account';
+import { Identity } from 'src/types';
 import { stringToDecimal } from '../util';
 
 export const NoAccount = (params: Identity) => {
@@ -24,16 +22,16 @@ export const NoAccount = (params: Identity) => {
   );
 };
 
-export const AccountOnly = (params: Identity) => {
-  console.log('Account->AccountOnly params', params);
+export const AccountWithoutAtom = (params: Identity) => {
+  console.log('Account->AccountWithoutAtom params', params);
   const { address, chainId } = params;
   const links = [];
   for (const vendor of Object.values(VENDORS)) {
-    const { name, getNoAccountAtomData } = vendor;
-    if (!getNoAccountAtomData) {
+    const { name, accountWithoutAtom } = vendor;
+    if (!accountWithoutAtom) {
       continue;
     }
-    const { url } = getNoAccountAtomData(address, chainId);
+    const { url } = accountWithoutAtom(address, chainId);
     links.push(<Link href={url}>{name}</Link>);
   }
 
@@ -48,18 +46,18 @@ export const AccountOnly = (params: Identity) => {
   );
 };
 
-export const AtomWihoutTrustData = (params: Identity) => {
-  console.log('Account->AtomWihoutTrustData params', params);
+export const AccountWihoutTrustData = (params: Identity) => {
+  console.log('Account->AccountWihoutTrustData params', params);
   const { account, chainId, nickname } = params;
   const links = [];
 
   for (const vendor of Object.values(VENDORS)) {
-    const { name, getAccountAtomNoTrustData } = vendor;
-    if (!getAccountAtomNoTrustData) {
+    const { name, accountWithoutTrustData } = vendor;
+    if (!accountWithoutTrustData) {
       continue;
     }
     //
-    const { url } = getAccountAtomNoTrustData(account.atom_id, chainId);
+    const { url } = accountWithoutTrustData(account.atom_id, chainId);
     links.push(
       <Link href={url}>Is this address trustworthy? Vote on {name}</Link>,
     );
@@ -69,13 +67,13 @@ export const AtomWihoutTrustData = (params: Identity) => {
     <Box>
       <Text>Atom exists for {account.id}</Text>
       {!!nickname && <Text>Nickname: {nickname}</Text>}
-      <Button name="rate_accountAtomNoTrustData">Rate account</Button>
+      <Button name="rate_accountWithoutTrustData">Rate account</Button>
     </Box>
   );
 };
 
-export const AtomWithTrustData = (params: Identity) => {
-  console.log('AtomWithTrustData params', JSON.stringify(params, null, 2));
+export const AccountWithTrustData = (params: Identity) => {
+  console.log('AccountWithTrustData params', JSON.stringify(params, null, 2));
   const { account, triple, nickname } = params;
   const chainlinkPrices: { usd: number } = { usd: 3500 };
   const { counter_term, term, positions, counter_positions, term_id } = triple;
@@ -88,11 +86,11 @@ export const AtomWithTrustData = (params: Identity) => {
   const opposeMarketCapFiat = chainlinkPrices.usd * opposeMarketCapEth;
   const links = [];
   for (const vendor of Object.values(VENDORS)) {
-    const { name, getAccountAtomTrustData } = vendor;
-    if (!getAccountAtomTrustData) {
+    const { name, accountWithTrustData } = vendor;
+    if (!accountWithTrustData) {
       continue;
     }
-    const { url } = getAccountAtomTrustData(params);
+    const { url } = accountWithTrustData(params);
     links.push(<Link href={url}>Voice your opinion on {name}</Link>);
   }
   return (
@@ -118,15 +116,15 @@ export const AtomWithTrustData = (params: Identity) => {
             extra={`$${opposeMarketCapFiat.toFixed(2)} `}
           />
         </Row>
-        <Button name="rate_accountAtomTrustData">Rate account</Button>
+        <Button name="rate_accountWithTrustData">Rate account</Button>
       </Box>
     </Container>
   );
 };
 
 export const AccountComponents = {
-  NoAccount, // NoAccount and AccountNoAtom render the same UI
-  AccountOnly,
-  AtomWihoutTrustData,
-  AtomWithTrustData,
+  NoAccount, // NoAccount and AccountWithoutAtom render the same UI
+  AccountWithoutAtom,
+  AccountWihoutTrustData,
+  AccountWithTrustData,
 };

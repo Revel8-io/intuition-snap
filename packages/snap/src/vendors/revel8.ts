@@ -14,13 +14,13 @@ export const revel8: Vendor = {
       url: `${origin}/redirect/complete_address_trustworthy_triple?address=${address}&chain_id=${chainId}`,
     };
   },
-  noAccountAtomData: (params: Identity) => {
+  accountWithoutAtom: (params: Identity) => {
     const { address, chainId } = params;
     return {
       url: `${origin}/redirect/complete_address_trustworthy_triple?address=${address}&chain_id=${chainId}`,
     };
   },
-  accountAtomNoTrustData: (params: Identity) => {
+  accountWithoutTrustData: (params: Identity) => {
     const { chainId, account } = params;
     if (!account)
       throw new Error('getAccountAtomNoTrustData account not found');
@@ -36,9 +36,9 @@ export const revel8: Vendor = {
       url: `${origin}/atoms/${atomId}?modal=complete_triple&chain_id=${chainId}&atom_ids=${atomId},${isAtomId},${trustworthyAtomId}`,
     };
   },
-  accountAtomTrustData: (params: Identity) => {
+  accountWithTrustData: (params: Identity) => {
     const { triple } = params;
-    if (!triple) throw new Error('getAccountAtomTrustData triple not found');
+    if (!triple) throw new Error('getAccountWithTrustData triple not found');
     const { term_id: tripleId } = triple;
     return {
       url: `${origin}/triples/${tripleId}?modal=stake_triple&direction=support`,

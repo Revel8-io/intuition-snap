@@ -30,12 +30,12 @@ export const CallToAction = (props: CallToActionProps) => {
 };
 
 const noAccount = CallToAction;
-const accountAtomNoTrustData = CallToAction;
-const accountAtomTrustData = CallToAction;
+const accountWithoutTrustData = CallToAction;
+const accountWithTrustData = CallToAction;
 
 export const rate = {
-  accountAtomNoTrustData,
-  accountAtomTrustData,
+  accountWithoutTrustData,
+  accountWithTrustData,
   noAccount,
 };
 
