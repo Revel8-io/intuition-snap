@@ -1,16 +1,17 @@
 import { Box, Text, Link, Button } from '@metamask/snaps-sdk/jsx';
-import { VENDOR_LIST, VENDORS, type Vendor } from './vendors';
+import { VENDOR_LIST, type Vendor } from './vendors';
 import { Identity } from './types';
+import { AccountType } from './account';
 
 export type CallToActionProps = Identity & {
-  method: string;
+  method: AccountType;
 };
 
 export const CallToAction = (props: CallToActionProps) => {
   console.log('CallToAction props', props);
   const { method } = props;
   const links = VENDOR_LIST.map((vendor: Vendor) => {
-    const linkGenerator = vendor[method as keyof Vendor];
+    const linkGenerator = vendor[method];
     if (!linkGenerator) return null;
     const { url } = linkGenerator(props);
     return <Link href={url}>{vendor.name}</Link>;

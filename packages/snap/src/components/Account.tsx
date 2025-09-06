@@ -83,12 +83,21 @@ export const AccountWithTrustData = (params: AccountWithTrustDataParams) => {
   console.log('AccountWithTrustData params', JSON.stringify(params, null, 2));
   const { account, triple, nickname, accountType } = params;
   const chainlinkPrices: { usd: number } = { usd: 3500 };
-  const { counter_term, term, positions, counter_positions } = triple;
+  const {
+    counter_term: {
+      vaults: [counterVault],
+    },
+    term: {
+      vaults: [vault],
+    },
+    positions,
+    counter_positions,
+  } = triple;
 
-  const supportMarketCap = term.vaults[0]?.market_cap || '0';
+  const supportMarketCap = vault?.market_cap || '0';
   const supportMarketCapEth = stringToDecimal(supportMarketCap, 18);
   const supportMarketCapFiat = chainlinkPrices.usd * supportMarketCapEth;
-  const opposeMarketCap = counter_term.vaults[0]?.market_cap || '0';
+  const opposeMarketCap = counterVault?.market_cap || '0';
   const opposeMarketCapEth = stringToDecimal(opposeMarketCap, 18);
   const opposeMarketCapFiat = chainlinkPrices.usd * opposeMarketCapEth;
   const links: any[] = [];
