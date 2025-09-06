@@ -1,13 +1,3 @@
-import {
-  Box,
-  Text,
-  Link,
-  Row,
-  Value,
-  Container,
-  Address,
-  Button,
-} from '@metamask/snaps-sdk/jsx';
 import { type ChainConfig, getChainConfigByChainId } from './config';
 import {
   getAccountQuery,
@@ -15,31 +5,15 @@ import {
   getTripleWithPositionsDataQuery,
   graphQLQuery,
 } from './queries';
-import type { Account, TripleWithPositions } from './types';
-import { addressToCaip10, stringToDecimal } from './util';
-import { VENDORS } from './vendors';
+import type { Account, Identity, TripleWithPositions } from './types';
+import { addressToCaip10 } from './util';
 import { AccountComponents } from './components';
-
-// State management utilities
-export const getSnapState = async (): Promise<any> => {
-  return await snap.request({
-    method: 'snap_manageState',
-    params: { operation: 'get' },
-  });
-};
-
-export const setSnapState = async (newState: { uiMode: string }) => {
-  await snap.request({
-    method: 'snap_manageState',
-    params: { operation: 'update', newState },
-  });
-};
 
 export type GetAccountDataResult = {
   account: Account | null;
   triple: TripleWithPositions | null;
-  isContract?: boolean;
-  nickname?: string;
+  isContract: boolean;
+  nickname: string | null;
 };
 
 export enum AccountType {
@@ -52,7 +26,7 @@ export enum AccountType {
 export const getAccountData = async (
   destinationAddress: string,
   chainId: string,
-): Promise<GetAccountDataResult | undefined> => {
+): Promise<GetAccountDataResult> => {
   const caipAddress = addressToCaip10(destinationAddress, chainId);
   const chainConfig = getChainConfigByChainId(chainId);
   if (!chainConfig) {
@@ -78,11 +52,11 @@ export const getAccountData = async (
     } = accountResponse;
     const isContract = accountType !== '0x';
     if (accounts.length === 0) {
-      return { account: null, triple: null, isContract };
+      return { account: null, triple: null, isContract, nickname: null };
     }
 
     if (accounts[0].atom_id === null) {
-      return { account: accounts[0], triple: null, isContract };
+      return { account: accounts[0], triple: null, isContract, nickname: null };
     }
 
     // account exists, now check if atom exists
@@ -128,9 +102,10 @@ export const getAccountData = async (
         isContract,
       };
     }
-    return { account: null, triple: null, isContract };
+    return { account: null, triple: null, isContract, nickname: null };
   } catch (error: any) {
     console.error('getAccountData error', JSON.stringify(error));
+    throw error;
   }
 };
 
@@ -150,75 +125,6 @@ export const getAccountType = (accountData: any): AccountType => {
     return AccountType.AccountWithTrustData;
   }
   return AccountType.NoAccount; // default
-};
-
-export const renderNoAccount = () => {
-  return (
-    <Box>
-      <Text>
-        No information about this account on Intuition, yet! Click a link below
-        to contribute:
-      </Text>
-      <Button name="rate_noAccount">Create atom</Button>
-    </Box>
-  );
-};
-
-export const renderAccountWithoutAtom = renderNoAccount;
-
-export const renderAccountWithTrustData = (
-  tripleQueryResponse: TripleWithPositions,
-  accountData: GetAccountDataResult,
-  chainlinkPrices: { usd: number } = { usd: 3500 },
-) => {
-  const { counter_term, term, positions, counter_positions, term_id } =
-    tripleQueryResponse;
-
-  const supportMarketCap = term.vaults[0]?.market_cap || '0';
-  const supportMarketCapEth = stringToDecimal(supportMarketCap, 18);
-  const supportMarketCapFiat = chainlinkPrices.usd * supportMarketCapEth;
-
-  const opposeMarketCap = counter_term.vaults[0]?.market_cap || '0';
-  const opposeMarketCapEth = stringToDecimal(opposeMarketCap, 18);
-  const opposeMarketCapFiat = chainlinkPrices.usd * opposeMarketCapEth;
-
-  const links = [];
-  for (const vendor of Object.values(VENDORS)) {
-    const { name, getAccountWithTrustData } = vendor;
-    if (!getAccountWithTrustData) {
-      continue;
-    }
-    const { url } = getAccountWithTrustData(term_id);
-    links.push(<Link href={url}>Voice your opinion on {name}</Link>);
-  }
-
-  return (
-    <Container>
-      <Box>
-        <Row label="Address">
-          <Address address={accountData.account?.id || ''} />
-        </Row>
-        {accountData.nickname && (
-          <Row label="Nickname">
-            <Value value={`"${accountData.nickname}"`} extra="" />
-          </Row>
-        )}
-        <Row label={`Trustworthy (${positions.length})`}>
-          <Value
-            value={`${supportMarketCapEth.toFixed(6)} Ξ`}
-            extra={`$${supportMarketCapFiat.toFixed(2)} `}
-          />
-        </Row>
-        <Row label={`Not trustworthy (${counter_positions.length})`}>
-          <Value
-            value={`${opposeMarketCapEth.toFixed(6)} Ξ`}
-            extra={`$${opposeMarketCapFiat.toFixed(2)} `}
-          />
-        </Row>
-        <Button name="rate_accountWithTrustData">Rate account</Button>
-      </Box>
-    </Container>
-  );
 };
 
 export const renderOnTransaction = (props: Identity) => {

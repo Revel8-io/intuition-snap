@@ -1,21 +1,15 @@
 import type {
   ChainId,
-  EIP1559Transaction,
-  LegacyTransaction,
   OnTransactionHandler,
+  Transaction,
 } from '@metamask/snaps-sdk';
 
-import {
-  getAccountData,
-  getAccountType,
-  setSnapState,
-  renderOnTransaction,
-} from './account';
-import { Account, Identity, TripleWithPositions } from './types';
+import { getAccountData, getAccountType, renderOnTransaction } from './account';
+import { Account, TripleWithPositions } from './types';
 
 export type OnTransactionContext = {
-  address: `0x${string}`;
-  chainId: `epi155:${string}`;
+  address: string;
+  chainId: ChainId;
   account: Account;
   triple: TripleWithPositions | null;
   nickname: string;
@@ -32,12 +26,12 @@ export const onTransaction: OnTransactionHandler = async ({
   transaction,
   chainId,
 }: {
-  transaction: EIP1559Transaction | LegacyTransaction;
+  transaction: Transaction;
   chainId: ChainId;
 }) => {
   // MetaMask addresses come in as 0x______
   let { to: address } = transaction;
-  address = '0x0000000000000000600000000000000000000000';
+  address = '0x0000000000000000a00000000000000000000000';
   console.log('onTransaction chainId', chainId);
 
   const accountData = await getAccountData(address, chainId);
@@ -49,15 +43,14 @@ export const onTransaction: OnTransactionHandler = async ({
     address,
     chainId,
   });
-  const context: Identity = {
+  const context = {
+    ...accountData,
     address,
     chainId,
     initialUI,
     accountType,
-    ...accountData,
   };
-  setSnapState(context);
-  console.log('onTransaction context', context);
+
   const interfaceId = await snap.request({
     method: 'snap_createInterface',
     params: {
@@ -65,7 +58,6 @@ export const onTransaction: OnTransactionHandler = async ({
       context,
     },
   });
-  console.log('onTransaction interfaceId', interfaceId);
   return {
     id: interfaceId,
   };

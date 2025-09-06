@@ -1,82 +1,89 @@
-import { Address, Box, Button, Container, Link, Row, Text, Value } from "@metamask/snaps-sdk/jsx";
-import { VENDORS } from '../vendors';
-import { Identity } from 'src/types';
+import {
+  Address,
+  Box,
+  Button,
+  Container,
+  Link,
+  Row,
+  Text,
+  Value,
+} from '@metamask/snaps-sdk/jsx';
+import { VENDOR_LIST } from '../vendors';
+import { Account, Identity, TripleWithPositions } from 'src/types';
 import { stringToDecimal } from '../util';
 
 export const NoAccount = (params: Identity) => {
-  console.log('Account->NoAccount params', params);
-  const address = params.address;
-  console.log('NoAccount address', address);
-  if (!address) {
-    throw new Error('Missing address');
-  }
+  const { address, accountType } = params;
   return (
     <Box>
       <Address address={address as `0x${string}`} />
-      <Text>
-        No information about this account on Intuition, yet! Click a link below
-        to contribute:
-      </Text>
-      <Button name="rate_noAccount">Create atom</Button>
+      <Text>No information about this account on Intuition, yet!</Text>
+      <Button name={`rate_${accountType}`}>Create atom</Button>
     </Box>
   );
 };
 
 export const AccountWithoutAtom = (params: Identity) => {
-  console.log('Account->AccountWithoutAtom params', params);
-  const { address, chainId } = params;
-  const links = [];
-  for (const vendor of Object.values(VENDORS)) {
-    const { name, accountWithoutAtom } = vendor;
-    if (!accountWithoutAtom) {
-      continue;
+  const { accountType } = params;
+  const links: any[] = [];
+  VENDOR_LIST.forEach((vendor) => {
+    const { name } = vendor;
+    const vendorFn = vendor[accountType];
+    if (!vendorFn) {
+      return;
     }
-    const { url } = accountWithoutAtom(address, chainId);
+    const { url } = vendorFn(params);
     links.push(<Link href={url}>{name}</Link>);
-  }
+  });
 
   return (
     <Box>
-      <Text>
-        No information about this account on Intuition, yet! Click a link below
-        to contribute:
-      </Text>
-      {links.map((linkComponent) => linkComponent)}
+      <Text>No information about this account on Intuition, yet!</Text>
+      {links}
     </Box>
   );
 };
 
-export const AccountWihoutTrustData = (params: Identity) => {
-  console.log('Account->AccountWihoutTrustData params', params);
-  const { account, chainId, nickname } = params;
-  const links = [];
+type AccountWithoutTrustDataParams = Identity & {
+  account: Account;
+};
 
-  for (const vendor of Object.values(VENDORS)) {
-    const { name, accountWithoutTrustData } = vendor;
-    if (!accountWithoutTrustData) {
-      continue;
+export const AccountWithoutTrustData = (
+  params: AccountWithoutTrustDataParams,
+) => {
+  const { account, nickname, accountType } = params;
+  const links: any[] = [];
+  VENDOR_LIST.forEach((vendor) => {
+    const { name } = vendor;
+    const vendorFn = vendor[accountType];
+    if (!vendorFn) {
+      return;
     }
-    //
-    const { url } = accountWithoutTrustData(account.atom_id, chainId);
+    const { url } = vendorFn(params);
     links.push(
       <Link href={url}>Is this address trustworthy? Vote on {name}</Link>,
     );
-  }
+  });
 
   return (
     <Box>
       <Text>Atom exists for {account.id}</Text>
       {!!nickname && <Text>Nickname: {nickname}</Text>}
-      <Button name="rate_accountWithoutTrustData">Rate account</Button>
+      <Button name={`rate_${accountType}`}>Rate account</Button>
     </Box>
   );
 };
 
-export const AccountWithTrustData = (params: Identity) => {
+type AccountWithTrustDataParams = Identity & {
+  account: Account;
+  triple: TripleWithPositions;
+};
+
+export const AccountWithTrustData = (params: AccountWithTrustDataParams) => {
   console.log('AccountWithTrustData params', JSON.stringify(params, null, 2));
-  const { account, triple, nickname } = params;
+  const { account, triple, nickname, accountType } = params;
   const chainlinkPrices: { usd: number } = { usd: 3500 };
-  const { counter_term, term, positions, counter_positions, term_id } = triple;
+  const { counter_term, term, positions, counter_positions } = triple;
 
   const supportMarketCap = term.vaults[0]?.market_cap || '0';
   const supportMarketCapEth = stringToDecimal(supportMarketCap, 18);
@@ -84,22 +91,24 @@ export const AccountWithTrustData = (params: Identity) => {
   const opposeMarketCap = counter_term.vaults[0]?.market_cap || '0';
   const opposeMarketCapEth = stringToDecimal(opposeMarketCap, 18);
   const opposeMarketCapFiat = chainlinkPrices.usd * opposeMarketCapEth;
-  const links = [];
-  for (const vendor of Object.values(VENDORS)) {
-    const { name, accountWithTrustData } = vendor;
-    if (!accountWithTrustData) {
-      continue;
+  const links: any[] = [];
+  VENDOR_LIST.forEach((vendor) => {
+    const { name } = vendor;
+    const vendorFn = vendor[accountType];
+    if (!vendorFn) {
+      return;
     }
-    const { url } = accountWithTrustData(params);
+    const { url } = vendorFn(params);
     links.push(<Link href={url}>Voice your opinion on {name}</Link>);
-  }
+  });
+
   return (
     <Container>
       <Box>
         <Row label="Address">
-          <Address address={account.id} />
+          <Address address={account.id as `0x${string}`} />
         </Row>
-        {nickname && (
+        {!!nickname && (
           <Row label="Nickname">
             <Value value={`"${nickname}"`} extra="" />
           </Row>
@@ -116,7 +125,7 @@ export const AccountWithTrustData = (params: Identity) => {
             extra={`$${opposeMarketCapFiat.toFixed(2)} `}
           />
         </Row>
-        <Button name="rate_accountWithTrustData">Rate account</Button>
+        <Button name={`rate_${accountType}`}>Rate account</Button>
       </Box>
     </Container>
   );
@@ -125,6 +134,6 @@ export const AccountWithTrustData = (params: Identity) => {
 export const AccountComponents = {
   NoAccount, // NoAccount and AccountWithoutAtom render the same UI
   AccountWithoutAtom,
-  AccountWihoutTrustData,
+  AccountWithoutTrustData,
   AccountWithTrustData,
 };

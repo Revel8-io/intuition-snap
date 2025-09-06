@@ -1,3 +1,5 @@
+import { ChainId } from '@metamask/snaps-sdk';
+
 export type Atom = {
   term_id: string;
   type: string;
@@ -10,13 +12,17 @@ export type Atom = {
 };
 
 export type Identity = {
-  chainId: `epi155:${string}`;
+  chainId: ChainId;
   isContract: boolean;
-  accountType: string;
-  address: `0x${string}`;
-  account?: Account;
-  triple?: TripleWithPositions | null;
-  nickname?: string;
+  accountType:
+    | 'NoAccount'
+    | 'AccountWithoutAtom'
+    | 'AccountWithoutTrustData'
+    | 'AccountWithTrustData';
+  address: string;
+  account: Account | null;
+  triple: TripleWithPositions | null;
+  nickname: string | null;
   initialUI?: any;
 };
 

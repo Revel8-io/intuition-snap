@@ -17,6 +17,7 @@ export type ChainConfig = {
   relatedImagesAtomId: string;
   relatedNicknamesAtomId: string;
   backendUrl: string;
+  chainlinkContractAddress: string;
 };
 
 export const BASE_MAINNET = {
@@ -37,6 +38,7 @@ export const BASE_MAINNET = {
   relatedNicknamesAtomId: '0',
   ethRpcUrl:
     'https://base-mainnet.g.alchemy.com/v2/xww_HDMOC0nGOVJL-HtXWxn2oqXOtK5v',
+  chainlinkContractAddress: '0x71041dddad3595F9CEd3DcCFBe3D1F4b0a16Bb70',
 };
 
 export const BASE_SEPOLIA = {
@@ -57,6 +59,7 @@ export const BASE_SEPOLIA = {
   relatedNicknamesAtomId: '26813',
   ethRpcUrl:
     'https://base-sepolia.g.alchemy.com/v2/xww_HDMOC0nGOVJL-HtXWxn2oqXOtK5v',
+  chainlinkContractAddress: '0x4aDC67696bA383F43DD60A9e78F2C97Fbbfc7cb1',
 };
 
 export const CHAIN_CONFIGS = [BASE_MAINNET, BASE_SEPOLIA];

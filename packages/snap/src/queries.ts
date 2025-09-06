@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { chainConfig } from './config';
+import { chainConfig, getChainConfigByChainId } from './config';
 
 export const i7nAxios = axios.create({
   baseURL: chainConfig.backendUrl,
@@ -220,3 +220,74 @@ export const getListWithHighestStakeQuery = `
     }
   }
 `;
+
+// ABI for Chainlink Price Feed (only the function we need)
+const PRICE_FEED_ABI = [
+  {
+    inputs: [],
+    name: 'latestRoundData',
+    outputs: [
+      { internalType: 'uint80', name: 'roundId', type: 'uint80' },
+      { internalType: 'int256', name: 'answer', type: 'int256' },
+      { internalType: 'uint256', name: 'startedAt', type: 'uint256' },
+      { internalType: 'uint256', name: 'updatedAt', type: 'uint256' },
+      { internalType: 'uint80', name: 'answeredInRound', type: 'uint80' },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+];
+
+export const getExchangeRate = async (chainId: number): Promise<number> => {
+  const chainConfig = getChainConfigByChainId(chainId);
+  if (!chainConfig) {
+    throw new Error(
+      `Chain config not found for chainId: ${chainId} (${typeof chainId})`,
+    );
+  }
+  try {
+    // Encode the function call data for latestRoundData()
+    // Function signature: latestRoundData() -> 0xfeaf968c
+    const data = '0xfeaf968c';
+
+    // Make the eth_call to the Chainlink price feed
+    const result = (await ethereum.request({
+      method: 'eth_call',
+      params: [
+        {
+          to: chainConfig.chainlinkContractAddress,
+          data: data,
+        },
+        'latest',
+      ],
+    })) as string;
+
+    // Decode the result
+    // latestRoundData returns (uint80 roundId, int256 answer, uint256 startedAt, uint256 updatedAt, uint80 answeredInRound)
+    // We need the 'answer' field which is the second return value (32 bytes offset)
+
+    if (!result || result === '0x') {
+      throw new Error('No data returned from price feed');
+    }
+
+    // Remove '0x' prefix and parse the hex result
+    const hexResult = result.slice(2);
+
+    // Skip first 32 bytes (roundId) and get next 32 bytes (answer)
+    const answerHex = hexResult.slice(64, 128); // bytes 32-64 contain the answer
+
+    // Convert hex to BigInt (signed 256-bit integer)
+    const answerBigInt = BigInt('0x' + answerHex);
+
+    // Chainlink ETH/USD price feeds return prices with 8 decimals
+    // So we need to divide by 10^8 to get the actual price
+    const price = Number(answerBigInt) / 100000000; // 10^8
+
+    console.log('ETH/USD price from Chainlink:', price);
+    return price;
+  } catch (error) {
+    console.error('Error fetching exchange rate from Chainlink:', error);
+    // Return a fallback price or rethrow the error
+    throw new Error(`Failed to fetch exchange rate: ${error.message}`);
+  }
+};
