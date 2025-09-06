@@ -5,16 +5,21 @@ import type {
 } from '@metamask/snaps-sdk';
 
 import { getAccountData, getAccountType, renderOnTransaction } from './account';
-import { Account, TripleWithPositions } from './types';
+import {
+  Account,
+  TripleWithPositions,
+  AccountType,
+  AccountProps,
+} from './types';
 
 export type OnTransactionContext = {
   address: string;
   chainId: ChainId;
-  account: Account;
+  account: Account | null;
   triple: TripleWithPositions | null;
-  nickname: string;
+  nickname: string | null;
   isContract: boolean;
-  initialUI?: any;
+  accountType: AccountType;
 };
 
 export type OnTransactionProps = {
@@ -31,23 +36,27 @@ export const onTransaction: OnTransactionHandler = async ({
 }) => {
   // MetaMask addresses come in as 0x______
   let { to: address } = transaction;
-  address = '0x0000000000000000a00000000000000000000000';
+  address = '0x0000000000000000b00000000000000000000000';
   console.log('onTransaction chainId', chainId);
 
   const accountData = await getAccountData(address, chainId);
   const accountType = getAccountType(accountData);
 
-  const initialUI = renderOnTransaction({
+  // Create properly typed props based on account type
+  const props: AccountProps = {
     ...accountData,
     accountType,
     address,
     chainId,
-  });
-  const context = {
+  } as AccountProps; // Type assertion needed due to the discriminated union
+
+  const initialUI = renderOnTransaction(props);
+
+  // Remove initialUI from context to fix serialization issue
+  const context: OnTransactionContext = {
     ...accountData,
     address,
     chainId,
-    initialUI,
     accountType,
   };
 

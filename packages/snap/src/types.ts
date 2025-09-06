@@ -14,11 +14,7 @@ export type Atom = {
 export type Identity = {
   chainId: ChainId;
   isContract: boolean;
-  accountType:
-    | 'NoAccount'
-    | 'AccountWithoutAtom'
-    | 'AccountWithoutTrustData'
-    | 'AccountWithTrustData';
+  accountType: string;
   address: string;
   account: Account | null;
   triple: TripleWithPositions | null;
@@ -128,3 +124,56 @@ export type TripleQueryResponse = {
   triples: TripleWithPositions[];
   chainlink_prices: { usd: number }[];
 };
+
+// AccountType enum
+export enum AccountType {
+  NoAccount = 'NoAccount',
+  AccountWithoutAtom = 'AccountWithoutAtom',
+  AccountWithoutTrustData = 'AccountWithoutTrustData',
+  AccountWithTrustData = 'AccountWithTrustData',
+}
+
+// Discriminated union types for proper AccountProps typing
+export type AccountProps =
+  | {
+      accountType: AccountType.NoAccount;
+      chainId: ChainId;
+      address: string;
+      account: null;
+      triple: null;
+      nickname: null;
+      isContract: boolean;
+    }
+  | {
+      accountType: AccountType.AccountWithoutAtom;
+      chainId: ChainId;
+      address: string;
+      account: Account;
+      triple: null;
+      nickname: string | null;
+      isContract: boolean;
+    }
+  | {
+      accountType: AccountType.AccountWithoutTrustData;
+      chainId: ChainId;
+      address: string;
+      account: Account;
+      triple: null;
+      nickname: string | null;
+      isContract: boolean;
+    }
+  | {
+      accountType: AccountType.AccountWithTrustData;
+      chainId: ChainId;
+      address: string;
+      account: Account;
+      triple: TripleWithPositions;
+      nickname: string | null;
+      isContract: boolean;
+    };
+
+// Helper type to extract props for a specific account type
+export type PropsForAccountType<T extends AccountType> = Extract<
+  AccountProps,
+  { accountType: T }
+>;

@@ -5,7 +5,12 @@ import {
   getTripleWithPositionsDataQuery,
   graphQLQuery,
 } from './queries';
-import type { Account, Identity, TripleWithPositions } from './types';
+import type {
+  Account,
+  AccountType,
+  TripleWithPositions,
+  AccountProps,
+} from './types';
 import { addressToCaip10 } from './util';
 import { AccountComponents } from './components';
 
@@ -15,13 +20,6 @@ export type GetAccountDataResult = {
   isContract: boolean;
   nickname: string | null;
 };
-
-export enum AccountType {
-  NoAccount = 'NoAccount',
-  AccountWithoutAtom = 'AccountWithoutAtom',
-  AccountWithoutTrustData = 'AccountWithoutTrustData',
-  AccountWithTrustData = 'AccountWithTrustData',
-}
 
 export const getAccountData = async (
   destinationAddress: string,
@@ -109,7 +107,9 @@ export const getAccountData = async (
   }
 };
 
-export const getAccountType = (accountData: any): AccountType => {
+export const getAccountType = (
+  accountData: GetAccountDataResult,
+): AccountType => {
   const { account, triple } = accountData;
 
   if (account === null) {
@@ -127,12 +127,13 @@ export const getAccountType = (accountData: any): AccountType => {
   return AccountType.NoAccount; // default
 };
 
-export const renderOnTransaction = (props: Identity) => {
+export const renderOnTransaction = (props: AccountProps) => {
   console.log('renderOnTransaction props', JSON.stringify(props, null, 2));
-  const combinedProps = { ...props, ...props.context };
-  const { accountType } = combinedProps;
+  const { accountType } = props;
   console.log('renderOnTransaction accountType', accountType);
-  const initialUI = AccountComponents[accountType]?.(combinedProps);
+
+  // TypeScript now knows the exact prop shape for each accountType
+  const initialUI = AccountComponents[accountType]?.(props);
   console.log('renderOnTransaction initialUI', initialUI);
   return initialUI;
 };

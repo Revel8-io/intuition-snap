@@ -4,15 +4,18 @@ import {
   Button,
   Container,
   Link,
+  Nestable,
   Row,
   Text,
   Value,
 } from '@metamask/snaps-sdk/jsx';
 import { VENDOR_LIST } from '../vendors';
-import { Account, Identity, TripleWithPositions } from 'src/types';
+import { Account, AccountType, PropsForAccountType } from '../types';
 import { stringToDecimal } from '../util';
 
-export const NoAccount = (params: Identity) => {
+export const NoAccount = (
+  params: PropsForAccountType<AccountType.NoAccount>,
+) => {
   const { address, accountType } = params;
   return (
     <Box>
@@ -23,7 +26,9 @@ export const NoAccount = (params: Identity) => {
   );
 };
 
-export const AccountWithoutAtom = (params: Identity) => {
+export const AccountWithoutAtom = (
+  params: PropsForAccountType<AccountType.AccountWithoutAtom>,
+) => {
   const { accountType } = params;
   const links: any[] = [];
   VENDOR_LIST.forEach((vendor) => {
@@ -44,12 +49,8 @@ export const AccountWithoutAtom = (params: Identity) => {
   );
 };
 
-type AccountWithoutTrustDataParams = Identity & {
-  account: Account;
-};
-
 export const AccountWithoutTrustData = (
-  params: AccountWithoutTrustDataParams,
+  params: PropsForAccountType<AccountType.AccountWithoutTrustData>,
 ) => {
   const { account, nickname, accountType } = params;
   const links: any[] = [];
@@ -74,12 +75,9 @@ export const AccountWithoutTrustData = (
   );
 };
 
-type AccountWithTrustDataParams = Identity & {
-  account: Account;
-  triple: TripleWithPositions;
-};
-
-export const AccountWithTrustData = (params: AccountWithTrustDataParams) => {
+export const AccountWithTrustData = (
+  params: PropsForAccountType<AccountType.AccountWithTrustData>,
+) => {
   console.log('AccountWithTrustData params', JSON.stringify(params, null, 2));
   const { account, triple, nickname, accountType } = params;
   const chainlinkPrices: { usd: number } = { usd: 3500 };
@@ -140,9 +138,14 @@ export const AccountWithTrustData = (params: AccountWithTrustDataParams) => {
   );
 };
 
-export const AccountComponents = {
-  NoAccount, // NoAccount and AccountWithoutAtom render the same UI
-  AccountWithoutAtom,
-  AccountWithoutTrustData,
-  AccountWithTrustData,
+// Update the AccountComponents type to use the discriminated union
+export type AccountComponents = {
+  [K in AccountType]: (params: PropsForAccountType<K>) => JSX.Element;
+};
+
+export const AccountComponents: AccountComponents = {
+  [AccountType.NoAccount]: NoAccount,
+  [AccountType.AccountWithoutAtom]: AccountWithoutAtom,
+  [AccountType.AccountWithoutTrustData]: AccountWithoutTrustData,
+  [AccountType.AccountWithTrustData]: AccountWithTrustData,
 };

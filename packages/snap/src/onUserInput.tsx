@@ -1,7 +1,7 @@
 import { OnUserInputHandler } from '@metamask/snaps-sdk';
 import { rate } from './cta';
 import { renderOnTransaction } from './account';
-import { Identity } from './types';
+import { AccountProps } from './types';
 
 const components = {
   account: {
@@ -14,7 +14,7 @@ export type OnUserInputProps = {
   event: {
     name: string;
   };
-  context: Identity;
+  context: AccountProps;
   id: string;
 };
 

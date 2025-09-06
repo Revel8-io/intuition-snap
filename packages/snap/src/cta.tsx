@@ -1,9 +1,8 @@
 import { Box, Text, Link, Button } from '@metamask/snaps-sdk/jsx';
 import { VENDOR_LIST, type Vendor } from './vendors';
-import { Identity } from './types';
-import { AccountType } from './account';
+import { AccountProps, AccountType } from './types';
 
-export type CallToActionProps = Identity & {
+export type CallToActionProps = AccountProps & {
   method: AccountType;
 };
 
@@ -13,7 +12,7 @@ export const CallToAction = (props: CallToActionProps) => {
   const links = VENDOR_LIST.map((vendor: Vendor) => {
     const linkGenerator = vendor[method];
     if (!linkGenerator) return null;
-    const { url } = linkGenerator(props);
+    const { url } = linkGenerator(props as any); // Type assertion needed for vendor function
     return <Link href={url}>{vendor.name}</Link>;
   });
   return (
@@ -30,9 +29,9 @@ const AccountWithoutTrustData = CallToAction;
 const AccountWithTrustData = CallToAction;
 
 export const rate = {
-  AccountWithoutTrustData,
-  AccountWithTrustData,
-  NoAccount,
+  [AccountType.AccountWithoutTrustData]: AccountWithoutTrustData,
+  [AccountType.AccountWithTrustData]: AccountWithTrustData,
+  [AccountType.NoAccount]: NoAccount,
 };
 
 export const cta = {
