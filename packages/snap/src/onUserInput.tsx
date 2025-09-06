@@ -3,6 +3,7 @@ import { rate } from './cta';
 import { renderOnTransaction } from './account';
 import { AccountProps } from './types';
 
+type ComponentKey = 'account' | 'rate';
 const components = {
   account: {
     renderOnTransaction,
@@ -12,26 +13,19 @@ const components = {
 
 export type OnUserInputProps = {
   event: {
-    name: string;
+    name: `${string}:${string}`;
   };
   context: AccountProps;
   id: string;
 };
 
-export const onUserInput: OnUserInputHandler = async (
-  props: OnUserInputProps,
-) => {
-  console.group('onUserInput');
+export const onUserInput: OnUserInputHandler = async (props: OnUserInputProps) => {
   if (!props.event.name) return;
-  console.log('props', JSON.stringify(props, null, 2));
+  // console.log('props', JSON.stringify(props, null, 2));
   const [type, method] = props.event.name.split('_');
-  console.log('type', type);
-  console.log('method', method);
-  const renderFn = components[type]?.[method];
-  console.log('renderFn', renderFn);
+  const renderFn = components[type as ComponentKey][method];
   const params = { ...props.context, method };
-  console.log('params', JSON.stringify(params, null, 2));
-  console.groupEnd();
+  if (!renderFn) return;
   await snap.request({
     method: 'snap_updateInterface',
     params: {

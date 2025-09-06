@@ -36,6 +36,7 @@ export const onTransaction: OnTransactionHandler = async ({
 }) => {
   // MetaMask addresses come in as 0x______
   let { to: address } = transaction;
+  // todo: remove hard-coded address!
   address = '0x0000000000000000b00000000000000000000000';
   console.log('onTransaction chainId', chainId);
 

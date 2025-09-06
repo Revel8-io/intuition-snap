@@ -1,5 +1,5 @@
 import { revel8 } from './revel8';
-import { AccountProps, AccountType, PropsForAccountType } from '../types';
+import { AccountType, PropsForAccountType } from '../types';
 
 type VendorCtaResponse = {
   url: string;

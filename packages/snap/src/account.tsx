@@ -5,7 +5,7 @@ import {
   getTripleWithPositionsDataQuery,
   graphQLQuery,
 } from './queries';
-import type {
+import {
   Account,
   AccountType,
   TripleWithPositions,
@@ -128,12 +128,9 @@ export const getAccountType = (
 };
 
 export const renderOnTransaction = (props: AccountProps) => {
-  console.log('renderOnTransaction props', JSON.stringify(props, null, 2));
   const { accountType } = props;
-  console.log('renderOnTransaction accountType', accountType);
 
   // TypeScript now knows the exact prop shape for each accountType
-  const initialUI = AccountComponents[accountType]?.(props);
-  console.log('renderOnTransaction initialUI', initialUI);
+  const initialUI = AccountComponents[accountType](props as any);
   return initialUI;
 };

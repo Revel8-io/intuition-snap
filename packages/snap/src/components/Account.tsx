@@ -4,13 +4,12 @@ import {
   Button,
   Container,
   Link,
-  Nestable,
   Row,
   Text,
   Value,
 } from '@metamask/snaps-sdk/jsx';
 import { VENDOR_LIST } from '../vendors';
-import { Account, AccountType, PropsForAccountType } from '../types';
+import { AccountType, PropsForAccountType } from '../types';
 import { stringToDecimal } from '../util';
 
 export const NoAccount = (
@@ -78,9 +77,8 @@ export const AccountWithoutTrustData = (
 export const AccountWithTrustData = (
   params: PropsForAccountType<AccountType.AccountWithTrustData>,
 ) => {
-  console.log('AccountWithTrustData params', JSON.stringify(params, null, 2));
   const { account, triple, nickname, accountType } = params;
-  const chainlinkPrices: { usd: number } = { usd: 3500 };
+  const chainlinkPrices: { usd: number } = { usd: 4300 };
   const {
     counter_term: {
       vaults: [counterVault],
