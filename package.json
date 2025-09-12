@@ -1,15 +1,15 @@
 {
-  "name": "root",
-  "version": "0.1.0",
+  "name": "intuition-snap",
+  "version": "0.3.0",
   "private": true,
   "description": "",
-  "homepage": "https://github.com/0xIntuition/intuition-snap#readme",
+  "homepage": "https://github.com/Revel8-io/intuition-snap",
   "bugs": {
     "url": "https://github.com/0xIntuition/intuition-snap/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/0xIntuition/intuition-snap.git"
+    "url": "git+https://github.com/Revel8-io/intuition-snap.git"
   },
   "license": "Apache-2.0",
   "author": "",
@@ -24,6 +24,9 @@
     "lint:misc": "prettier '**/*.json' '**/*.md' '!**/CHANGELOG.md' '**/*.yml' --ignore-path .gitignore",
     "start": "yarn workspaces foreach --parallel --interlaced --verbose run start",
     "test": "yarn workspace snap run test"
+  },
+  "dependencies": {
+    "viem": "^2.20.1"
   },
   "devDependencies": {
     "@lavamoat/allow-scripts": "^3.0.0",
@@ -56,8 +59,5 @@
       "@lavamoat/preinstall-always-fail": false,
       "sharp": true
     }
-  },
-  "dependencies": {
-    "viem": "^2.20.1"
   }
 }
