@@ -2,7 +2,7 @@ import { AccountType, PropsForAccountType } from '../types';
 import { type Vendor } from '.';
 import { getChainConfigByChainId, type ChainConfig } from '../config';
 
-const origin = 'https://localhost:3000';
+const origin = 'https://testnet.trust-scan.io';
 
 export const revel8: Vendor = {
   name: 'Revel8',

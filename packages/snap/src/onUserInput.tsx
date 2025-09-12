@@ -21,7 +21,6 @@ export type OnUserInputProps = {
 
 export const onUserInput: OnUserInputHandler = async (props: OnUserInputProps) => {
   if (!props.event.name) return;
-  // console.log('props', JSON.stringify(props, null, 2));
   const [type, method] = props.event.name.split('_');
   const renderFn = components[type as ComponentKey][method];
   const params = { ...props.context, method };
