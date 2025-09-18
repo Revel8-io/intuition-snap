@@ -34,3 +34,17 @@ Great, now your changes in the code should show up when you are using your versi
 7. Add translations
 8. Decide upon code style and enforce code quality via GitHub actions
 
+### Atoms Used
+These can be found in `packages/snap/src/config.ts` and are dependent upon which chain is enabled. (As of 2025-09-17 it is Intuition Testnet)
+
+- Triple: `[address] is trustworthy`
+  1. [address]: atom with target address as term_id
+  2. "is": `config.isAtomId`
+  3. "trustworthy": `config.trustworthyAtomId`
+
+- List: `[address] has nickname [nickname]`
+  1. [address]: atom with target address as term_id
+  2. "has nickname": `config.relatedNicknamesAtomId`
+  3. [nickname]: the label for that atom in the list
+
+You can use this info to stake and unstake to the atoms and triples involved
