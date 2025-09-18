@@ -13,6 +13,7 @@ import {
 } from './types';
 import { addressToCaip10 } from './util';
 import { AccountComponents } from './components';
+import { ChainId } from '@metamask/snaps-sdk';
 
 export type GetAccountDataResult = {
   account: Account | null;
@@ -23,11 +24,10 @@ export type GetAccountDataResult = {
 
 export const getAccountData = async (
   destinationAddress: string,
-  chainId: `eip155:${number}`,
+  chainId: ChainId,
 ): Promise<GetAccountDataResult> => {
-  const chainIdNumber = chainId.split(':')[1] as string;
   const caipAddress = addressToCaip10(destinationAddress, chainId);
-  const chainConfig = getChainConfigByChainId(chainIdNumber);
+  const chainConfig = getChainConfigByChainId(chainId);
   if (!chainConfig) {
     throw new Error(
       `[getAccountData] Chain config not found for chainId: ${chainId} (${typeof chainId})`,
