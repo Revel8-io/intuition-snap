@@ -32,7 +32,7 @@ export const revel8: Vendor = {
     const chainConfig = getChainConfigByChainId(chainId);
     if (!chainConfig) {
       throw new Error(
-        `Chain config not found for chainId: ${chainId} (${typeof chainId})`,
+        `[revel8] Chain config not found for chainId: ${chainId} (${typeof chainId})`,
       );
     }
     const { isAtomId, trustworthyAtomId } = chainConfig as ChainConfig;

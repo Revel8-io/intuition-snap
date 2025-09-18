@@ -23,13 +23,14 @@ export type GetAccountDataResult = {
 
 export const getAccountData = async (
   destinationAddress: string,
-  chainId: string,
+  chainId: `eip155:${number}`,
 ): Promise<GetAccountDataResult> => {
+  const chainIdNumber = chainId.split(':')[1] as string;
   const caipAddress = addressToCaip10(destinationAddress, chainId);
-  const chainConfig = getChainConfigByChainId(chainId);
+  const chainConfig = getChainConfigByChainId(chainIdNumber);
   if (!chainConfig) {
     throw new Error(
-      `Chain config not found for chainId: ${chainId} (${typeof chainId})`,
+      `[getAccountData] Chain config not found for chainId: ${chainId} (${typeof chainId})`,
     );
   }
   try {
@@ -59,12 +60,6 @@ export const getAccountData = async (
 
     // account exists, now check if atom exists
     const { atom_id: atomId } = accounts[0];
-    const chainConfig = getChainConfigByChainId(chainId);
-    if (!chainConfig) {
-      throw new Error(
-        `Chain config not found for chainId: ${chainId} (${typeof chainId})`,
-      );
-    }
     const { isAtomId, trustworthyAtomId, relatedNicknamesAtomId } =
       chainConfig as ChainConfig;
     const trustQuery = graphQLQuery(getTripleWithPositionsDataQuery, {
