@@ -49,7 +49,7 @@ query Account($address: String!, $caipAddress: String!) {
 // as the subject for the triple and select the triple with the highest
 // total market cap
 export const getTripleWithPositionsDataQuery = `
-query TripleWithPositionAggregates($subjectId: numeric!, $predicateId: numeric!, $objectId: numeric!) {
+query TripleWithPositionAggregates($subjectId: String!, $predicateId: String!, $objectId: String!) {
   triples(where: {
     subject_id: { _eq: $subjectId },
     predicate_id: { _eq: $predicateId },
@@ -165,7 +165,7 @@ query TripleWithPositionAggregates($subjectId: numeric!, $predicateId: numeric!,
 `;
 
 export const getListWithHighestStakeQuery = `
-  query GetTriplesWithHighestStake($subjectId: numeric!, $predicateId: numeric!) {
+  query GetTriplesWithHighestStake($subjectId: String!, $predicateId: String!) {
     triples(
       where: {
         subject_id: { _eq: $subjectId },
