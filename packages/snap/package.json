@@ -4,7 +4,7 @@
   "description": "Bringing human trust to trustless systems.",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Revel8-io/intuition-snap"
+    "url": "https://github.com/0xintuition/intuition-snap"
   },
   "license": "Apache-2.0",
   "main": "./dist/bundle.js",
