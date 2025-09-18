@@ -7,7 +7,6 @@ type CallToActionProps = AccountProps & {
 };
 
 export const CallToAction = (props: CallToActionProps) => {
-  console.log('CallToAction props', props);
   const { method } = props;
   const links = VENDOR_LIST.map((vendor: Vendor) => {
     const linkGenerator = vendor[method];
