@@ -10,7 +10,6 @@ export const graphQLQuery = async (query: string, variables: any) => {
     query,
     variables,
   });
-  console.log('graphQLQuery data', JSON.stringify(data, null, 2));
   return data;
 };
 
