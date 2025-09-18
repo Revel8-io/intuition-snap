@@ -1,9 +1,9 @@
 {
-  "name": "intuition-snap",
-  "version": "0.3.0",
+  "name": "root",
+  "version": "0.2.0",
   "private": true,
-  "description": "",
-  "homepage": "https://github.com/Revel8-io/intuition-snap",
+  "description": "MetaMask snap for the Intuition network",
+  "homepage": "https://github.com/0xIntuition/intuition-snap#readme",
   "bugs": {
     "url": "https://github.com/0xIntuition/intuition-snap/issues"
   },

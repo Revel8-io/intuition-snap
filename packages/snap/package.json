@@ -1,6 +1,6 @@
 {
   "name": "intuition-snap",
-  "version": "0.3.0",
+  "version": "0.2.0",
   "description": "Bringing human trust to trustless systems.",
   "repository": {
     "type": "git",
@@ -29,7 +29,9 @@
   },
   "dependencies": {
     "@metamask/snaps-sdk": "^6.10.0",
-    "buffer": "^6.0.3"
+    "axios": "^1.11.0",
+    "buffer": "^6.0.3",
+    "viem": "^2.33.1"
   },
   "devDependencies": {
     "@jest/globals": "^29.5.0",

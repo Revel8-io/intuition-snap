@@ -22,9 +22,11 @@ module.exports = {
             allow: ['Text'],
           },
         ],
+        rules: {
+          '@typescript-eslint/naming-convention': 'off',
+        },
       },
     },
-
     {
       files: ['*.test.ts', '*.test.tsx'],
       rules: {
@@ -32,6 +34,5 @@ module.exports = {
       },
     },
   ],
-
   ignorePatterns: ['!.eslintrc.js', 'dist/'],
 };
