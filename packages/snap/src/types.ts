@@ -1,57 +1,11 @@
 import { ChainId } from '@metamask/snaps-sdk';
 
-export type Atom = {
-  term_id: string;
-  type: string;
-  label: string;
-  image: null;
-  data: string;
-  emoji: string;
-  followers: any[];
-  as_subject_triples: any[];
-};
-
-export type Identity = {
-  chainId: ChainId;
-  isContract: boolean;
-  accountType: string;
-  address: string;
-  account: Account | null;
-  triple: TripleWithPositions | null;
-  nickname: string | null;
-  initialUI?: any;
-};
-
 export type Account = {
   id: string;
   label: string;
   image?: string;
   nickname?: string;
   atom_id: string;
-};
-
-export type Triple = {
-  id: string;
-  vault_id: string;
-  counter_vault_id: string;
-  subject: {
-    emoji: string;
-    label: string;
-    image: string;
-    id: string;
-  };
-  predicate: {
-    emoji: string;
-    label: string;
-    image: string;
-    id: string;
-  };
-  object: {
-    emoji: string;
-    label: string;
-    image: string;
-    id: string;
-  };
 };
 
 export type TripleWithPositions = {
@@ -118,11 +72,6 @@ export type TripleWithPositions = {
     position_count: string;
     market_cap: string;
   }[];
-};
-
-export type TripleQueryResponse = {
-  triples: TripleWithPositions[];
-  chainlink_prices: { usd: number }[];
 };
 
 // AccountType enum

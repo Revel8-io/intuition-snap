@@ -2,7 +2,7 @@ import { Box, Text, Link, Button } from '@metamask/snaps-sdk/jsx';
 import { VENDOR_LIST, type Vendor } from './vendors';
 import { AccountProps, AccountType } from './types';
 
-export type CallToActionProps = AccountProps & {
+type CallToActionProps = AccountProps & {
   method: AccountType;
 };
 
@@ -32,8 +32,4 @@ export const rate = {
   [AccountType.AccountWithoutTrustData]: AccountWithoutTrustData,
   [AccountType.AccountWithTrustData]: AccountWithTrustData,
   [AccountType.NoAccount]: NoAccount,
-};
-
-export const cta = {
-  rate,
 };

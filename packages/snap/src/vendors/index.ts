@@ -22,7 +22,3 @@ export type Vendor = {
 };
 // change to array?
 export const VENDOR_LIST: Vendor[] = [revel8];
-
-export const VENDORS: Record<string, Vendor> = {
-  revel8,
-};

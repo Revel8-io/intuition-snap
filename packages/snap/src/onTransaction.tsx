@@ -22,11 +22,6 @@ export type OnTransactionContext = {
   accountType: AccountType;
 };
 
-export type OnTransactionProps = {
-  context: OnTransactionContext;
-  method: string;
-};
-
 export const onTransaction: OnTransactionHandler = async ({
   transaction,
   chainId,
