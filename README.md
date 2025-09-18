@@ -30,4 +30,7 @@ Great, now your changes in the code should show up when you are using your versi
 3. Version for mobile app? (Snaps are currently not enabled within MetaMask mobile)
 4. SVGs or animations to better convey position distribution
 5. We will always need more vendors / third-party dapps for the CTAs since we cannot generate EVM transactions from within the Snap
+6. Add support for other fiat currencies (currently just USD)
+7. Add translations
+8. Decide upon code style and enforce code quality via GitHub actions
 
