@@ -3,6 +3,7 @@ import {
   getAccountQuery,
   getListWithHighestStakeQuery,
   getTripleWithPositionsDataQuery,
+  getOriginAtomQuery,
   graphQLQuery,
 } from './queries';
 import {
@@ -10,6 +11,9 @@ import {
   AccountType,
   TripleWithPositions,
   AccountProps,
+  GetOriginDataResult,
+  OriginAtom,
+  OriginType,
 } from './types';
 import { addressToCaip10 } from './util';
 import { AccountComponents } from './components';
@@ -120,6 +124,91 @@ export const getAccountType = (
     return AccountType.AccountWithTrustData;
   }
   return AccountType.NoAccount; // default
+};
+
+export const getOriginData = async (
+  transactionOrigin: string | undefined,
+  chainId: ChainId,
+): Promise<GetOriginDataResult | null> => {
+  if (!transactionOrigin) {
+    return null;
+  }
+
+  const chainConfig = getChainConfigByChainId(chainId);
+  if (!chainConfig) {
+    throw new Error(
+      `[getOriginData] Chain config not found for chainId: ${chainId}`,
+    );
+  }
+
+  try {
+    // 1. Query for atom by label
+    const atomResponse = await graphQLQuery(getOriginAtomQuery, {
+      originLabel: transactionOrigin,
+    });
+
+    const atoms = atomResponse.data.atoms;
+    if (!atoms || atoms.length === 0) {
+      return {
+        originAtom: null,
+        originTriple: null,
+        originNickname: null,
+      };
+    }
+
+    const originAtom: OriginAtom = atoms[0];
+    const { term_id: atomId } = originAtom;
+
+    // 2. Check for trust triple and nickname
+    const { isAtomId, trustworthyAtomId, relatedNicknamesAtomId } = chainConfig as ChainConfig;
+
+    const [trustResponse, nicknameResponse] = await Promise.all([
+      graphQLQuery(getTripleWithPositionsDataQuery, {
+        subjectId: atomId,
+        predicateId: isAtomId,
+        objectId: trustworthyAtomId,
+      }),
+      graphQLQuery(getListWithHighestStakeQuery, {
+        subjectId: atomId,
+        predicateId: relatedNicknamesAtomId,
+      }),
+    ]);
+
+    const trustTriple = trustResponse.data.triples[0];
+    const nicknameTriple = nicknameResponse.data.triples[0];
+    const nickname = nicknameTriple?.object?.label;
+
+    return {
+      originAtom,
+      originTriple: trustTriple || null,
+      originNickname: nickname || null,
+    };
+
+  } catch (error: any) {
+    console.error('[getOriginData] error', JSON.stringify(error));
+    // Return null instead of throwing to handle gracefully
+    return null;
+  }
+};
+
+export const getOriginType = (
+  originData: GetOriginDataResult | null,
+): OriginType => {
+  if (!originData) {
+    return OriginType.NoOrigin;
+  }
+
+  const { originAtom, originTriple } = originData;
+
+  if (!originAtom) {
+    return OriginType.NoAtom;
+  }
+
+  if (!originTriple) {
+    return OriginType.AtomWithoutTrust;
+  }
+
+  return OriginType.AtomWithTrust;
 };
 
 export const renderOnTransaction = (props: AccountProps) => {

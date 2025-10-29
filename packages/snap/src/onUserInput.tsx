@@ -23,6 +23,21 @@ export const onUserInput: OnUserInputHandler = async (props: OnUserInputProps) =
   if (!props.event.name) return;
   const [type, method] = props.event.name.split('_');
   const renderFn = components[type as ComponentKey][method];
+
+  // For account_renderOnTransaction, we need to render the full transaction view
+  if (type === 'account' && method === 'renderOnTransaction') {
+    const ui = renderOnTransaction(props.context);
+    await snap.request({
+      method: 'snap_updateInterface',
+      params: {
+        id: props.id,
+        ui,
+      },
+    });
+    return;
+  }
+
+  // For other actions, pass the context with method
   const params = { ...props.context, method };
   if (!renderFn) return;
   await snap.request({

@@ -7,7 +7,7 @@
     "url": "https://github.com/0xintuition/intuition-snap"
   },
   "source": {
-    "shasum": "2cue+UMtjV6IHCPic1QOZHa4vlU6SEtlIx5jDNPu+pM=",
+    "shasum": "wGx950tnm9o7I0zBgAk+FMaxAOkAqAWgj3hSE+IeyZI=",
     "location": {
       "npm": {
         "filePath": "dist/bundle.js",
@@ -18,7 +18,9 @@
     }
   },
   "initialPermissions": {
-    "endowment:transaction-insight": {},
+    "endowment:transaction-insight": {
+      "allowTransactionOrigin": true
+    },
     "endowment:ethereum-provider": {},
     "endowment:network-access": {},
     "endowment:rpc": {

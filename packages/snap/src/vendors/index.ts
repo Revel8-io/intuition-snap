@@ -1,4 +1,5 @@
 import { AccountType, PropsForAccountType } from '../types';
+import { revel8 } from './revel8';
 
 type VendorCtaResponse = {
   url: string;
@@ -20,4 +21,4 @@ export type Vendor = {
   ) => VendorCtaResponse;
 };
 // change to array?
-export const VENDOR_LIST: Vendor[] = [];
+export const VENDOR_LIST: Vendor[] = [revel8];
