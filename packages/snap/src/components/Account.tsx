@@ -2,25 +2,121 @@ import {
   Address,
   Box,
   Button,
-  Container,
+  Divider,
   Link,
   Row,
   Text,
   Value,
 } from '@metamask/snaps-sdk/jsx';
 import { VENDOR_LIST } from '../vendors';
-import { AccountType, PropsForAccountType } from '../types';
+import { AccountType, PropsForAccountType, GetOriginDataResult, OriginType } from '../types';
 import { stringToDecimal } from '../util';
+import { getOriginType } from '../account';
+
+// Helper component to render origin section
+const OriginSection = ({
+  originData,
+  transactionOrigin,
+  chainId,
+}: {
+  originData?: GetOriginDataResult | null;
+  transactionOrigin?: string;
+  chainId: string;
+}) => {
+  if (!transactionOrigin || !originData) return null;
+
+  const originType = getOriginType(originData);
+  const { originAtom, originTriple, originNickname } = originData;
+
+  return (
+    <Box>
+      <Divider />
+      <Box>
+        <Box>
+          <Row label="Transaction Origin">
+            <Value value={transactionOrigin} extra="" />
+          </Row>
+
+          {originType === OriginType.NoAtom && (
+            <Box>
+              <Text>No atom exists for this origin yet</Text>
+              <Button name={`rate_origin_${OriginType.NoAtom}`}>Create origin atom</Button>
+            </Box>
+          )}
+
+          {originType === OriginType.AtomWithoutTrust && originAtom && (
+            <Box>
+              <Text>Atom exists for {transactionOrigin}</Text>
+              {originNickname && (
+                <Row label="Nickname">
+                  <Value value={`"${originNickname}"`} extra="" />
+                </Row>
+              )}
+              <Button name={`rate_origin_${OriginType.AtomWithoutTrust}`}>Rate origin</Button>
+            </Box>
+          )}
+
+          {originType === OriginType.AtomWithTrust && originAtom && originTriple && (
+            <Box>
+              {originNickname && (
+                <Row label="Nickname">
+                  <Value value={`"${originNickname}"`} extra="" />
+                </Row>
+              )}
+
+              {/* Trust data */}
+              {(() => {
+                const { term, counter_term, positions, counter_positions } = originTriple;
+                const supportVault = term?.vaults?.[0];
+                const opposeVault = counter_term?.vaults?.[0];
+
+                const supportMarketCap = supportVault?.market_cap || '0';
+                const supportMarketCapEth = stringToDecimal(supportMarketCap, 18);
+                const supportMarketCapFiat = 4300 * supportMarketCapEth; // TODO: use real chainlink price
+
+                const opposeMarketCap = opposeVault?.market_cap || '0';
+                const opposeMarketCapEth = stringToDecimal(opposeMarketCap, 18);
+                const opposeMarketCapFiat = 4300 * opposeMarketCapEth;
+
+                return (
+                  <Box>
+                    <Row label={`Trustworthy (${positions?.length || 0})`}>
+                      <Value
+                        value={`${supportMarketCapEth.toFixed(6)} Ξ`}
+                        extra={`$${supportMarketCapFiat.toFixed(2)} `}
+                      />
+                    </Row>
+                    <Row label={`Not trustworthy (${counter_positions?.length || 0})`}>
+                      <Value
+                        value={`${opposeMarketCapEth.toFixed(6)} Ξ`}
+                        extra={`$${opposeMarketCapFiat.toFixed(2)} `}
+                      />
+                    </Row>
+                  </Box>
+                );
+              })()}
+
+              <Button name={`rate_origin_${OriginType.AtomWithTrust}`}>Rate origin</Button>
+            </Box>
+          )}
+        </Box>
+      </Box>
+    </Box>
+  );
+};
 
 export const NoAccount = (
   params: PropsForAccountType<AccountType.NoAccount>,
 ) => {
-  const { address, accountType } = params;
+  const { address, accountType, originData, transactionOrigin, chainId } = params;
   return (
     <Box>
-      <Address address={address as `0x${string}`} />
-      <Text>No information about this account on Intuition, yet!</Text>
-      <Button name={`rate_${accountType}`}>Create atom</Button>
+      <Box>
+        <Address address={address as `0x${string}`} />
+        <Text>No information about this account on Intuition, yet!</Text>
+        <Button name={`rate_${accountType}`}>Create atom</Button>
+      </Box>
+      <OriginSection originData={originData} transactionOrigin={transactionOrigin} chainId={chainId} />
     </Box>
   );
 };
@@ -28,7 +124,7 @@ export const NoAccount = (
 export const AccountWithoutAtom = (
   params: PropsForAccountType<AccountType.AccountWithoutAtom>,
 ) => {
-  const { accountType } = params;
+  const { accountType, originData, transactionOrigin, chainId } = params;
   const links: any[] = [];
   VENDOR_LIST.forEach((vendor) => {
     const { name } = vendor;
@@ -42,8 +138,11 @@ export const AccountWithoutAtom = (
 
   return (
     <Box>
-      <Text>No information about this account on Intuition, yet!</Text>
-      {links}
+      <Box>
+        <Text>No information about this account on Intuition, yet!</Text>
+        {links}
+      </Box>
+      <OriginSection originData={originData} transactionOrigin={transactionOrigin} chainId={chainId} />
     </Box>
   );
 };
@@ -51,7 +150,7 @@ export const AccountWithoutAtom = (
 export const AccountWithoutTrustData = (
   params: PropsForAccountType<AccountType.AccountWithoutTrustData>,
 ) => {
-  const { account, nickname, accountType } = params;
+  const { account, nickname, accountType, originData, transactionOrigin, chainId } = params;
   const links: any[] = [];
   VENDOR_LIST.forEach((vendor) => {
     const { name } = vendor;
@@ -67,9 +166,12 @@ export const AccountWithoutTrustData = (
 
   return (
     <Box>
-      <Text>Atom exists for {account.id}</Text>
-      {!!nickname && <Text>Nickname: {nickname}</Text>}
-      <Button name={`rate_${accountType}`}>Rate account</Button>
+      <Box>
+        <Text>Atom exists for {account.id}</Text>
+        {!!nickname && <Text>Nickname: {nickname}</Text>}
+        <Button name={`rate_${accountType}`}>Rate account</Button>
+      </Box>
+      <OriginSection originData={originData} transactionOrigin={transactionOrigin} chainId={chainId} />
     </Box>
   );
 };
@@ -77,7 +179,7 @@ export const AccountWithoutTrustData = (
 export const AccountWithTrustData = (
   params: PropsForAccountType<AccountType.AccountWithTrustData>,
 ) => {
-  const { account, triple, nickname, accountType } = params;
+  const { account, triple, nickname, accountType, originData, transactionOrigin, chainId } = params;
   const chainlinkPrices: { usd: number } = { usd: 4300 };
   const {
     counter_term: {
@@ -108,31 +210,34 @@ export const AccountWithTrustData = (
   });
 
   return (
-    <Container>
+    <Box>
       <Box>
-        <Row label="Address">
-          <Address address={account.id as `0x${string}`} />
-        </Row>
-        {!!nickname && (
-          <Row label="Nickname">
-            <Value value={`"${nickname}"`} extra="" />
+        <Box>
+          <Row label="Address">
+            <Address address={account.id as `0x${string}`} />
           </Row>
-        )}
-        <Row label={`Trustworthy (${positions.length})`}>
-          <Value
-            value={`${supportMarketCapEth.toFixed(6)} Ξ`}
-            extra={`$${supportMarketCapFiat.toFixed(2)} `}
-          />
-        </Row>
-        <Row label={`Not trustworthy (${counter_positions.length})`}>
-          <Value
-            value={`${opposeMarketCapEth.toFixed(6)} Ξ`}
-            extra={`$${opposeMarketCapFiat.toFixed(2)} `}
-          />
-        </Row>
-        <Button name={`rate_${accountType}`}>Rate account</Button>
+          {!!nickname && (
+            <Row label="Nickname">
+              <Value value={`"${nickname}"`} extra="" />
+            </Row>
+          )}
+          <Row label={`Trustworthy (${positions.length})`}>
+            <Value
+              value={`${supportMarketCapEth.toFixed(6)} Ξ`}
+              extra={`$${supportMarketCapFiat.toFixed(2)} `}
+            />
+          </Row>
+          <Row label={`Not trustworthy (${counter_positions.length})`}>
+            <Value
+              value={`${opposeMarketCapEth.toFixed(6)} Ξ`}
+              extra={`$${opposeMarketCapFiat.toFixed(2)} `}
+            />
+          </Row>
+          <Button name={`rate_${accountType}`}>Rate account</Button>
+        </Box>
       </Box>
-    </Container>
+      <OriginSection originData={originData} transactionOrigin={transactionOrigin} chainId={chainId} />
+    </Box>
   );
 };
 

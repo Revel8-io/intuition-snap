@@ -219,3 +219,20 @@ export const getListWithHighestStakeQuery = `
     }
   }
 `;
+
+export const getOriginAtomQuery = `
+  query OriginAtom($originLabel: String!) {
+    atoms(where: { label: { _eq: $originLabel } }, limit: 1) {
+      term_id
+      type
+      label
+      image
+      data
+      emoji
+      creator_id
+    }
+    chainlink_prices(limit: 1, order_by: { id: desc }) {
+      usd
+    }
+  }
+`;
