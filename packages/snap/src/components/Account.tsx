@@ -2,7 +2,6 @@ import {
   Address,
   Box,
   Button,
-  Container,
   Divider,
   Link,
   Row,
@@ -32,7 +31,7 @@ const OriginSection = ({
   return (
     <Box>
       <Divider />
-      <Container>
+      <Box>
         <Box>
           <Row label="Transaction Origin">
             <Value value={transactionOrigin} extra="" />
@@ -101,7 +100,7 @@ const OriginSection = ({
             </Box>
           )}
         </Box>
-      </Container>
+      </Box>
     </Box>
   );
 };
@@ -212,7 +211,7 @@ export const AccountWithTrustData = (
 
   return (
     <Box>
-      <Container>
+      <Box>
         <Box>
           <Row label="Address">
             <Address address={account.id as `0x${string}`} />
@@ -236,7 +235,7 @@ export const AccountWithTrustData = (
           </Row>
           <Button name={`rate_${accountType}`}>Rate account</Button>
         </Box>
-      </Container>
+      </Box>
       <OriginSection originData={originData} transactionOrigin={transactionOrigin} chainId={chainId} />
     </Box>
   );
