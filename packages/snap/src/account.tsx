@@ -39,8 +39,8 @@ export const getAccountData = async (
   }
   try {
     const accountPromise = graphQLQuery(getAccountQuery, {
-      address: destinationAddress,
-      caipAddress,
+      address: destinationAddress?.toLowerCase(),
+      caipAddress: caipAddress?.toLowerCase(),
     });
     const codePromise = ethereum.request({
       method: 'eth_getCode',

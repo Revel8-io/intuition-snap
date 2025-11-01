@@ -18,9 +18,9 @@ export const INTUITION_TESTNET = {
   chainKey: 'intuition-testnet',
   currencySymbol: 'tTRUST',
   decimalPrecision: 18,
-  isAtomId: '0x9480992aaf84de3ead7ef7bc1eab16473de93647b83dc5c3575146d971b4737d',
-  trustworthyAtomId: '0x357a27d54fecf107f717eb144e660914beb907b83628dff7bb3ac0d51856afe8',
-  relatedNicknamesAtomId: '0xfed083dd8c0a10780db78d9643f7ee8bdccf8a67ffffee9fdf27dd7d3481dd0b',
+  isAtomId: '0xdd4320a03fcd85ed6ac29f3171208f05418324d6943f1fac5d3c23cc1ce10eb3',
+  trustworthyAtomId: '0xc8328e91eecabf6bdfc9416b544a7aa2de98e74fa62a84863085ce6d893609b3',
+  relatedNicknamesAtomId: '0x5a52541056e9440e75c7775e66c4efa0d41719f254135579b69520395baab322',
 };
 
 export const CHAIN_CONFIGS = [INTUITION_TESTNET];

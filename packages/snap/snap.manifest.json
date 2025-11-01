@@ -7,11 +7,7 @@
     "url": "https://github.com/0xintuition/intuition-snap"
   },
   "source": {
-<<<<<<< HEAD
-    "shasum": "MYgxt28is61Q1o/zLPzaz5rsa85T2ldR2U65ELrijk4=",
-=======
-    "shasum": "ns/iU0Vg2oI62O0yGl7FxMxo90NQ7AONwr4MWhEyau0=",
->>>>>>> url
+    "shasum": "BB5wid87Py9AiP5sd0BBXgb4/C7Vfn38fPQxJaksnHs=",
     "location": {
       "npm": {
         "filePath": "dist/bundle.js",
