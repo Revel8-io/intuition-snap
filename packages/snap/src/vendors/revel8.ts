@@ -6,28 +6,28 @@ const origin = 'https://localhost:3000';
 
 export const revel8: Vendor = {
   name: 'Revel8',
-  [AccountType.AccountWithoutAtom]: (
-    params: PropsForAccountType<AccountType.AccountWithoutAtom>,
+  [AccountType.NoAtom]: ( // will want to push user to COMPLETE triple (create atom + 2 existing)
+    params: PropsForAccountType<AccountType.NoAtom>,
   ) => {
     const { address, chainId } = params;
     return {
       url: `${origin}/redirect/complete_address_trustworthy_triple?address=${address}&chain_id=${chainId}`,
     };
   },
-  [AccountType.AccountWithoutTrustData]: (
-    params: PropsForAccountType<AccountType.AccountWithoutTrustData>,
+  [AccountType.AtomWithoutTrustTriple]: ( // will want to push user to CREATE triple (3 atoms exist)
+    params: PropsForAccountType<AccountType.AtomWithoutTrustTriple>,
   ) => {
-    const { chainId, account } = params;
+    const { chainId, account, address } = params;
     if (!account)
       throw new Error('getAccountAtomNoTrustData account not found');
-    const { atom_id: atomId } = account;
+    const { term_id: atomId } = account;
     const { isAtomId, trustworthyAtomId } = chainConfig as ChainConfig;
     return {
-      url: `${origin}/atoms/${atomId}?modal=complete_triple&chain_id=${chainId}&atom_ids=${atomId},${isAtomId},${trustworthyAtomId}`,
+      url: `${origin}/atoms/${atomId}?modal=complete_triple&atom_type=evm_address&evm_address=${address}&chain_id=${chainId}&atom_ids=${atomId},${isAtomId},${trustworthyAtomId}`,
     };
   },
-  [AccountType.AccountWithTrustData]: (
-    params: PropsForAccountType<AccountType.AccountWithTrustData>,
+  [AccountType.AtomWithTrustTriple]: (
+    params: PropsForAccountType<AccountType.AtomWithTrustTriple>,
   ) => {
     const { triple } = params;
     if (!triple) throw new Error('getAccountWithTrustData triple not found');

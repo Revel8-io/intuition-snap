@@ -10,14 +10,14 @@ export type Vendor = {
   [AccountType.NoAccount]?: (
     props: PropsForAccountType<AccountType.NoAccount>,
   ) => VendorCtaResponse;
-  [AccountType.AccountWithoutAtom]?: (
-    props: PropsForAccountType<AccountType.AccountWithoutAtom>,
+  [AccountType.NoAtom]?: (
+    props: PropsForAccountType<AccountType.NoAtom>,
   ) => VendorCtaResponse;
-  [AccountType.AccountWithoutTrustData]?: (
-    props: PropsForAccountType<AccountType.AccountWithoutTrustData>,
+  [AccountType.AtomWithoutTrustTriple]?: (
+    props: PropsForAccountType<AccountType.AtomWithoutTrustTriple>,
   ) => VendorCtaResponse;
-  [AccountType.AccountWithTrustData]?: (
-    props: PropsForAccountType<AccountType.AccountWithTrustData>,
+  [AccountType.AtomWithTrustTriple]?: (
+    props: PropsForAccountType<AccountType.AtomWithTrustTriple>,
   ) => VendorCtaResponse;
 };
 // change to array?

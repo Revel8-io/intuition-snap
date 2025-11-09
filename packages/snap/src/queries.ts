@@ -15,12 +15,27 @@ export const graphQLQuery = async (query: string, variables: any) => {
 };
 
 export const getAddressAtomsQuery = `
-query AddressAtoms($address: String!, $caipAddress: String!) {
-  atoms(where: {
+query AddressAtoms($plainAddress: String!, $caipAddress: String!) {
+  # Atoms matching plain address format (for EOAs)
+  plainAtoms: atoms(where: {
     _or: [
-      { label: { _ilike: $address } },
+      { label: { _ilike: $plainAddress } },
+      { data: { _ilike: $plainAddress } }
+    ]
+  }, limit: 1) {
+    term_id
+    type
+    label
+    image
+    data
+    emoji
+    creator_id
+  }
+
+  # Atoms matching CAIP format (for smart contracts)
+  caipAtoms: atoms(where: {
+    _or: [
       { label: { _ilike: $caipAddress } },
-      { data: { _ilike: $address } },
       { data: { _ilike: $caipAddress } }
     ]
   }, limit: 1) {

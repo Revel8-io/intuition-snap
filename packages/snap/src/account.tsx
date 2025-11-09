@@ -34,66 +34,66 @@ export const getAccountData = async (
   const caipAddress = addressToCaip10(destinationAddress, chainId);
 
   try {
-    const addressAtomsPromise = graphQLQuery(getAddressAtomsQuery, {
-      address: destinationAddress?.toLowerCase(),
-      caipAddress: caipAddress?.toLowerCase(),
-    });
-    const codePromise = ethereum.request({
-      method: 'eth_getCode',
-      params: [destinationAddress, 'latest'],
-    });
-    const [addressAtomsResponse, accountType] = await Promise.all([
-      addressAtomsPromise,
-      codePromise,
+    console.log('Starting parallel queries for:', destinationAddress, caipAddress);
+
+    // PARALLEL: Fetch atoms in both formats and check if it's a contract
+    const [atomsResponse, codeResponse] = await Promise.all([
+      graphQLQuery(getAddressAtomsQuery, {
+        plainAddress: destinationAddress,
+        caipAddress: caipAddress,
+      }),
+      ethereum.request({
+        method: 'eth_getCode',
+        params: [destinationAddress, 'latest'],
+      }),
     ]);
-    console.log('addressAtomsResponse', JSON.stringify(addressAtomsResponse, null, 2));
-    console.log('accountType', accountType);
-    const {
-      data: { atoms: [atom] },
-    } = addressAtomsResponse;
-    const isContract = accountType !== '0x';
-    if (!atom) {
-      return { account: atom, triple: null, isContract, nickname: null };
+
+    console.log('atomsResponse', JSON.stringify(atomsResponse, null, 2));
+    console.log('codeResponse', codeResponse);
+
+    const isContract = codeResponse !== '0x';
+    const { plainAtoms, caipAtoms } = atomsResponse.data;
+
+    // Choose the appropriate atom based on address type
+    const relevantAtom = isContract
+      ? caipAtoms?.[0]   // Use CAIP format for smart contracts
+      : plainAtoms?.[0]; // Use plain format for EOAs
+
+    console.log('isContract:', isContract, 'relevantAtom:', relevantAtom);
+
+    if (!relevantAtom) {
+      return { account: null, triple: null, isContract, nickname: null };
     }
 
-    // account exists, now check if atom exists
-    const { term_id: atomId } = atom;
+    // Use the relevant atom to check for trust data
+    const { term_id: atomId } = relevantAtom;
     const { isAtomId, trustworthyAtomId, relatedNicknamesAtomId } =
       chainConfig as ChainConfig;
-    const trustQuery = graphQLQuery(getTripleWithPositionsDataQuery, {
-      subjectId: atomId,
-      predicateId: isAtomId,
-      objectId: trustworthyAtomId,
-    });
-    const nicknameQuery = graphQLQuery(getListWithHighestStakeQuery, {
-      subjectId: atomId,
-      predicateId: relatedNicknamesAtomId,
-    });
+
+    // PARALLEL: Get trust and nickname data
     const [trustResponse, nicknameResponse] = await Promise.all([
-      trustQuery,
-      nicknameQuery,
+      graphQLQuery(getTripleWithPositionsDataQuery, {
+        subjectId: atomId,
+        predicateId: isAtomId,
+        objectId: trustworthyAtomId,
+      }),
+      graphQLQuery(getListWithHighestStakeQuery, {
+        subjectId: atomId,
+        predicateId: relatedNicknamesAtomId,
+      }),
     ]);
+
     const trustTriple = trustResponse.data.triples[0];
     const nicknameTriple = nicknameResponse.data.triples[0];
     const nickname = nicknameTriple?.object?.label;
-    if (!trustTriple) {
-      return {
-        account: atom,
-        triple: null,
-        isContract,
-        nickname,
-      };
-    }
 
-    if (trustTriple) {
-      return {
-        account: atom,
-        triple: trustTriple || null,
-        nickname,
-        isContract,
-      };
-    }
-    return { account: null, triple: null, isContract, nickname: null };
+    // Return the account data with the relevant atom
+    return {
+      account: relevantAtom as Account,  // Using atom as account for now
+      triple: trustTriple || null,
+      isContract,
+      nickname: nickname || null,
+    };
   } catch (error: any) {
     console.error('getAccountData error', JSON.stringify(error));
     throw error;
@@ -105,15 +105,23 @@ export const getAccountType = (
 ): AccountType => {
   const { account, triple } = accountData;
 
-  if (account.atom_id === null) {
-    return AccountType.AccountWithoutAtom;
+  if (account === null) {
+    return AccountType.NoAccount;
   }
+
+  // Since we're now using atoms directly, check if we have atom data
+  if (!account.term_id) {
+    return AccountType.NoAtom;
+  }
+
   if (triple === null) {
-    return AccountType.AccountWithoutTrustData;
+    return AccountType.AtomWithoutTrustTriple;
   }
+
   if (triple) {
-    return AccountType.AccountWithTrustData;
+    return AccountType.AtomWithTrustTriple;
   }
+
   return AccountType.NoAccount; // default
 };
 
@@ -196,7 +204,7 @@ export const getOriginType = (
 
 export const renderOnTransaction = (props: AccountProps) => {
   const { accountType } = props;
-
+  console.log('renderOnTransaction accountType', accountType);
   // TypeScript now knows the exact prop shape for each accountType
   const initialUI = AccountComponents[accountType](props as any);
   return initialUI;

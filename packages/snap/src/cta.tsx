@@ -48,9 +48,9 @@ export const OriginCallToAction = (props: CallToActionProps) => {
 };
 
 const NoAccount = CallToAction;
-const AccountWithoutTrustData = CallToAction;
-const AccountWithTrustData = CallToAction;
-const AccountWithoutAtom = CallToAction;
+const AtomWithoutTrustTriple = CallToAction;
+const AtomWithTrustTriple = CallToAction;
+const NoAtom = CallToAction;
 
 // Origin-specific CTAs
 const OriginNoAtom = OriginCallToAction;
@@ -58,10 +58,10 @@ const OriginAtomWithoutTrust = OriginCallToAction;
 const OriginAtomWithTrust = OriginCallToAction;
 
 export const rate = {
-  [AccountType.AccountWithoutTrustData]: AccountWithoutTrustData,
-  [AccountType.AccountWithTrustData]: AccountWithTrustData,
+  [AccountType.AtomWithoutTrustTriple]: AtomWithoutTrustTriple,
+  [AccountType.AtomWithTrustTriple]: AtomWithTrustTriple,
   [AccountType.NoAccount]: NoAccount,
-  [AccountType.AccountWithoutAtom]: AccountWithoutAtom,
+  [AccountType.NoAtom]: NoAtom,
 
   // Origin-specific methods
   [`origin_${OriginType.NoAtom}`]: OriginNoAtom,

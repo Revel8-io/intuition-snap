@@ -121,8 +121,8 @@ export const NoAccount = (
   );
 };
 
-export const AccountWithoutAtom = (
-  params: PropsForAccountType<AccountType.AccountWithoutAtom>,
+export const NoAtom = (
+  params: PropsForAccountType<AccountType.NoAtom>,
 ) => {
   const { accountType, originData, transactionOrigin, chainId } = params;
   const links: any[] = [];
@@ -147,8 +147,8 @@ export const AccountWithoutAtom = (
   );
 };
 
-export const AccountWithoutTrustData = (
-  params: PropsForAccountType<AccountType.AccountWithoutTrustData>,
+export const AtomWithoutTrustTriple = (
+  params: PropsForAccountType<AccountType.AtomWithoutTrustTriple>,
 ) => {
   const { account, nickname, accountType, originData, transactionOrigin, chainId } = params;
   const links: any[] = [];
@@ -167,7 +167,7 @@ export const AccountWithoutTrustData = (
   return (
     <Box>
       <Box>
-        <Text>Atom exists for {account.id}</Text>
+        <Text>Atom exists for {account.label || account.data}</Text>
         {!!nickname && <Text>Nickname: {nickname}</Text>}
         <Button name={`rate_${accountType}`}>Rate account</Button>
       </Box>
@@ -176,11 +176,11 @@ export const AccountWithoutTrustData = (
   );
 };
 
-export const AccountWithTrustData = (
-  params: PropsForAccountType<AccountType.AccountWithTrustData>,
+export const AtomWithTrustTriple = (
+  params: PropsForAccountType<AccountType.AtomWithTrustTriple>,
 ) => {
-  const { account, triple, nickname, accountType, originData, transactionOrigin, chainId } = params;
-  const chainlinkPrices: { usd: number } = { usd: 4300 };
+  const { address, triple, nickname, accountType, originData, transactionOrigin, chainId } = params;
+  const chainlinkPrices: { usd: number } = { usd: 0.22 };
   const {
     counter_term: {
       vaults: [counterVault],
@@ -214,7 +214,7 @@ export const AccountWithTrustData = (
       <Box>
         <Box>
           <Row label="Address">
-            <Address address={account.id as `0x${string}`} />
+            <Address address={address as `0x${string}`} />
           </Row>
           {!!nickname && (
             <Row label="Nickname">
@@ -223,13 +223,13 @@ export const AccountWithTrustData = (
           )}
           <Row label={`Trustworthy (${positions.length})`}>
             <Value
-              value={`${supportMarketCapEth.toFixed(6)} Ξ`}
+              value={`${supportMarketCapEth.toFixed(2)} TRUST`}
               extra={`$${supportMarketCapFiat.toFixed(2)} `}
             />
           </Row>
           <Row label={`Not trustworthy (${counter_positions.length})`}>
             <Value
-              value={`${opposeMarketCapEth.toFixed(6)} Ξ`}
+              value={`${opposeMarketCapEth.toFixed(2)} TRUST`}
               extra={`$${opposeMarketCapFiat.toFixed(2)} `}
             />
           </Row>
@@ -248,7 +248,7 @@ export type AccountComponents = {
 
 export const AccountComponents: AccountComponents = {
   [AccountType.NoAccount]: NoAccount,
-  [AccountType.AccountWithoutAtom]: AccountWithoutAtom,
-  [AccountType.AccountWithoutTrustData]: AccountWithoutTrustData,
-  [AccountType.AccountWithTrustData]: AccountWithTrustData,
+  [AccountType.NoAtom]: NoAtom,
+  [AccountType.AtomWithoutTrustTriple]: AtomWithoutTrustTriple,
+  [AccountType.AtomWithTrustTriple]: AtomWithTrustTriple,
 };

@@ -5,7 +5,7 @@ export type Account = {
   label: string;
   image?: string;
   nickname?: string;
-  atom_id: string;
+  term_id: string;
 };
 
 export type TripleWithPositions = {
@@ -77,9 +77,9 @@ export type TripleWithPositions = {
 // AccountType enum
 export enum AccountType {
   NoAccount = 'NoAccount',
-  AccountWithoutAtom = 'AccountWithoutAtom',
-  AccountWithoutTrustData = 'AccountWithoutTrustData',
-  AccountWithTrustData = 'AccountWithTrustData',
+  NoAtom = 'NoAtom',
+  AtomWithoutTrustTriple = 'AtomWithoutTrustTriple',
+  AtomWithTrustTriple = 'AtomWithTrustTriple',
 }
 
 // Discriminated union types for proper AccountProps typing
@@ -96,7 +96,7 @@ export type AccountProps =
       transactionOrigin?: string;
     }
   | {
-      accountType: AccountType.AccountWithoutAtom;
+      accountType: AccountType.NoAtom;
       chainId: ChainId;
       address: string;
       account: Account;
@@ -107,7 +107,7 @@ export type AccountProps =
       transactionOrigin?: string;
     }
   | {
-      accountType: AccountType.AccountWithoutTrustData;
+      accountType: AccountType.AtomWithoutTrustTriple;
       chainId: ChainId;
       address: string;
       account: Account;
@@ -118,7 +118,7 @@ export type AccountProps =
       transactionOrigin?: string;
     }
   | {
-      accountType: AccountType.AccountWithTrustData;
+      accountType: AccountType.AtomWithTrustTriple;
       chainId: ChainId;
       address: string;
       account: Account;
