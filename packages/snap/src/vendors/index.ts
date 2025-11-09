@@ -1,4 +1,4 @@
-import { AccountType, PropsForAccountType } from '../types';
+import { AccountType, OriginType, PropsForAccountType } from '../types';
 import { revel8 } from './revel8';
 
 type VendorCtaResponse = {

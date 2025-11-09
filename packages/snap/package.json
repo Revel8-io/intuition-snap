@@ -25,6 +25,8 @@
     "prepublishOnly": "mm-snap manifest",
     "serve": "mm-snap serve",
     "start": "mm-snap watch",
+    "start:mainnet": "CHAIN=mainnet mm-snap watch",
+    "start:testnet": "CHAIN=testnet mm-snap watch",
     "test": "jest"
   },
   "dependencies": {

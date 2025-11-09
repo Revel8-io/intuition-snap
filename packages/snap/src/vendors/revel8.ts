@@ -1,6 +1,6 @@
 import { AccountType, PropsForAccountType, OriginType } from '../types';
 import { type Vendor } from '.';
-import { getChainConfigByChainId, type ChainConfig } from '../config';
+import { chainConfig, type ChainConfig } from '../config';
 
 const origin = 'https://testnet.explorer.revel8.io';
 
@@ -29,12 +29,6 @@ export const revel8: Vendor = {
     if (!account)
       throw new Error('getAccountAtomNoTrustData account not found');
     const { atom_id: atomId } = account;
-    const chainConfig = getChainConfigByChainId(chainId);
-    if (!chainConfig) {
-      throw new Error(
-        `[revel8] Chain config not found for chainId: ${chainId} (${typeof chainId})`,
-      );
-    }
     const { isAtomId, trustworthyAtomId } = chainConfig as ChainConfig;
     return {
       url: `${origin}/atoms/${atomId}?modal=complete_triple&chain_id=${chainId}&atom_ids=${atomId},${isAtomId},${trustworthyAtomId}`,
@@ -64,10 +58,6 @@ export const revel8: Vendor = {
     const { originData, chainId } = params;
     if (!originData?.originAtom) throw new Error('Origin atom not found');
     const { term_id: atomId } = originData.originAtom;
-    const chainConfig = getChainConfigByChainId(chainId);
-    if (!chainConfig) {
-      throw new Error(`[revel8] Chain config not found for chainId: ${chainId}`);
-    }
     const { isAtomId, trustworthyAtomId } = chainConfig as ChainConfig;
     return {
       url: `${origin}/atoms/${atomId}?modal=complete_triple&chain_id=${chainId}&atom_ids=${atomId},${isAtomId},${trustworthyAtomId}`,
@@ -83,3 +73,6 @@ export const revel8: Vendor = {
     };
   },
 };
+
+// https://testnet.explorer.revel8.io/redirect/complete_address_trustworthy_triple?address=0x2ece8d4dedcb9918a398528f3fa4688b1d2cab91&chain_id=eip155:13579
+// http://localhost:3000/redirect/complete_address_trustworthy_triple?address=0x2ece8d4dedcb9918a398528f3fa4688b1d2cab91&chain_id=eip155:13579

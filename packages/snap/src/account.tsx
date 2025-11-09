@@ -1,4 +1,4 @@
-import { type ChainConfig, getChainConfigByChainId } from './config';
+import { type ChainConfig, chainConfig } from './config';
 import {
   getAccountQuery,
   getListWithHighestStakeQuery,
@@ -31,12 +31,7 @@ export const getAccountData = async (
   chainId: ChainId,
 ): Promise<GetAccountDataResult> => {
   const caipAddress = addressToCaip10(destinationAddress, chainId);
-  const chainConfig = getChainConfigByChainId(chainId);
-  if (!chainConfig) {
-    throw new Error(
-      `[getAccountData] Chain config not found for chainId: ${chainId} (${typeof chainId})`,
-    );
-  }
+
   try {
     const accountPromise = graphQLQuery(getAccountQuery, {
       address: destinationAddress?.toLowerCase(),
@@ -128,17 +123,9 @@ export const getAccountType = (
 
 export const getOriginData = async (
   transactionOrigin: string | undefined,
-  chainId: ChainId,
 ): Promise<GetOriginDataResult | null> => {
   if (!transactionOrigin) {
     return null;
-  }
-
-  const chainConfig = getChainConfigByChainId(chainId);
-  if (!chainConfig) {
-    throw new Error(
-      `[getOriginData] Chain config not found for chainId: ${chainId}`,
-    );
   }
 
   try {
@@ -151,7 +138,7 @@ export const getOriginData = async (
     if (!atoms || atoms.length === 0) {
       return {
         originAtom: null,
-        originTriple: null,
+        originTriple: null, // is - trustworthy triple
         originNickname: null,
       };
     }

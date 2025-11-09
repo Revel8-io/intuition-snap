@@ -10,6 +10,9 @@ const config: SnapConfig = {
   polyfills: {
     buffer: true,
   },
+  environment: {
+    CHAIN: process.env.CHAIN,
+  },
 };
 
 export default config;
