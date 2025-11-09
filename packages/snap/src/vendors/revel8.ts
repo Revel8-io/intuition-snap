@@ -2,18 +2,10 @@ import { AccountType, PropsForAccountType, OriginType } from '../types';
 import { type Vendor } from '.';
 import { chainConfig, type ChainConfig } from '../config';
 
-const origin = 'https://testnet.explorer.revel8.io';
+const origin = 'https://localhost:3000';
 
 export const revel8: Vendor = {
   name: 'Revel8',
-  [AccountType.NoAccount]: (
-    params: PropsForAccountType<AccountType.NoAccount>,
-  ) => {
-    const { address, chainId } = params;
-    return {
-      url: `${origin}/redirect/complete_address_trustworthy_triple?address=${address}&chain_id=${chainId}`,
-    };
-  },
   [AccountType.AccountWithoutAtom]: (
     params: PropsForAccountType<AccountType.AccountWithoutAtom>,
   ) => {

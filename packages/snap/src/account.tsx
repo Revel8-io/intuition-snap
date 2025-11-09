@@ -5,6 +5,7 @@ import {
   getTripleWithPositionsDataQuery,
   getOriginAtomQuery,
   graphQLQuery,
+  getAddressAtomsQuery,
 } from './queries';
 import {
   Account,
@@ -33,7 +34,7 @@ export const getAccountData = async (
   const caipAddress = addressToCaip10(destinationAddress, chainId);
 
   try {
-    const accountPromise = graphQLQuery(getAccountQuery, {
+    const addressAtomsPromise = graphQLQuery(getAddressAtomsQuery, {
       address: destinationAddress?.toLowerCase(),
       caipAddress: caipAddress?.toLowerCase(),
     });
@@ -41,24 +42,22 @@ export const getAccountData = async (
       method: 'eth_getCode',
       params: [destinationAddress, 'latest'],
     });
-    const [accountResponse, accountType] = await Promise.all([
-      accountPromise,
+    const [addressAtomsResponse, accountType] = await Promise.all([
+      addressAtomsPromise,
       codePromise,
     ]);
+    console.log('addressAtomsResponse', JSON.stringify(addressAtomsResponse, null, 2));
+    console.log('accountType', accountType);
     const {
-      data: { accounts },
-    } = accountResponse;
+      data: { atoms: [atom] },
+    } = addressAtomsResponse;
     const isContract = accountType !== '0x';
-    if (accounts.length === 0) {
-      return { account: null, triple: null, isContract, nickname: null };
-    }
-
-    if (accounts[0].atom_id === null) {
-      return { account: accounts[0], triple: null, isContract, nickname: null };
+    if (!atom) {
+      return { account: atom, triple: null, isContract, nickname: null };
     }
 
     // account exists, now check if atom exists
-    const { atom_id: atomId } = accounts[0];
+    const { term_id: atomId } = atom;
     const { isAtomId, trustworthyAtomId, relatedNicknamesAtomId } =
       chainConfig as ChainConfig;
     const trustQuery = graphQLQuery(getTripleWithPositionsDataQuery, {
@@ -79,7 +78,7 @@ export const getAccountData = async (
     const nickname = nicknameTriple?.object?.label;
     if (!trustTriple) {
       return {
-        account: accounts[0],
+        account: atom,
         triple: null,
         isContract,
         nickname,
@@ -88,7 +87,7 @@ export const getAccountData = async (
 
     if (trustTriple) {
       return {
-        account: accounts[0],
+        account: atom,
         triple: trustTriple || null,
         nickname,
         isContract,
@@ -106,9 +105,6 @@ export const getAccountType = (
 ): AccountType => {
   const { account, triple } = accountData;
 
-  if (account === null) {
-    return AccountType.NoAccount;
-  }
   if (account.atom_id === null) {
     return AccountType.AccountWithoutAtom;
   }

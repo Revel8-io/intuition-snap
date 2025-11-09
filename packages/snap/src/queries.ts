@@ -10,32 +10,27 @@ export const graphQLQuery = async (query: string, variables: any) => {
     query,
     variables,
   });
+  console.log('graphQLQuery data', JSON.stringify(data, null, 2));
   return data;
 };
 
-export const getAccountQuery = `
-query Account($address: String!, $caipAddress: String!) {
-  accounts(where: {
+export const getAddressAtomsQuery = `
+query AddressAtoms($address: String!, $caipAddress: String!) {
+  atoms(where: {
     _or: [
-      { id: { _ilike: $address } },
-      { id: { _ilike: $caipAddress } }
+      { label: { _ilike: $address } },
+      { label: { _ilike: $caipAddress } },
+      { data: { _ilike: $address } },
+      { data: { _ilike: $caipAddress } }
     ]
   }, limit: 1) {
-    id
+    term_id
+    type
     label
     image
-    atom_id
-    atom {
-      term_id
-      type
-      label
-      image
-      data
-      emoji
-    }
-  }
-  chainlink_prices(limit: 1, order_by: { id: desc }) {
-    usd
+    data
+    emoji
+    creator_id
   }
 }
 `;
