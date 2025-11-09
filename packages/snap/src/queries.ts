@@ -13,17 +13,14 @@ export const graphQLQuery = async (query: string, variables: any) => {
   return data;
 };
 
-export const checkAccountAtomExistenceQuery = `
-query CheckAccountAtomExistence($address: String!) {
-  account(id: $address) {
-    atom_id
-  }
-}
-`;
-
 export const getAccountQuery = `
 query Account($address: String!, $caipAddress: String!) {
-  accounts(where: { id: { _in: [$address, $caipAddress] } }, limit: 1) {
+  accounts(where: {
+    _or: [
+      { id: { _ilike: $address } },
+      { id: { _ilike: $caipAddress } }
+    ]
+  }, limit: 1) {
     id
     label
     image
