@@ -14,6 +14,7 @@ import {
 import { addressToCaip10 } from './util';
 import { AccountComponents } from './components';
 import { ChainId } from '@metamask/snaps-sdk';
+import axios from 'axios';
 
 export type GetAccountDataResult = {
   account: Account | null;
@@ -26,23 +27,33 @@ export const getAccountData = async (
   destinationAddress: string,
   chainId: ChainId,
 ): Promise<GetAccountDataResult> => {
+  const { chainId: configChainId, rpcUrl } = chainConfig;
   const caipAddress = addressToCaip10(destinationAddress, chainId);
 
   try {
+    // if it's on our chain (Intuitin Mainnet) then use our own node
+    const simpleChainId = chainId.split(':')[1];
+    let isContract = true
+    if (simpleChainId === configChainId.toString()) {
+      // use our own node to see if smart contract
+      // todo: switch back if they fix ethereum.request()
+      const codeResponse = await axios.post(rpcUrl, {
+        method: 'POST',
+        data: {
+          jsonrpc: '2.0',
+          method: 'eth_getCode',
+          params: [destinationAddress, 'latest']
+        },
+      });
+      isContract = codeResponse.data.result !== '0x';
+    }
 
-    // PARALLEL: Fetch atoms in both formats and check if it's a contract
-    const [atomsResponse, codeResponse] = await Promise.all([
+    const [atomsResponse] = await Promise.all([
       graphQLQuery(getAddressAtomsQuery, {
         plainAddress: destinationAddress,
         caipAddress: caipAddress,
       }),
-      ethereum.request({
-        method: 'eth_getCode',
-        params: [destinationAddress, 'latest'],
-      }),
     ]);
-
-    const isContract = codeResponse !== '0x';
     const { plainAtoms, caipAtoms } = atomsResponse.data;
 
     // Choose the appropriate atom based on address type

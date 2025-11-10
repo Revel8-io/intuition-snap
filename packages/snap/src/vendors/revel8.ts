@@ -4,6 +4,7 @@ import { chainConfig, type ChainConfig } from '../config';
 
 const origin = 'https://localhost:3000';
 
+// change to class?
 export const revel8: Vendor = {
   name: 'Revel8',
   [AccountType.NoAtom]: ( // will want to push user to COMPLETE triple (create atom + 2 existing)

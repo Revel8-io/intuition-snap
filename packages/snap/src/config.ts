@@ -8,10 +8,12 @@ export type ChainConfig = {
   isAtomId: string;
   trustworthyAtomId: string;
   relatedNicknamesAtomId: string;
+  rpcUrl: string;
 };
 
 export const INTUITION_TESTNET = {
   backendUrl: 'https://testnet.intuition.sh/v1/graphql',
+  rpcUrl: 'https://testnet.rpc.intuition.systems',
   chainId: 13579,
   chainIdHex: '0x350B',
   chainName: 'Intuition Testnet',
@@ -24,9 +26,11 @@ export const INTUITION_TESTNET = {
   // 0x2Ece8D4dEdcB9918A398528f3fa4688b1d2CAB91
 };
 
+// Multivault address: 0x6E35cF57A41fA15eA0EaE9C33e751b01A784Fe7e
 export const INTUITION_MAINNET = {
   backendUrl: 'https://mainnet.intuition.sh/v1/graphql',
   chainId: 1155,
+  rpcUrl: 'https://rpc.intuition.systems',
   chainIdHex: '0x483',
   chainName: 'Intuition Mainnet',
   chainKey: 'intuition-mainnet',
