@@ -2,7 +2,6 @@ import {
   Address,
   Box,
   Button,
-  Divider,
   Link,
   Row,
   Text,
@@ -15,7 +14,7 @@ import { stringToDecimal } from '../util';
 export const NoAtom = (
   params: PropsForAccountType<AccountType.NoAtom>,
 ) => {
-  const { accountType, transactionOrigin, chainId } = params;
+  const { accountType } = params;
   const links: any[] = [];
   VENDOR_LIST.forEach((vendor) => {
     const { name } = vendor;
@@ -40,7 +39,7 @@ export const NoAtom = (
 export const AtomWithoutTrustTriple = (
   params: PropsForAccountType<AccountType.AtomWithoutTrustTriple>,
 ) => {
-  const { account, nickname, accountType, transactionOrigin, chainId } = params;
+  const { account, nickname, accountType } = params;
   const links: any[] = [];
   VENDOR_LIST.forEach((vendor) => {
     const { name } = vendor;
@@ -68,7 +67,7 @@ export const AtomWithoutTrustTriple = (
 export const AtomWithTrustTriple = (
   params: PropsForAccountType<AccountType.AtomWithTrustTriple>,
 ) => {
-  const { address, triple, nickname, accountType, transactionOrigin, chainId } = params;
+  const { address, triple, nickname, accountType } = params;
   const chainlinkPrices: { usd: number } = { usd: 0.22 };
   const {
     counter_term: {

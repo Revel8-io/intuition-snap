@@ -1,30 +1,34 @@
 import { AccountType, PropsForAccountType } from '../types';
 import { type Vendor } from '.';
 import { chainConfig, type ChainConfig } from '../config';
+import { addressToCaip10 } from '../util';
 
 const origin = 'https://localhost:3000';
 
 // change to class?
+// should we use /redirect for all methods? We don't want to have to
+// issue many Snap updates
 export const revel8: Vendor = {
   name: 'Revel8',
   [AccountType.NoAtom]: ( // will want to push user to COMPLETE triple (create atom + 2 existing)
     params: PropsForAccountType<AccountType.NoAtom>,
   ) => {
-    const { address, chainId } = params;
+    const { address, chainId, isContract } = params;
+    const addressToUse = isContract ? addressToCaip10(address, chainId) : address
     return {
-      url: `${origin}/redirect/complete_address_trustworthy_triple?address=${address}&chain_id=${chainId}`,
+      url: `${origin}/redirect/complete_address_trustworthy_triple?address=${addressToUse}&chain_id=${chainId}`,
     };
   },
   [AccountType.AtomWithoutTrustTriple]: ( // will want to push user to CREATE triple (3 atoms exist)
     params: PropsForAccountType<AccountType.AtomWithoutTrustTriple>,
   ) => {
-    const { chainId, account, address } = params;
+    const { account } = params;
     if (!account)
       throw new Error('getAccountAtomNoTrustData account not found');
     const { term_id: atomId } = account;
     const { isAtomId, trustworthyAtomId } = chainConfig as ChainConfig;
-    return {
-      url: `${origin}/atoms/${atomId}?modal=complete_triple&atom_type=evm_address&evm_address=${address}&chain_id=${chainId}&atom_ids=${atomId},${isAtomId},${trustworthyAtomId}`,
+    return { // change atom_type from evm_address to just address because CAIP is not EVM
+      url: `${origin}/atoms/${atomId}?modal=complete_triple&atom_ids=${atomId},${isAtomId},${trustworthyAtomId}`,
     };
   },
   [AccountType.AtomWithTrustTriple]: (
