@@ -4,7 +4,7 @@ import type {
   Transaction,
 } from '@metamask/snaps-sdk';
 
-import { getAccountData, getAccountType, getOriginData, renderOnTransaction } from './account';
+import { getAccountData, getAccountType, renderOnTransaction } from './account';
 import {
   Account,
   TripleWithPositions,
@@ -35,9 +35,9 @@ export const onTransaction: OnTransactionHandler = async ({
   const { to: address } = transaction;
 
   // Execute both queries in parallel for performance
-  const [accountData, originData] = await Promise.all([
+  const [accountData,] = await Promise.all([
     getAccountData(address, chainId),
-    getOriginData(transactionOrigin, chainId),
+    // add more here
   ]);
 
   const accountType = getAccountType(accountData);
@@ -48,7 +48,6 @@ export const onTransaction: OnTransactionHandler = async ({
     accountType,
     address,
     chainId,
-    originData,
     transactionOrigin,
   } as AccountProps; // Type assertion needed due to the discriminated union
 
