@@ -1,4 +1,4 @@
-import { AccountType, OriginType, PropsForAccountType } from '../types';
+import { AccountType, PropsForAccountType } from '../types';
 import { revel8 } from './revel8';
 
 type VendorCtaResponse = {
@@ -7,9 +7,6 @@ type VendorCtaResponse = {
 
 export type Vendor = {
   name: string;
-  [AccountType.NoAccount]?: (
-    props: PropsForAccountType<AccountType.NoAccount>,
-  ) => VendorCtaResponse;
   [AccountType.NoAtom]?: (
     props: PropsForAccountType<AccountType.NoAtom>,
   ) => VendorCtaResponse;

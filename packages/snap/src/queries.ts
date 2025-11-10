@@ -10,7 +10,6 @@ export const graphQLQuery = async (query: string, variables: any) => {
     query,
     variables,
   });
-  console.log('graphQLQuery data', JSON.stringify(data, null, 2));
   return data;
 };
 
@@ -221,23 +220,6 @@ export const getListWithHighestStakeQuery = `
       }
     }
 
-    chainlink_prices(limit: 1, order_by: { id: desc }) {
-      usd
-    }
-  }
-`;
-
-export const getOriginAtomQuery = `
-  query OriginAtom($originLabel: String!) {
-    atoms(where: { label: { _eq: $originLabel } }, limit: 1) {
-      term_id
-      type
-      label
-      image
-      data
-      emoji
-      creator_id
-    }
     chainlink_prices(limit: 1, order_by: { id: desc }) {
       usd
     }

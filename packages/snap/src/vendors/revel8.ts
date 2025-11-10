@@ -1,4 +1,4 @@
-import { AccountType, PropsForAccountType, OriginType } from '../types';
+import { AccountType, PropsForAccountType } from '../types';
 import { type Vendor } from '.';
 import { chainConfig, type ChainConfig } from '../config';
 
@@ -36,35 +36,4 @@ export const revel8: Vendor = {
       url: `${origin}/triples/${tripleId}?modal=stake_triple&triple_id=${tripleId}&direction=support`,
     };
   },
-
-  // Origin-specific methods
-  [`origin_${OriginType.NoAtom}`]: (params: any) => {
-    const { transactionOrigin, chainId } = params;
-    // For URL atoms, we create them differently than address atoms
-    return {
-      url: `${origin}/redirect/create_url_atom?url=${encodeURIComponent(transactionOrigin)}&chain_id=${chainId}`,
-    };
-  },
-
-  [`origin_${OriginType.AtomWithoutTrust}`]: (params: any) => {
-    const { originData, chainId } = params;
-    if (!originData?.originAtom) throw new Error('Origin atom not found');
-    const { term_id: atomId } = originData.originAtom;
-    const { isAtomId, trustworthyAtomId } = chainConfig as ChainConfig;
-    return {
-      url: `${origin}/atoms/${atomId}?modal=complete_triple&chain_id=${chainId}&atom_ids=${atomId},${isAtomId},${trustworthyAtomId}`,
-    };
-  },
-
-  [`origin_${OriginType.AtomWithTrust}`]: (params: any) => {
-    const { originData } = params;
-    if (!originData?.originTriple) throw new Error('Origin triple not found');
-    const { term_id: tripleId } = originData.originTriple;
-    return {
-      url: `${origin}/triples/${tripleId}?modal=stake_triple&triple_id=${tripleId}&direction=support`,
-    };
-  },
 };
-
-// https://testnet.explorer.revel8.io/redirect/complete_address_trustworthy_triple?address=0x2ece8d4dedcb9918a398528f3fa4688b1d2cab91&chain_id=eip155:13579
-// http://localhost:3000/redirect/complete_address_trustworthy_triple?address=0x2ece8d4dedcb9918a398528f3fa4688b1d2cab91&chain_id=eip155:13579

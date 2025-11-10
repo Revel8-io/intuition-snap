@@ -1,9 +1,7 @@
 import { type ChainConfig, chainConfig } from './config';
 import {
-  getAccountQuery,
   getListWithHighestStakeQuery,
   getTripleWithPositionsDataQuery,
-  getOriginAtomQuery,
   graphQLQuery,
   getAddressAtomsQuery,
 } from './queries';
@@ -12,9 +10,6 @@ import {
   AccountType,
   TripleWithPositions,
   AccountProps,
-  GetOriginDataResult,
-  OriginAtom,
-  OriginType,
 } from './types';
 import { addressToCaip10 } from './util';
 import { AccountComponents } from './components';
@@ -34,7 +29,6 @@ export const getAccountData = async (
   const caipAddress = addressToCaip10(destinationAddress, chainId);
 
   try {
-    console.log('Starting parallel queries for:', destinationAddress, caipAddress);
 
     // PARALLEL: Fetch atoms in both formats and check if it's a contract
     const [atomsResponse, codeResponse] = await Promise.all([
@@ -48,9 +42,6 @@ export const getAccountData = async (
       }),
     ]);
 
-    console.log('atomsResponse', JSON.stringify(atomsResponse, null, 2));
-    console.log('codeResponse', codeResponse);
-
     const isContract = codeResponse !== '0x';
     const { plainAtoms, caipAtoms } = atomsResponse.data;
 
@@ -59,7 +50,6 @@ export const getAccountData = async (
       ? caipAtoms?.[0]   // Use CAIP format for smart contracts
       : plainAtoms?.[0]; // Use plain format for EOAs
 
-    console.log('isContract:', isContract, 'relevantAtom:', relevantAtom);
 
     if (!relevantAtom) {
       return { account: null, triple: null, isContract, nickname: null };
@@ -105,12 +95,8 @@ export const getAccountType = (
 ): AccountType => {
   const { account, triple } = accountData;
 
-  if (account === null) {
-    return AccountType.NoAccount;
-  }
-
   // Since we're now using atoms directly, check if we have atom data
-  if (!account.term_id) {
+  if (!account) {
     return AccountType.NoAtom;
   }
 
@@ -122,84 +108,7 @@ export const getAccountType = (
     return AccountType.AtomWithTrustTriple;
   }
 
-  return AccountType.NoAccount; // default
-};
-
-export const getOriginData = async (
-  transactionOrigin: string | undefined,
-): Promise<GetOriginDataResult | null> => {
-  if (!transactionOrigin) {
-    return null;
-  }
-
-  try {
-    // 1. Query for atom by label
-    const atomResponse = await graphQLQuery(getOriginAtomQuery, {
-      originLabel: transactionOrigin,
-    });
-
-    const atoms = atomResponse.data.atoms;
-    if (!atoms || atoms.length === 0) {
-      return {
-        originAtom: null,
-        originTriple: null, // is - trustworthy triple
-        originNickname: null,
-      };
-    }
-
-    const originAtom: OriginAtom = atoms[0];
-    const { term_id: atomId } = originAtom;
-
-    // 2. Check for trust triple and nickname
-    const { isAtomId, trustworthyAtomId, relatedNicknamesAtomId } = chainConfig as ChainConfig;
-
-    const [trustResponse, nicknameResponse] = await Promise.all([
-      graphQLQuery(getTripleWithPositionsDataQuery, {
-        subjectId: atomId,
-        predicateId: isAtomId,
-        objectId: trustworthyAtomId,
-      }),
-      graphQLQuery(getListWithHighestStakeQuery, {
-        subjectId: atomId,
-        predicateId: relatedNicknamesAtomId,
-      }),
-    ]);
-
-    const trustTriple = trustResponse.data.triples[0];
-    const nicknameTriple = nicknameResponse.data.triples[0];
-    const nickname = nicknameTriple?.object?.label;
-
-    return {
-      originAtom,
-      originTriple: trustTriple || null,
-      originNickname: nickname || null,
-    };
-
-  } catch (error: any) {
-    console.error('[getOriginData] error', JSON.stringify(error));
-    // Return null instead of throwing to handle gracefully
-    return null;
-  }
-};
-
-export const getOriginType = (
-  originData: GetOriginDataResult | null,
-): OriginType => {
-  if (!originData) {
-    return OriginType.NoOrigin;
-  }
-
-  const { originAtom, originTriple } = originData;
-
-  if (!originAtom) {
-    return OriginType.NoAtom;
-  }
-
-  if (!originTriple) {
-    return OriginType.AtomWithoutTrust;
-  }
-
-  return OriginType.AtomWithTrust;
+  return AccountType.NoAtom; // default
 };
 
 export const renderOnTransaction = (props: AccountProps) => {
