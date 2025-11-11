@@ -56,11 +56,16 @@ Want to add links to your Intuition dapp? Read instructions here ([packages/snap
 ## More Features to Build
 
 1. Snap homepage (who owns?)
-2. Display information about websites / dapps (origin) where the transaction originated from
-3. Version for mobile app? (Snaps are currently not enabled within MetaMask mobile)
-4. SVGs or animations to better convey position distribution
-5. We will always need more vendors / third-party dapps for the CTAs since we cannot generate EVM transactions from within the Snap
-6. Add support for other fiat currencies (currently just USD)
-7. Add translations / internationalization
-8. Decide upon code style and enforce code quality via GitHub actions / CI
+2. How to fetch vendors in decentralized fashion? (Smart contract registry?)
+3. Display information about websites / dapps (origin) where the transaction originated from
+4. Version for mobile app? (Snaps are currently not enabled within MetaMask mobile)
+5. SVGs or animations to better convey position distribution
+6. We will always need more vendors / third-party dapps for the CTAs since we cannot generate EVM transactions from within the Snap
+7. Add support for other fiat currencies (currently just USD)
+8. Add translations / internationalization
+9. Decide upon code style and enforce code quality via GitHub actions / CI
+10. Push MetaMask Snap developers to implement [onActivityItem](https://github.com/MetaMask/SIPs/pull/179) handler
+11. SVG image support. Link atoms with `has related SVG image` atom. Image [HAS to be SVG](https://docs.metamask.io/snaps/features/custom-ui/#image) (cannot be PNG or SVG)
+12. Let users choose their own GraphQL node? (privacy reasons)
 
+// 0x6E35cF57A41fA15eA0EaE9C33e751b01A784Fe7e

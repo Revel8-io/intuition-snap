@@ -3,40 +3,62 @@ import { type Vendor } from '.';
 import { chainConfig, type ChainConfig } from '../config';
 import { addressToCaip10 } from '../util';
 
-const origin = 'https://localhost:3000';
+const origins: Record<string, string> = {
+  '13579': 'https://explorer.revel8.io',
+  '1155': 'https://testnet.explorer.revel8.io',
+} as const;
 
-// change to class?
-export const revel8: Vendor = {
+const getExplorerOrigin = (chainId: number) => {
+  return origins[chainId];
+}
+
+const getCurrentExplorerOrigin = () => {
+  return getExplorerOrigin(chainConfig.chainId);
+}
+
+export const revel8Base: Partial<Vendor> = {
   name: 'Revel8',
-  [AccountType.NoAtom]: ( // will want to push user to COMPLETE triple (create atom + 2 existing)
+
+  [AccountType.NoAtom]: function(
     params: PropsForAccountType<AccountType.NoAtom>,
-  ) => {
+  ): { url: string } {
     const { address, chainId, isContract } = params;
-    const addressToUse = isContract ? addressToCaip10(address, chainId) : address
+    const addressToUse = isContract ? addressToCaip10(address, chainId) : address;
     return {
-      url: `${origin}/redirect/complete_address_trustworthy_triple?address=${addressToUse}&chain_id=${chainId}`,
+      url: `${getCurrentExplorerOrigin()}/redirect/complete_address_trustworthy_triple?address=${addressToUse}&chain_id=${chainId}`,
     };
   },
-  [AccountType.AtomWithoutTrustTriple]: ( // will want to push user to CREATE triple (3 atoms exist)
+
+  [AccountType.AtomWithoutTrustTriple]: function(
     params: PropsForAccountType<AccountType.AtomWithoutTrustTriple>,
-  ) => {
+  ): { url: string } {
     const { account } = params;
     if (!account)
       throw new Error('getAccountAtomNoTrustData account not found');
     const { term_id: atomId } = account;
     const { isAtomId, trustworthyAtomId } = chainConfig as ChainConfig;
-    return { // change atom_type from evm_address to just address because CAIP is not EVM
-      url: `${origin}/atoms/${atomId}?modal=complete_triple&atom_ids=${atomId},${isAtomId},${trustworthyAtomId}`,
+    return {
+      url: `${getCurrentExplorerOrigin()}/atoms/${atomId}?modal=complete_triple&atom_ids=${atomId},${isAtomId},${trustworthyAtomId}`,
     };
   },
-  [AccountType.AtomWithTrustTriple]: (
+
+  [AccountType.AtomWithTrustTriple]: function(
     params: PropsForAccountType<AccountType.AtomWithTrustTriple>,
-  ) => {
+  ): { url: string } {
     const { triple } = params;
     if (!triple) throw new Error('getAccountWithTrustData triple not found');
     const { term_id: tripleId } = triple;
     return {
-      url: `${origin}/triples/${tripleId}?modal=stake_triple&triple_id=${tripleId}&direction=support`,
+      url: `${getCurrentExplorerOrigin()}/triples/${tripleId}?modal=stake_triple&triple_id=${tripleId}&direction=support`,
     };
   },
 };
+
+const getVendor = (chainId: number): Vendor => {
+  return {
+    ...revel8Base,
+    // explorer origin based on chainId, determined at runtime
+    explorerOrigin: getExplorerOrigin(chainId),
+  } as Vendor;
+}
+export const revel8 = getVendor(chainConfig.chainId);

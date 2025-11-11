@@ -7,6 +7,9 @@ type VendorCtaResponse = {
 
 export type Vendor = {
   name: string;
+  explorerOrigin: string;
+  logo?: string;
+
   [AccountType.NoAtom]?: (
     props: PropsForAccountType<AccountType.NoAtom>,
   ) => VendorCtaResponse;
