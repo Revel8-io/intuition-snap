@@ -11,7 +11,7 @@ const config: SnapConfig = {
     buffer: true,
   },
   environment: {
-    CHAIN: process.env.CHAIN,
+    CHAIN: process.env.CHAIN, // defined via package.json command
   },
 };
 
