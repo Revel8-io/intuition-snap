@@ -9,7 +9,7 @@ This is the first draft for a community-driven MetaMask Snap effort for the Intu
 
 
 - `onTransaction` hook that displays any trust-related information (see details below) and nickname data for the account
-- Basic call-to-action (CTA) navigation / functionality. Once third-party vendors (eg Intuition dapps) register their dapps in the `packages/snap/src/vendors/index.ts` file
+- Vendor integration system allowing third-party dapps to provide CTAs for creating atoms, triples, and staking (see [Vendor Integration](#vendor-integration) below)
 
 ### Development
 
@@ -48,3 +48,24 @@ These can be found in `packages/snap/src/config.ts` and are dependent upon which
   3. [nickname]: the label for that atom in the list
 
 You can use this info to stake and unstake to the atoms and triples involved
+
+### Vendor Integration
+
+The Intuition Snap supports integration with third-party dapps (vendors) that can provide functionality for:
+- Creating atoms (on-chain identities) for addresses
+- Creating trust triples (relationships between atoms)
+- Staking on existing trust relationships
+
+#### For Vendors
+
+To integrate your dapp with the Intuition Snap:
+
+1. Create a vendor file in `packages/snap/src/vendors/your-app-name.ts`
+2. Implement the `Vendor` interface with methods for each account state
+3. Add your vendor to the `VENDOR_LIST` in `packages/snap/src/vendors/index.ts`
+
+See the [Vendor Integration Guide](packages/snap/src/vendors/readme.md) for detailed instructions and the [Example Vendor](packages/snap/src/vendors/example.ts) for a template.
+
+#### Current Vendors
+
+- **Revel8** - The primary Intuition explorer and staking interface

@@ -3,7 +3,7 @@ import { VENDOR_LIST, type Vendor } from './vendors';
 import { AccountProps, AccountType } from './types';
 
 type CallToActionProps = AccountProps & {
-  method: AccountType | string;
+  method: AccountType;
 };
 
 export const CallToAction = (props: CallToActionProps) => {
@@ -11,7 +11,7 @@ export const CallToAction = (props: CallToActionProps) => {
   const links = VENDOR_LIST.map((vendor: Vendor) => {
     const linkGenerator = vendor[method];
     if (!linkGenerator) return null;
-    const { url } = linkGenerator(props as any); // Type assertion needed for vendor function
+    const { url } = linkGenerator(props as any); // Type assertion needed due to discriminated union
     return <Link href={url}>{vendor.name}</Link>;
   });
   return (

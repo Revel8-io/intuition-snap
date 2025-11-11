@@ -53,9 +53,13 @@ We want to encourage user input (ie creating atoms and triples, and staking). Si
 
 Want to add links to your Intuition dapp? Read instructions here ([packages/snap/src/vendors](https://github.com/Revel8-io/intuition-snap/blob/main/packages/snap/src/vendors))
 
+## Areas Possibly Needing Improvement
+
+1. Type-safety
+
 ## More Features to Build
 
-1. Snap homepage (who owns?)
+1. Snap homepage (who owns?) -  if this is owned by Intuition then we have to take measures to make sure users can trust
 2. How to fetch vendors in decentralized fashion? (Smart contract registry?)
 3. Display information about websites / dapps (origin) where the transaction originated from
 4. Version for mobile app? (Snaps are currently not enabled within MetaMask mobile)

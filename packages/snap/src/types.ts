@@ -2,6 +2,7 @@ import { ChainId } from '@metamask/snaps-sdk';
 
 export type Account = {
   id: string;
+  data: string;
   label: string;
   image?: string;
   nickname?: string;
