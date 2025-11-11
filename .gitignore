@@ -76,5 +76,7 @@ node_modules/
 .yarn/install-state.gz
 .pnp.*
 
+# safe folders to generate docs
 .user-prompts
 .user-docs
+.user
