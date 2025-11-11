@@ -6,8 +6,6 @@ import { addressToCaip10 } from '../util';
 const origin = 'https://localhost:3000';
 
 // change to class?
-// should we use /redirect for all methods? We don't want to have to
-// issue many Snap updates
 export const revel8: Vendor = {
   name: 'Revel8',
   [AccountType.NoAtom]: ( // will want to push user to COMPLETE triple (create atom + 2 existing)
