@@ -26,17 +26,19 @@ export const getAccountData = async (
   destinationAddress: string,
   chainId: ChainId,
 ): Promise<GetAccountDataResult> => {
+  const { chainId: configChainId } = chainConfig;
   const caipAddress = addressToCaip10(destinationAddress, chainId);
 
   try {
     // if it's on our chain (Intuitin Mainnet) then use our own node
     const simpleChainId = chainId.split(':')[1];
     let isContract = true
-    const switchChainResponse = await ethereum.request({
-      method: 'wallet_switchEthereumChain',
-      params: [{ chainId: simpleChainId }],
-    })
-    console.log('switchChainResponse', switchChainResponse);
+    if (simpleChainId !== configChainId.toString()) {
+      const switchChainResponse = await ethereum.request({
+        method: 'wallet_switchEthereumChain',
+        params: [{ chainId: simpleChainId }],
+      })
+    }
     // get code for destination address
     const codeResponse = await ethereum.request({
       method: 'eth_getCode',
