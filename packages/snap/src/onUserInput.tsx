@@ -3,7 +3,6 @@ import { rate } from './cta';
 import { renderOnTransaction } from './account';
 import { AccountProps, AccountType } from './types';
 
-type ComponentKey = 'account' | 'rate';
 const components = {
   account: {
     renderOnTransaction,

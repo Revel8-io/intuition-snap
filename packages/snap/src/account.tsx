@@ -14,7 +14,6 @@ import {
 import { addressToCaip10 } from './util';
 import { AccountComponents } from './components';
 import { ChainId } from '@metamask/snaps-sdk';
-import axios from 'axios';
 
 export type GetAccountDataResult = {
   account: Account | null;
@@ -27,26 +26,24 @@ export const getAccountData = async (
   destinationAddress: string,
   chainId: ChainId,
 ): Promise<GetAccountDataResult> => {
-  const { chainId: configChainId, rpcUrl } = chainConfig;
   const caipAddress = addressToCaip10(destinationAddress, chainId);
 
   try {
     // if it's on our chain (Intuitin Mainnet) then use our own node
     const simpleChainId = chainId.split(':')[1];
     let isContract = true
-    if (simpleChainId === configChainId.toString()) {
-      // use our own node to see if smart contract
-      // todo: switch back if they fix ethereum.request()
-      const codeResponse = await axios.post(rpcUrl, {
-        method: 'POST',
-        data: {
-          jsonrpc: '2.0',
-          method: 'eth_getCode',
-          params: [destinationAddress, 'latest']
-        },
-      });
-      isContract = codeResponse.data.result !== '0x';
-    }
+    const switchChainResponse = await ethereum.request({
+      method: 'wallet_switchEthereumChain',
+      params: [{ chainId: simpleChainId }],
+    })
+    console.log('switchChainResponse', switchChainResponse);
+    // get code for destination address
+    const codeResponse = await ethereum.request({
+      method: 'eth_getCode',
+      params: [destinationAddress, 'latest'],
+    })
+    console.log('codeResponse', codeResponse);
+    isContract = codeResponse !== '0x';
 
     const [atomsResponse] = await Promise.all([
       graphQLQuery(getAddressAtomsQuery, {
@@ -124,7 +121,6 @@ export const getAccountType = (
 
 export const renderOnTransaction = (props: AccountProps) => {
   const { accountType } = props;
-  console.log('renderOnTransaction accountType', accountType);
   // TypeScript now knows the exact prop shape for each accountType
   const initialUI = AccountComponents[accountType](props as any);
   return initialUI;
