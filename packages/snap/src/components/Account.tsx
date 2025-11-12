@@ -10,6 +10,7 @@ import {
 import { VENDOR_LIST } from '../vendors';
 import { AccountType, PropsForAccountType } from '../types';
 import { stringToDecimal } from '../util';
+import { chainConfig } from '../config';
 
 export const NoAtom = (
   params: PropsForAccountType<AccountType.NoAtom>,
@@ -68,7 +69,6 @@ export const AtomWithTrustTriple = (
   params: PropsForAccountType<AccountType.AtomWithTrustTriple>,
 ) => {
   const { address, triple, nickname, accountType } = params;
-  const chainlinkPrices: { usd: number } = { usd: 0.22 };
   const {
     counter_term: {
       vaults: [counterVault],
@@ -81,11 +81,9 @@ export const AtomWithTrustTriple = (
   } = triple;
 
   const supportMarketCap = vault?.market_cap || '0';
-  const supportMarketCapEth = stringToDecimal(supportMarketCap, 18);
-  const supportMarketCapFiat = chainlinkPrices.usd * supportMarketCapEth;
+  const supportMarketCapNative = stringToDecimal(supportMarketCap, 18);
   const opposeMarketCap = counterVault?.market_cap || '0';
-  const opposeMarketCapEth = stringToDecimal(opposeMarketCap, 18);
-  const opposeMarketCapFiat = chainlinkPrices.usd * opposeMarketCapEth;
+  const opposeMarketCapNative = stringToDecimal(opposeMarketCap, 18);
   const links: any[] = [];
   VENDOR_LIST.forEach((vendor) => {
     const { name } = vendor;
@@ -111,14 +109,14 @@ export const AtomWithTrustTriple = (
           )}
           <Row label={`Trustworthy (${positions.length})`}>
             <Value
-              value={`${supportMarketCapEth.toFixed(2)} TRUST`}
-              extra={`$${supportMarketCapFiat.toFixed(2)} `}
+              value={`${supportMarketCapNative.toFixed(2)} ${chainConfig.currencySymbol}`}
+              extra={``}
             />
           </Row>
           <Row label={`Not trustworthy (${counter_positions.length})`}>
             <Value
-              value={`${opposeMarketCapEth.toFixed(2)} TRUST`}
-              extra={`$${opposeMarketCapFiat.toFixed(2)} `}
+              value={`${opposeMarketCapNative.toFixed(2)} ${chainConfig.currencySymbol}`}
+              extra={``}
             />
           </Row>
           <Button name={`rate_${accountType}`}>Rate account</Button>
