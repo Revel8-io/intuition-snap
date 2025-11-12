@@ -2,6 +2,12 @@
   "name": "intuition-snap",
   "version": "0.3.0",
   "description": "Bringing human trust to trustless systems.",
+  "contributors": [
+    {
+      "name": "Kylan Hurt",
+      "email": "kylan.hurt@gmail.com"
+    }
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/0xintuition/intuition-snap"
