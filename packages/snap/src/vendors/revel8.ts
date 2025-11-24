@@ -6,13 +6,15 @@ import { addressToCaip10 } from '../util';
 const CHAIN_URLS: Record<number, string> = {
   // 13579: 'https://explorer.revel8.io',
   // 1155: 'https://testnet.explorer.revel8.io',
-  13579: 'http://localhost:3000',
-  1155: 'http://localhost:3000',
+  13579: 'https://localhost:3000',
+  1155: 'https://localhost:3000',
 };
 
 // Get the base URL for the current chain at module load time
-const baseUrl = CHAIN_URLS[chainConfig.chainId] || CHAIN_URLS[13579];
-
+console.log('chainConfig', JSON.stringify(chainConfig, null, 2))
+console.log('CHAIN_URLS', JSON.stringify(CHAIN_URLS, null, 2))
+const baseUrl = CHAIN_URLS[chainConfig.chainId];
+console.log('baseUrl', baseUrl)
 export const revel8: Vendor = {
   name: 'Revel8 Explorer',
 

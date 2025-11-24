@@ -31,12 +31,10 @@ export const onTransaction: OnTransactionHandler = async ({
   chainId: ChainId;
   transactionOrigin?: string;
 }) => {
-  // MetaMask addresses come in as 0x______
-  const { to: address } = transaction;
-
+  console.log('onTransaction', JSON.stringify({ transaction, chainId, transactionOrigin }, null, 2));
   // Execute both queries in parallel for performance
   const [accountData,] = await Promise.all([
-    getAccountData(address, chainId),
+    getAccountData(transaction, chainId),
     // add more here
   ]);
 

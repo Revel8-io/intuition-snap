@@ -13,7 +13,7 @@ import {
 } from './types';
 import { addressToCaip10 } from './util';
 import { AccountComponents } from './components';
-import { ChainId } from '@metamask/snaps-sdk';
+import { ChainId, Transaction } from '@metamask/snaps-sdk';
 
 export type GetAccountDataResult = {
   account: Account | null;
@@ -23,30 +23,47 @@ export type GetAccountDataResult = {
 };
 
 export const getAccountData = async (
-  destinationAddress: string,
+  transaction: Transaction,
   chainId: ChainId,
 ): Promise<GetAccountDataResult> => {
+  const { to: destinationAddress, data: transactionData } = transaction;
   const { chainId: configChainId } = chainConfig;
   const caipAddress = addressToCaip10(destinationAddress, chainId);
 
-  try {
-    // if it's on our chain (Intuitin Mainnet) then use our own node
-    const simpleChainId = chainId.split(':')[1];
-    let isContract = true
-    if (simpleChainId !== configChainId.toString()) {
-      const switchChainResponse = await ethereum.request({
-        method: 'wallet_switchEthereumChain',
-        params: [{ chainId: simpleChainId }],
-      })
-    }
-    // get code for destination address
-    const codeResponse = await ethereum.request({
-      method: 'eth_getCode',
-      params: [destinationAddress, 'latest'],
-    })
-    console.log('codeResponse', codeResponse);
-    isContract = codeResponse !== '0x';
+  let hasCode = transactionData !== '0x';
 
+  // even if its data is 0x it could still be a contract
+  if (!hasCode) {
+    try {
+      // Switch chain if needed (only if different)
+      const txChainId = chainId.split(':')[1];
+      if (txChainId !== configChainId.toString()) {
+        await ethereum.request({
+          method: 'wallet_switchEthereumChain',
+          params: [{ chainId: chainId }],
+        });
+      }
+
+      // Get code (works regardless of whether we switched)
+      const codeResponse = await ethereum.request({
+        method: 'eth_getCode',
+        params: [destinationAddress, 'latest'],
+      });
+
+      console.log('codeResponse', codeResponse);
+      hasCode = codeResponse !== '0x';
+
+    } catch (err) {
+      console.error('getCode or switchChain error', JSON.stringify(err));
+      // fallback to true because CAIP atom is more specific and therefore
+      // better if we don't know whether it's a contract or not
+      hasCode = true;
+    }
+  }
+
+  const isContract = hasCode;
+  console.log('isContract', isContract);
+  try {
     const [atomsResponse] = await Promise.all([
       graphQLQuery(getAddressAtomsQuery, {
         plainAddress: destinationAddress,
@@ -59,7 +76,6 @@ export const getAccountData = async (
     const relevantAtom = isContract
       ? caipAtoms?.[0]   // Use CAIP format for smart contracts
       : plainAtoms?.[0]; // Use plain format for EOAs
-
 
     if (!relevantAtom) {
       return { account: null, triple: null, isContract, nickname: null };
