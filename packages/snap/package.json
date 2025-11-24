@@ -1,7 +1,7 @@
 {
-  "name": "intuition-snap",
+  "name": "revel8-snap",
   "version": "0.3.0",
-  "description": "Bringing human trust to trustless systems.",
+  "description": "Real-time trust and sentiment insights for every transaction. Powered by Intuition",
   "contributors": [
     {
       "name": "Kylan Hurt",
@@ -10,7 +10,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/0xintuition/intuition-snap"
+    "url": "https://github.com/revel8-io/intuition-snap"
   },
   "license": "Apache-2.0",
   "main": "./dist/bundle.js",

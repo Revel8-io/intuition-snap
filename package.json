@@ -2,7 +2,7 @@
   "name": "root",
   "version": "0.3.0",
   "private": true,
-  "description": "MetaMask snap for the Intuition network",
+  "description": "Real-time trust and sentiment insights for every transaction. Powered by Intuition",
   "homepage": "https://github.com/0xIntuition/intuition-snap#readme",
   "bugs": {
     "url": "https://github.com/0xIntuition/intuition-snap/issues"

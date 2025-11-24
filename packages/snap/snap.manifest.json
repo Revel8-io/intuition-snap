@@ -4,15 +4,15 @@
   "proposedName": "Intuition",
   "repository": {
     "type": "git",
-    "url": "https://github.com/0xintuition/intuition-snap"
+    "url": "https://github.com/revel8-io/intuition-snap"
   },
   "source": {
-    "shasum": "sOW0CGjFT1uR1Ahpp4FDBQ41XY5zoiGz9ZR44B8J/NY=",
+    "shasum": "UfxQqbwEf3BRsLXMO2yBdzOvpI3gDffyr094wWIWdfw=",
     "location": {
       "npm": {
         "filePath": "dist/bundle.js",
         "iconPath": "src/images/logo.svg",
-        "packageName": "intuition-snap",
+        "packageName": "revel8-snap",
         "registry": "https://registry.npmjs.org/"
       }
     }

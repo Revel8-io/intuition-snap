@@ -4,16 +4,21 @@ import { chainConfig, type ChainConfig } from '../config';
 import { addressToCaip10 } from '../util';
 
 const CHAIN_URLS: Record<number, string> = {
-  13579: 'https://explorer.revel8.io',
-  1155: 'https://testnet.explorer.revel8.io',
+  // 13579: 'https://explorer.revel8.io',
+  // 1155: 'https://testnet.explorer.revel8.io',
+  13579: 'http://localhost:3000',
+  1155: 'http://localhost:3000',
 };
 
 // Get the base URL for the current chain at module load time
 const baseUrl = CHAIN_URLS[chainConfig.chainId] || CHAIN_URLS[13579];
 
 export const revel8: Vendor = {
-  name: 'Revel8',
+  name: 'Revel8 Explorer',
 
+  // links should send ALL critical info to the vendor website
+  // that way actions / modals can be created from any
+  // page on the vendor website
   [AccountType.NoAtom]: (
     params: PropsForAccountType<AccountType.NoAtom>,
   ) => {
