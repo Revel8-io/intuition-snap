@@ -24,12 +24,14 @@ export const revel8: Vendor = {
   noAtom: (
     params: PropsForAccountType<AccountType.NoAtom>,
   ) => {
+    console.log('params', JSON.stringify(params, null, 2))
     const { address, chainId, isContract } = params;
     const addressToUse = isContract ? addressToCaip10(address, chainId) : address;
 
     const url = new URL('/snap/action?intent=complete_address_trustworthy_triple', baseUrl);
     url.searchParams.set('address', addressToUse);
     url.searchParams.set('chain_id', chainId);
+
     return {
       // http://localhost:3000/rankings/,0x5cc8...1801,0xa037...05110ca
       // ?modal=complete_triple
@@ -44,6 +46,7 @@ export const revel8: Vendor = {
   atomWithoutTrustTriple: (
     params: PropsForAccountType<AccountType.AtomWithoutTrustTriple>,
   ) => {
+    console.log('params', JSON.stringify(params, null, 2))
     const { account } = params;
     if (!account)
       throw new Error('getAccountAtomNoTrustData account not found');
@@ -63,6 +66,8 @@ export const revel8: Vendor = {
   atomWithTrustTriple: (
     params: PropsForAccountType<AccountType.AtomWithTrustTriple>,
   ) => {
+    // one link for support, one for oppose?
+    console.log('params', JSON.stringify(params, null, 2))
     const { triple } = params;
     if (!triple) throw new Error('getAccountWithTrustData triple not found');
     const { term_id: tripleId } = triple;
