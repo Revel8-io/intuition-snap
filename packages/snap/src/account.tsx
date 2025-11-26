@@ -30,6 +30,7 @@ export const getAccountData = async (
   const { chainId: configChainId } = chainConfig;
   const caipAddress = addressToCaip10(destinationAddress, chainId);
 
+  // if it is a contract then grab the right type of atom (caip)
   let hasCode = transactionData !== '0x';
 
   // even if its data is 0x it could still be a contract

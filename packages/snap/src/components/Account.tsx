@@ -15,7 +15,7 @@ import { chainConfig } from '../config';
 export const NoAtom = (
   params: PropsForAccountType<AccountType.NoAtom>,
 ) => {
-  const { accountType } = params;
+  const { accountType, isContract } = params;
   const links: any[] = [];
   VENDOR_LIST.forEach((vendor) => {
     const { name } = vendor;
@@ -27,10 +27,11 @@ export const NoAtom = (
     links.push(<Link href={url}>{name}</Link>);
   });
 
+  const accountTypeSyntax = isContract ? 'contract' : 'address';
   return (
     <Box>
       <Box>
-        <Text>No information about this account on Intuition, yet!</Text>
+        <Text>No information about this {accountTypeSyntax} on Intuition, yet!</Text>
         {links}
       </Box>
     </Box>
@@ -57,7 +58,7 @@ export const AtomWithoutTrustTriple = (
   return (
     <Box>
       <Box>
-        <Text>Atom exists for {account?.label || account?.data}</Text>
+        <Text>Atom exists for {account?.label || account?.data}, but it has no trust data yet</Text>
         {!!nickname && <Text>Nickname: {nickname}</Text>}
         <Button name={`rate_${accountType}`}>Rate account</Button>
       </Box>
@@ -65,6 +66,7 @@ export const AtomWithoutTrustTriple = (
   );
 };
 
+// http://localhost:3000/atoms/0x5fe007...d9c8896?modal=complete_triple&atom_ids=0x5fe0...9c8896,0x5cc843bd9...811801,0xa037...05110ca
 export const AtomWithTrustTriple = (
   params: PropsForAccountType<AccountType.AtomWithTrustTriple>,
 ) => {

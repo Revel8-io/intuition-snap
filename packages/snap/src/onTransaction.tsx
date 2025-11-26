@@ -44,7 +44,7 @@ export const onTransaction: OnTransactionHandler = async ({
   const props: AccountProps = {
     ...accountData,
     accountType,
-    address,
+    address: transaction.to,
     chainId,
     transactionOrigin,
   } as AccountProps; // Type assertion needed due to the discriminated union

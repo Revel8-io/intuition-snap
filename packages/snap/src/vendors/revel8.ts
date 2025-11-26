@@ -26,8 +26,18 @@ export const revel8: Vendor = {
   ) => {
     const { address, chainId, isContract } = params;
     const addressToUse = isContract ? addressToCaip10(address, chainId) : address;
+
+    const url = new URL('/redirect/complete_address_trustworthy_triple', baseUrl);
+    url.searchParams.set('address', addressToUse);
+    url.searchParams.set('chain_id', chainId);
     return {
-      url: `${baseUrl}/redirect/complete_address_trustworthy_triple?address=${addressToUse}&chain_id=${chainId}`,
+      // http://localhost:3000/rankings/,0x5cc8...1801,0xa037...05110ca
+      // ?modal=complete_triple
+      // &atom_type=evm_address
+      // &evm_address=caip10%3Aeip155%3A13579%3Aundefined
+      // &chain_id=eip155%3A13579
+      // &atom_ids=%2C0x5cc843bd9...8811801%2C0xa037a2b9...10ca
+      url: url.toString(),
     };
   },
 
@@ -39,8 +49,12 @@ export const revel8: Vendor = {
       throw new Error('getAccountAtomNoTrustData account not found');
     const { term_id: atomId } = account;
     const { isAtomId, trustworthyAtomId } = chainConfig as ChainConfig;
+    const url = new URL(`/atoms/${atomId}`, baseUrl);
+    url.searchParams.set('modal', 'complete_triple');
+    url.searchParams.set('atom_ids', `${atomId},${isAtomId},${trustworthyAtomId}`);
+
     return {
-      url: `${baseUrl}/atoms/${atomId}?modal=complete_triple&atom_ids=${atomId},${isAtomId},${trustworthyAtomId}`,
+      url: url.toString(),
     };
   },
 
@@ -50,8 +64,13 @@ export const revel8: Vendor = {
     const { triple } = params;
     if (!triple) throw new Error('getAccountWithTrustData triple not found');
     const { term_id: tripleId } = triple;
+    const url = new URL(`/triples/${tripleId}`, baseUrl);
+    url.searchParams.set('modal', 'stake_triple');
+    url.searchParams.set('triple_id', tripleId);
+    url.searchParams.set('direction', 'support');
+
     return {
-      url: `${baseUrl}/triples/${tripleId}?modal=stake_triple&triple_id=${tripleId}&direction=support`,
+      url: url.toString(),
     };
   },
 };
