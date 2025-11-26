@@ -9,13 +9,13 @@ export type Vendor = {
   name: string;
   logo?: string;
 
-  [AccountType.NoAtom]?: (
+  noAtom: (
     props: PropsForAccountType<AccountType.NoAtom>,
   ) => VendorCtaResponse;
-  [AccountType.AtomWithoutTrustTriple]?: (
+  atomWithoutTrustTriple: (
     props: PropsForAccountType<AccountType.AtomWithoutTrustTriple>,
   ) => VendorCtaResponse;
-  [AccountType.AtomWithTrustTriple]?: (
+  atomWithTrustTriple: (
     props: PropsForAccountType<AccountType.AtomWithTrustTriple>,
   ) => VendorCtaResponse;
 };

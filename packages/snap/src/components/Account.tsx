@@ -8,6 +8,7 @@ import {
   Value,
 } from '@metamask/snaps-sdk/jsx';
 import { VENDOR_LIST } from '../vendors';
+import { revel8 as vendor } from '../vendors/revel8';
 import { AccountType, PropsForAccountType } from '../types';
 import { stringToDecimal } from '../util';
 import { chainConfig } from '../config';
@@ -17,17 +18,12 @@ export const NoAtom = (
 ) => {
   const { accountType, isContract } = params;
   const links: any[] = [];
-  VENDOR_LIST.forEach((vendor) => {
-    const { name } = vendor;
-    const vendorFn = vendor[accountType];
-    if (!vendorFn) {
-      return;
-    }
-    const { url } = vendorFn(params);
-    links.push(<Link href={url}>{name}</Link>);
-  });
+  const { name, noAtom } = vendor;
+  const { url } = vendor.noAtom(params);
+  links.push(<Link href={url}>{name}</Link>);
 
   const accountTypeSyntax = isContract ? 'contract' : 'address';
+
   return (
     <Box>
       <Box>
@@ -43,17 +39,11 @@ export const AtomWithoutTrustTriple = (
 ) => {
   const { account, nickname, accountType } = params;
   const links: any[] = [];
-  VENDOR_LIST.forEach((vendor) => {
-    const { name } = vendor;
-    const vendorFn = vendor[accountType];
-    if (!vendorFn) {
-      return;
-    }
-    const { url } = vendorFn(params);
-    links.push(
-      <Link href={url}>Is this address trustworthy? Vote on {name}</Link>,
-    );
-  });
+  const { name, atomWithoutTrustTriple } = vendor;
+  const { url } = atomWithoutTrustTriple(params);
+  links.push(
+    <Link href={url}>Is this address trustworthy? Vote on {name}</Link>,
+  );
 
   return (
     <Box>
@@ -87,15 +77,8 @@ export const AtomWithTrustTriple = (
   const opposeMarketCap = counterVault?.market_cap || '0';
   const opposeMarketCapNative = stringToDecimal(opposeMarketCap, 18);
   const links: any[] = [];
-  VENDOR_LIST.forEach((vendor) => {
-    const { name } = vendor;
-    const vendorFn = vendor[accountType];
-    if (!vendorFn) {
-      return;
-    }
-    const { url } = vendorFn(params);
-    links.push(<Link href={url}>Voice your opinion on {name}</Link>);
-  });
+  const { url } = vendor.atomWithTrustTriple(params);
+  links.push(<Link href={url}>Voice your opinion on {vendor.name}</Link>);
 
   return (
     <Box>

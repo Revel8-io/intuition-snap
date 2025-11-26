@@ -21,7 +21,7 @@ export const revel8: Vendor = {
   // links should send ALL critical info to the vendor website
   // that way actions / modals can be created from any
   // page on the vendor website
-  [AccountType.NoAtom]: (
+  noAtom: (
     params: PropsForAccountType<AccountType.NoAtom>,
   ) => {
     const { address, chainId, isContract } = params;
@@ -41,7 +41,7 @@ export const revel8: Vendor = {
     };
   },
 
-  [AccountType.AtomWithoutTrustTriple]: (
+  atomWithoutTrustTriple: (
     params: PropsForAccountType<AccountType.AtomWithoutTrustTriple>,
   ) => {
     const { account } = params;
@@ -58,7 +58,7 @@ export const revel8: Vendor = {
     };
   },
 
-  [AccountType.AtomWithTrustTriple]: (
+  atomWithTrustTriple: (
     params: PropsForAccountType<AccountType.AtomWithTrustTriple>,
   ) => {
     const { triple } = params;
