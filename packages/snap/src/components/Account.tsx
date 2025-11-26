@@ -1,13 +1,11 @@
 import {
   Address,
   Box,
-  Button,
   Link,
   Row,
   Text,
   Value,
 } from '@metamask/snaps-sdk/jsx';
-import { VENDOR_LIST } from '../vendors';
 import { revel8 as vendor } from '../vendors/revel8';
 import { AccountType, PropsForAccountType } from '../types';
 import { stringToDecimal } from '../util';
@@ -16,6 +14,7 @@ import { chainConfig } from '../config';
 export const NoAtom = (
   params: PropsForAccountType<AccountType.NoAtom>,
 ) => {
+  console.log('😎 NoAtom params', JSON.stringify(params, null, 2));
   const { accountType, isContract } = params;
   const links: any[] = [];
   const { name, noAtom } = vendor;
@@ -28,7 +27,6 @@ export const NoAtom = (
     <Box>
       <Box>
         <Text>No information about this {accountTypeSyntax} on Intuition, yet!</Text>
-        {links}
       </Box>
     </Box>
   );
@@ -37,6 +35,7 @@ export const NoAtom = (
 export const AtomWithoutTrustTriple = (
   params: PropsForAccountType<AccountType.AtomWithoutTrustTriple>,
 ) => {
+  console.log('😎 NoAtom params', JSON.stringify(params, null, 2));
   const { account, nickname, accountType } = params;
   const links: any[] = [];
   const { name, atomWithoutTrustTriple } = vendor;
@@ -50,16 +49,15 @@ export const AtomWithoutTrustTriple = (
       <Box>
         <Text>Atom exists for {account?.label || account?.data}, but it has no trust data yet</Text>
         {!!nickname && <Text>Nickname: {nickname}</Text>}
-        <Button name={`rate_${accountType}`}>Rate account</Button>
       </Box>
     </Box>
   );
 };
-
 // http://localhost:3000/atoms/0x5fe007...d9c8896?modal=complete_triple&atom_ids=0x5fe0...9c8896,0x5cc843bd9...811801,0xa037...05110ca
 export const AtomWithTrustTriple = (
   params: PropsForAccountType<AccountType.AtomWithTrustTriple>,
 ) => {
+  console.log('😎 NoAtom params', JSON.stringify(params, null, 2));
   const { address, triple, nickname, accountType } = params;
   const {
     counter_term: {
@@ -104,7 +102,6 @@ export const AtomWithTrustTriple = (
               extra={``}
             />
           </Row>
-          <Button name={`rate_${accountType}`}>Rate account</Button>
         </Box>
       </Box>
     </Box>
