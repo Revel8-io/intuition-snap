@@ -27,7 +27,7 @@ export const revel8: Vendor = {
     const { address, chainId, isContract } = params;
     const addressToUse = isContract ? addressToCaip10(address, chainId) : address;
 
-    const url = new URL('/redirect/complete_address_trustworthy_triple', baseUrl);
+    const url = new URL('/snap/action?intent=complete_address_trustworthy_triple', baseUrl);
     url.searchParams.set('address', addressToUse);
     url.searchParams.set('chain_id', chainId);
     return {
@@ -49,8 +49,10 @@ export const revel8: Vendor = {
       throw new Error('getAccountAtomNoTrustData account not found');
     const { term_id: atomId } = account;
     const { isAtomId, trustworthyAtomId } = chainConfig as ChainConfig;
-    const url = new URL(`/atoms/${atomId}`, baseUrl);
-    url.searchParams.set('modal', 'complete_triple');
+
+    const url = new URL(`/snap/action`, baseUrl);
+    url.searchParams.set('intent', 'complete_triple');
+    url.searchParams.set('atom_id', atomId);
     url.searchParams.set('atom_ids', `${atomId},${isAtomId},${trustworthyAtomId}`);
 
     return {
@@ -64,10 +66,10 @@ export const revel8: Vendor = {
     const { triple } = params;
     if (!triple) throw new Error('getAccountWithTrustData triple not found');
     const { term_id: tripleId } = triple;
-    const url = new URL(`/triples/${tripleId}`, baseUrl);
-    url.searchParams.set('modal', 'stake_triple');
+
+    const url = new URL(`/snap/action`, baseUrl);
+    url.searchParams.set('intent', 'stake_triple');
     url.searchParams.set('triple_id', tripleId);
-    url.searchParams.set('direction', 'support');
 
     return {
       url: url.toString(),
