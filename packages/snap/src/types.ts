@@ -60,18 +60,24 @@ export type TripleWithPositions = {
     };
   };
   positions: {
+    id: string;
+    account_id: string;
     term_id: string;
-    counter_term_id: string;
     curve_id: string;
-    position_count: string;
-    market_cap: string;
+    account?: {
+      id: string;
+      label: string;
+    };
   }[];
   counter_positions: {
+    id: string;
+    account_id: string;
     term_id: string;
-    counter_term_id: string;
     curve_id: string;
-    position_count: string;
-    market_cap: string;
+    account?: {
+      id: string;
+      label: string;
+    };
   }[];
 };
 
@@ -82,38 +88,35 @@ export enum AccountType {
   AtomWithTrustTriple = 'AtomWithTrustTriple',
 }
 
+/** Common props shared across all account states */
+type BaseAccountProps = {
+  chainId: ChainId;
+  /** The destination address of the transaction */
+  address: string;
+  /** The connected user's wallet address (for checking existing positions) */
+  userAddress?: string;
+  nickname: string | null;
+  isContract: boolean;
+  transactionOrigin?: string;
+};
+
 // Discriminated union types for proper AccountProps typing
 export type AccountProps =
-  | {
+  | (BaseAccountProps & {
       accountType: AccountType.NoAtom;
-      chainId: ChainId;
-      address: string;
-      account: Account;
+      account: null;
       triple: null;
-      nickname: string | null;
-      isContract: boolean;
-      transactionOrigin?: string;
-    }
-  | {
+    })
+  | (BaseAccountProps & {
       accountType: AccountType.AtomWithoutTrustTriple;
-      chainId: ChainId;
-      address: string;
       account: Account;
       triple: null;
-      nickname: string | null;
-      isContract: boolean;
-      transactionOrigin?: string;
-    }
-  | {
+    })
+  | (BaseAccountProps & {
       accountType: AccountType.AtomWithTrustTriple;
-      chainId: ChainId;
-      address: string;
       account: Account;
       triple: TripleWithPositions;
-      nickname: string | null;
-      isContract: boolean;
-      transactionOrigin?: string;
-    };
+    });
 
 // Helper type to extract props for a specific account type
 export type PropsForAccountType<T extends AccountType> = Extract<

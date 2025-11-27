@@ -32,6 +32,16 @@ export const onTransaction: OnTransactionHandler = async ({
   transactionOrigin?: string;
 }) => {
   console.log('onTransaction', JSON.stringify({ transaction, chainId, transactionOrigin }, null, 2));
+
+  // Get user's connected wallet address for position checking
+  let userAddress: string | undefined;
+  try {
+    const accounts = await ethereum.request({ method: 'eth_accounts' }) as string[];
+    userAddress = accounts?.[0];
+  } catch (err) {
+    console.error('Failed to get user accounts', err);
+  }
+
   // Execute both queries in parallel for performance
   const [accountData,] = await Promise.all([
     getAccountData(transaction, chainId),
@@ -45,6 +55,7 @@ export const onTransaction: OnTransactionHandler = async ({
     ...accountData,
     accountType,
     address: transaction.to,
+    userAddress,
     chainId,
     transactionOrigin,
   } as AccountProps; // Type assertion needed due to the discriminated union
