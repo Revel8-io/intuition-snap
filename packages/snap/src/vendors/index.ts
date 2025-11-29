@@ -1,40 +1,17 @@
-import { AccountType, PropsForAccountType, AccountProps } from '../types';
-import { revel8 } from './revel8';
+/**
+ * Vendor Configuration Export
+ *
+ * Imports from vendor.config.ts (git-ignored, developer-owned).
+ * See vendor.config.example.ts for the reference implementation.
+ */
 
-type VendorCtaResponse = {
-  url: string;
-};
+import { vendorConfig, type VendorConfig } from './vendor.config';
 
-/** Props for actions that require an atom to exist */
-type PropsWithAtom =
-  | PropsForAccountType<AccountType.AtomWithoutTrustTriple>
-  | PropsForAccountType<AccountType.AtomWithTrustTriple>;
+// Re-export types for use elsewhere
+export type { VendorConfig };
 
-export type Vendor = {
-  name: string;
-  logo?: string;
+// Export the vendor configuration
+export const vendor = vendorConfig;
 
-  /** Generate URL for creating a trust triple (no atom exists) */
-  noAtom: (
-    props: PropsForAccountType<AccountType.NoAtom>,
-  ) => VendorCtaResponse;
-
-  /** Generate URL for completing a trust triple (atom exists, no trust data) */
-  atomWithoutTrustTriple: (
-    props: PropsForAccountType<AccountType.AtomWithoutTrustTriple>,
-  ) => VendorCtaResponse;
-
-  /** Generate URL for staking on a trust triple */
-  atomWithTrustTriple: (
-    props: PropsForAccountType<AccountType.AtomWithTrustTriple>,
-  ) => VendorCtaResponse;
-
-  /** Generate URL for viewing an atom's details */
-  viewAtom: (props: PropsWithAtom) => VendorCtaResponse;
-
-  /** Generate URL for creating a nickname triple */
-  createNickname: (props: PropsWithAtom) => VendorCtaResponse;
-};
-
-// change to array?
-export const VENDOR_LIST: Vendor[] = [revel8];
+// Legacy export for backwards compatibility
+export const VENDOR_LIST = [vendorConfig];

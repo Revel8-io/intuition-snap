@@ -1,5 +1,5 @@
 import { AccountProps, AccountType } from '../../../types';
-import { revel8 as vendor } from '../../../vendors/revel8';
+import { vendor } from '../../../vendors';
 import { FooterLink } from '../FooterLink';
 
 /**
