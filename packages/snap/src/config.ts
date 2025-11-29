@@ -5,7 +5,7 @@ export type ChainConfig = {
   chainKey: string;
   currencySymbol: string;
   decimalPrecision: number;
-  isAtomId: string;
+  hasCharacteristicAtomId: string;
   trustworthyAtomId: string;
   relatedNicknamesAtomId: string;
   rpcUrl: string;
@@ -20,7 +20,7 @@ export const INTUITION_TESTNET = {
   chainKey: 'intuition-testnet',
   currencySymbol: 'tTRUST',
   decimalPrecision: 18,
-  isAtomId: '0x5cc843bd9ba824dbef4e80e7c41ced4ccde30a7b9ac66f0499c5766dc8811801',
+  hasCharacteristicAtomId: '0x5cc843bd9ba824dbef4e80e7c41ced4ccde30a7b9ac66f0499c5766dc8811801',
   trustworthyAtomId: '0xe9c0e287737685382bd34d51090148935bdb671c98d20180b2fec15bd263f73a',
   relatedNicknamesAtomId: '0x5a52541056e9440e75c7775e66c4efa0d41719f254135579b69520395baab322',
 };
@@ -34,7 +34,7 @@ export const INTUITION_MAINNET = {
   chainKey: 'intuition-mainnet',
   currencySymbol: 'TRUST',
   decimalPrecision: 18,
-  isAtomId: '0x5cc843bd9ba824dbef4e80e7c41ced4ccde30a7b9ac66f0499c5766dc8811801',
+  hasCharacteristicAtomId: '0x5cc843bd9ba824dbef4e80e7c41ced4ccde30a7b9ac66f0499c5766dc8811801',
   trustworthyAtomId: '0xe9c0e287737685382bd34d51090148935bdb671c98d20180b2fec15bd263f73a',
   relatedNicknamesAtomId: '0x5a52541056e9440e75c7775e66c4efa0d41719f254135579b69520395baab322',
 };

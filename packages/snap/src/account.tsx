@@ -84,14 +84,14 @@ export const getAccountData = async (
 
     // Use the relevant atom to check for trust data
     const { term_id: atomId } = relevantAtom;
-    const { isAtomId, trustworthyAtomId, relatedNicknamesAtomId } =
+    const { hasCharacteristicAtomId, trustworthyAtomId, relatedNicknamesAtomId } =
       chainConfig as ChainConfig;
 
     // PARALLEL: Get trust and nickname data
     const [trustResponse, nicknameResponse] = await Promise.all([
       graphQLQuery(getTripleWithPositionsDataQuery, {
         subjectId: atomId,
-        predicateId: isAtomId,
+        predicateId: hasCharacteristicAtomId,
         objectId: trustworthyAtomId,
       }),
       graphQLQuery(getListWithHighestStakeQuery, {

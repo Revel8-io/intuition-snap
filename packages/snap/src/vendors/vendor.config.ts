@@ -28,9 +28,9 @@ const VENDOR_NAME = 'Revel8 Explorer';
 
 const EXPLORER_ORIGINS: Record<number, string> = {
   // Intuition Mainnet
-  1155: 'https://explorer.revel8.io',
+  1155: 'https:/localhost:3000',
   // Intuition Testnet
-  13579: 'https://testnet.explorer.revel8.io',
+  13579: 'https://localhost:3000',
 };
 
 // Get the base URL for the current chain
@@ -81,13 +81,16 @@ export const vendorConfig: VendorConfig = {
   /**
    * No atom exists for this address.
    * Link to create an atom + trust triple.
+   *
+   * Slim API: Only send address + chain_id.
+   * Explorer derives hasCharacteristicAtomId + trustworthyAtomId from its config.
    */
   noAtom: (params) => {
     const { address, chainId, isContract } = params;
     const addressToUse = isContract ? addressToCaip10(address, chainId) : address;
 
     const url = new URL('/snap/action', baseUrl);
-    url.searchParams.set('intent', 'complete_address_trustworthy_triple');
+    url.searchParams.set('intent', 'complete_trust_triple');
     url.searchParams.set('address', addressToUse);
     url.searchParams.set('chain_id', chainId);
 
@@ -97,18 +100,19 @@ export const vendorConfig: VendorConfig = {
   /**
    * Atom exists but no trust triple.
    * Link to create the trust triple.
+   *
+   * Slim API: Only send atom_id.
+   * Explorer derives hasCharacteristicAtomId + trustworthyAtomId from its config.
    */
   atomWithoutTrustTriple: (params) => {
     const { account } = params;
     if (!account) throw new Error('atomWithoutTrustTriple: account not found');
 
     const { term_id: atomId } = account;
-    const { isAtomId, trustworthyAtomId } = chainConfig as ChainConfig;
 
     const url = new URL('/snap/action', baseUrl);
-    url.searchParams.set('intent', 'complete_triple');
+    url.searchParams.set('intent', 'create_trust_triple');
     url.searchParams.set('atom_id', atomId);
-    url.searchParams.set('atom_ids', `${atomId},${isAtomId},${trustworthyAtomId}`);
 
     return { url: url.toString() };
   },
@@ -116,6 +120,9 @@ export const vendorConfig: VendorConfig = {
   /**
    * Trust triple exists.
    * Link to stake on it.
+   *
+   * Slim API: Only send triple_id.
+   * User will stake on the triple page.
    */
   atomWithTrustTriple: (params) => {
     const { triple } = params;
@@ -124,7 +131,7 @@ export const vendorConfig: VendorConfig = {
     const { term_id: tripleId } = triple;
 
     const url = new URL('/snap/action', baseUrl);
-    url.searchParams.set('intent', 'stake_triple');
+    url.searchParams.set('intent', 'stake_trust_triple');
     url.searchParams.set('triple_id', tripleId);
 
     return { url: url.toString() };
@@ -150,12 +157,10 @@ export const vendorConfig: VendorConfig = {
     if (!account) throw new Error('createNickname: account not found');
 
     const { term_id: atomId } = account;
-    const { relatedNicknamesAtomId } = chainConfig as ChainConfig;
 
     const url = new URL('/snap/action', baseUrl);
     url.searchParams.set('intent', 'create_nickname');
     url.searchParams.set('subject_id', atomId);
-    url.searchParams.set('predicate_id', relatedNicknamesAtomId);
 
     return { url: url.toString() };
   },
