@@ -4,11 +4,44 @@ import {
   Row,
   Text,
   Value,
+  Italic,
 } from '@metamask/snaps-sdk/jsx';
-import { AccountType, PropsForAccountType } from '../types';
+import { AccountType, PropsForAccountType, AlternateTrustData } from '../types';
 import { stringToDecimal } from '../util';
 import { chainConfig } from '../config';
 import { Footer } from './Footer';
+
+/**
+ * Displays a note when alternate atom format (CAIP vs 0x) has trust data.
+ * Helps users understand there may be additional relevant trust information.
+ */
+const AlternateTrustNote = ({
+  alternateTrustData,
+  isContract,
+}: {
+  alternateTrustData: AlternateTrustData;
+  isContract: boolean;
+}) => {
+  if (!alternateTrustData.hasAlternateTrustData) {
+    return null;
+  }
+
+  // Determine the appropriate note text based on which format is alternate
+  const noteText = alternateTrustData.alternateIsCaip
+    ? `ℹ️ This address also has trust data as a contract on ${chainConfig.chainName}.`
+    : `ℹ️ This address also has trust data as an EOA.`;
+
+  return (
+    <Box>
+      <Text>
+        <Italic>{noteText}</Italic>
+      </Text>
+      <Text>
+        <Italic>View more to investigate.</Italic>
+      </Text>
+    </Box>
+  );
+};
 
 /**
  * Account display component for addresses with no atom on Intuition.
@@ -18,13 +51,17 @@ export const NoAtom = (
   params: PropsForAccountType<AccountType.NoAtom>,
 ) => {
   console.log('😎 NoAtom params', JSON.stringify(params, null, 2));
-  const { isContract } = params;
+  const { isContract, alternateTrustData } = params;
   const accountTypeSyntax = isContract ? 'contract' : 'address';
 
   return (
     <Box>
       <Box>
         <Text>No information about this {accountTypeSyntax} on Intuition, yet!</Text>
+        <AlternateTrustNote
+          alternateTrustData={alternateTrustData}
+          isContract={isContract}
+        />
       </Box>
       <Footer {...params} />
     </Box>
@@ -39,13 +76,21 @@ export const AtomWithoutTrustTriple = (
   params: PropsForAccountType<AccountType.AtomWithoutTrustTriple>,
 ) => {
   console.log('😎 AtomWithoutTrustTriple params', JSON.stringify(params, null, 2));
-  const { account, nickname } = params;
+  const { account, nickname, isContract, alternateTrustData } = params;
 
   return (
     <Box>
       <Box>
+        {!!nickname && (
+          <Row label="Nickname">
+            <Value value={`"${nickname}"`} extra="" />
+          </Row>
+        )}
         <Text>Atom exists for {account?.label || account?.data}, but it has no trust data yet</Text>
-        {!!nickname && <Text>Nickname: {nickname}</Text>}
+        <AlternateTrustNote
+          alternateTrustData={alternateTrustData}
+          isContract={isContract}
+        />
       </Box>
       <Footer {...params} />
     </Box>
@@ -60,7 +105,7 @@ export const AtomWithTrustTriple = (
   params: PropsForAccountType<AccountType.AtomWithTrustTriple>,
 ) => {
   console.log('😎 AtomWithTrustTriple params', JSON.stringify(params, null, 2));
-  const { address, triple, nickname } = params;
+  const { address, triple, nickname, isContract, alternateTrustData } = params;
   const {
     counter_term: {
       vaults: [counterVault],
@@ -100,6 +145,10 @@ export const AtomWithTrustTriple = (
             extra={``}
           />
         </Row>
+        <AlternateTrustNote
+          alternateTrustData={alternateTrustData}
+          isContract={isContract}
+        />
       </Box>
       <Footer {...params} />
     </Box>

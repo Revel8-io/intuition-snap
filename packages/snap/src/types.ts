@@ -9,6 +9,47 @@ export type Account = {
   term_id: string;
 };
 
+// ============================================================================
+// Address Classification Types
+// ============================================================================
+
+/**
+ * Reasons why address classification may be uncertain.
+ * Used to track why we couldn't definitively determine if address is EOA or contract.
+ */
+export type ClassificationFailureReason =
+  | 'eth_getCode_failed'
+  | 'chain_switch_failed'
+  | 'rpc_error';
+
+/**
+ * Classification result indicating whether an address is an EOA or contract.
+ * Includes certainty level to handle cases where eth_getCode fails.
+ *
+ * - definite EOA: eth_getCode returned 0x (no bytecode)
+ * - definite contract: transaction has data OR eth_getCode returned bytecode
+ * - uncertain: eth_getCode failed, we don't know for sure
+ */
+export type AddressClassification =
+  | { type: 'eoa'; certainty: 'definite' }
+  | { type: 'contract'; certainty: 'definite' }
+  | { type: 'unknown'; certainty: 'uncertain'; reason: ClassificationFailureReason };
+
+/**
+ * Alternate trust data info - used when the non-primary atom format
+ * has trust data that might be relevant to the user.
+ */
+export type AlternateTrustData = {
+  /** Whether alternate format has any trust triple with non-zero market cap */
+  hasAlternateTrustData: boolean;
+  /** The atom ID of the alternate format (for View More link) */
+  alternateAtomId?: string | undefined;
+  /** Total market cap of the alternate trust triple (support + counter) */
+  alternateMarketCap?: string | undefined;
+  /** Whether the alternate is the CAIP format (true) or plain 0x (false) */
+  alternateIsCaip?: boolean | undefined;
+};
+
 export type TripleWithPositions = {
   term_id: string;
   subject_id: string;
@@ -96,8 +137,13 @@ type BaseAccountProps = {
   /** The connected user's wallet address (for checking existing positions) */
   userAddress?: string;
   nickname: string | null;
+  /** Whether the address is a contract (derived from classification) */
   isContract: boolean;
   transactionOrigin?: string;
+  /** Classification result with certainty level */
+  classification: AddressClassification;
+  /** Info about trust data in alternate atom format (CAIP vs 0x) */
+  alternateTrustData: AlternateTrustData;
 };
 
 // Discriminated union types for proper AccountProps typing

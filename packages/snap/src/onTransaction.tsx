@@ -2,6 +2,7 @@ import type {
   ChainId,
   OnTransactionHandler,
   Transaction,
+  Json,
 } from '@metamask/snaps-sdk';
 
 import { getAccountData, getAccountType, renderOnTransaction } from './account';
@@ -10,6 +11,8 @@ import {
   TripleWithPositions,
   AccountType,
   AccountProps,
+  AddressClassification,
+  AlternateTrustData,
 } from './types';
 
 export type OnTransactionContext = {
@@ -20,6 +23,21 @@ export type OnTransactionContext = {
   nickname: string | null;
   isContract: boolean;
   accountType: AccountType;
+  classification: AddressClassification;
+  alternateTrustData: AlternateTrustData;
+};
+
+/**
+ * Converts props to a JSON-serializable context object.
+ * MetaMask Snap context must be Record<string, Json> which doesn't allow undefined.
+ * This function converts undefined values to null for JSON compatibility.
+ */
+const toSerializableContext = (props: AccountProps): Record<string, Json> => {
+  // JSON.parse(JSON.stringify()) handles the conversion cleanly:
+  // - undefined values are stripped from objects
+  // - null remains null
+  // - All other values are preserved
+  return JSON.parse(JSON.stringify(props)) as Record<string, Json>;
 };
 
 export const onTransaction: OnTransactionHandler = async ({
@@ -62,8 +80,8 @@ export const onTransaction: OnTransactionHandler = async ({
 
   const initialUI = renderOnTransaction(props);
 
-  // Use full props as context to preserve origin data
-  const context = props;
+  // Convert props to JSON-serializable context (strips undefined values)
+  const context = toSerializableContext(props);
 
   const interfaceId = await snap.request({
     method: 'snap_createInterface',
