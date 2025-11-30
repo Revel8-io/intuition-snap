@@ -407,4 +407,4 @@ The journey toward a decentralized knowledge graph is just beginning. With each 
 
 ---
 
-*This document provides a comprehensive overview of Intuition's concepts and mechanisms. As the protocol evolves, new features and capabilities will emerge. For the latest technical specifications and implementation details, refer to the official documentation and smart contract code.*
+*This document provides a comprehensive overview of Intuition's concepts and mechanisms. As the protocol evolves, new features and capabilities will emerge. For the latest technical specifications and implementation details, refer to the official documentation (https://intuition.systems) and smart contract code.*

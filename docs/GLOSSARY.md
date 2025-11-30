@@ -469,7 +469,7 @@ The **computational cost** unit for Ethereum operations. Users pay gas fees for 
 
 ### Chain ID
 A **unique identifier** for a blockchain network:
-- Intuition Mainnet: `8453` (Base)
+- Intuition Mainnet: `1155`
 - Intuition Testnet: `13579`
 
 ---
@@ -567,5 +567,5 @@ Object: [String Atom with nickname text]
 
 ---
 
-*This glossary is maintained alongside the codebase. For protocol-level documentation, see `docs/intuition/CONCEPTS.md` and the TRUST whitepaper.*
+*This glossary is maintained alongside the codebase. For protocol-level documentation, see [CONCEPTS.md](./CONCEPTS.md) and [TRUST-WHITEPAPER-SUMMARY.md](./TRUST-WHITEPAPER-SUMMARY.md).*
 
