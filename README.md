@@ -1,71 +1,86 @@
 # Intuition Snap
 
-This is the first draft for a community-driven MetaMask Snap effort for the Intuition network.
+A MetaMask Snap that displays real-time trust and reputation data from the [Intuition](https://intuition.systems) knowledge graph during transaction signing.
 
+## What is this?
 
-## Main Features
+When you're about to send a transaction to an address, the Intuition Snap shows you:
+- **Trust signals** — How many people have staked that the address is trustworthy (or not)
+- **Nicknames** — Community-assigned labels for the address
+- **Stake amounts** — The economic weight behind each trust signal
 
-<img height="180" alt="image" src="https://github.com/user-attachments/assets/6f599b3b-7198-48d9-ac40-ba33db0d0470" />
+This helps you make informed decisions before interacting with unknown addresses.
 
+<img height="180" alt="Intuition Snap Screenshot" src="https://github.com/user-attachments/assets/6f599b3b-7198-48d9-ac40-ba33db0d0470" />
 
-- `onTransaction` hook that displays any trust-related information (see details below) and nickname data for the account
-- Vendor integration system allowing third-party dapps to provide CTAs for creating atoms, triples, and staking (see [Vendor Integration](#vendor-integration) below)
+## Features
 
-### Development
+- **Transaction Insights** — `onTransaction` hook displays trust data before you sign
+- **Trust Triple Display** — Shows support/oppose positions on `[address] is trustworthy`
+- **Nickname Display** — Shows community-assigned nicknames for addresses
+- **Multi-chain Support** — Works on Intuition Testnet and Mainnet
 
-In order to run this Snap locally you need to do the following:
-- install [MetaMask Flask](https://docs.metamask.io/snaps/get-started/install-flask)
-- Run `pnpm i` in the root of this project
-- Run `pnpm start` and a local server should start running on port `8000`
-- Browse to `http://localhost:8000`
-- Click the "Connect" button
-- Approve the connection to the Snap via the MetaMask Extension
+## Requirements
 
-Great, now your changes in the code should show up when you are using your version of MetaMask Snap
+- [MetaMask Flask](https://docs.metamask.io/snaps/get-started/install-flask) (for development)
+- Node.js ≥ 18.6.0
+- pnpm or yarn
 
-### More Features to Build
+## Development
 
-1. Snap homepage
-2. Display information about websites / dapps where the transaction originated from
-3. Version for mobile app? (Snaps are currently not enabled within MetaMask mobile)
-4. SVGs or animations to better convey position distribution
-5. We will always need more vendors / third-party dapps for the CTAs since we cannot generate EVM transactions from within the Snap
-6. Add support for other fiat currencies (currently just USD)
-7. Add translations
-8. Decide upon code style and enforce code quality via GitHub actions
+To run this Snap locally:
 
-### Atoms Used
-These can be found in `packages/snap/src/config.ts` and are dependent upon which chain is enabled. (As of 2025-09-17 it is Intuition Testnet)
+1. Install [MetaMask Flask](https://docs.metamask.io/snaps/get-started/install-flask)
+2. Clone this repository
+3. Install dependencies:
+   ```bash
+   pnpm install
+   ```
+4. Start the development server:
+   ```bash
+   pnpm start
+   ```
+5. Browse to `http://localhost:8000`
+6. Click "Connect" and approve the Snap connection
 
-- Triple: `[address] is trustworthy`
-  1. [address]: atom with target address as term_id
-  2. "is": `config.isAtomId`
-  3. "trustworthy": `config.trustworthyAtomId`
+Your code changes will now be reflected when using the Snap.
 
-- List: `[address] has nickname [nickname]`
-  1. [address]: atom with target address as term_id
-  2. "has nickname": `config.relatedNicknamesAtomId`
-  3. [nickname]: the label for that atom in the list
+### Chain Configuration
 
-You can use this info to stake and unstake to the atoms and triples involved
+By default, the Snap connects to **Intuition Testnet**. To use mainnet:
 
-### Vendor Integration
+```bash
+pnpm start:mainnet
+```
 
-The Intuition Snap supports integration with third-party dapps (vendors) that can provide functionality for:
-- Creating atoms (on-chain identities) for addresses
-- Creating trust triples (relationships between atoms)
-- Staking on existing trust relationships
+## Atoms Used
 
-#### For Vendors
+The Snap queries the Intuition knowledge graph using these predefined atoms:
 
-To integrate your dapp with the Intuition Snap:
+| Atom | Purpose | Testnet ID | Mainnet ID |
+|------|---------|------------|------------|
+| `hasCharacteristic` | Predicate for trust triples | `0x5cc843bd9ba824dbef4e80e7c41ced4ccde30a7b9ac66f0499c5766dc8811801` | `0x5cc843bd9ba824dbef4e80e7c41ced4ccde30a7b9ac66f0499c5766dc8811801` |
+| `trustworthy` | The "trustworthy" characteristic | `0xe9c0e287737685382bd34d51090148935bdb671c98d20180b2fec15bd263f73a` | `0xe9c0e287737685382bd34d51090148935bdb671c98d20180b2fec15bd263f73a` |
+| `hasNickname` | Predicate for nickname lists | `0x5a52541056e9440e75c7775e66c4efa0d41719f254135579b69520395baab322` | `0x5a52541056e9440e75c7775e66c4efa0d41719f254135579b69520395baab322` |
 
-1. Create a vendor file in `packages/snap/src/vendors/your-app-name.ts`
-2. Implement the `Vendor` interface with methods for each account state
-3. Add your vendor to the `VENDOR_LIST` in `packages/snap/src/vendors/index.ts`
+**Trust Triple structure:** `[address] - hasCharacteristic - trustworthy`
+**Nickname List structure:** `[address] - hasNickname - [nickname atom]`
 
-See the [Vendor Integration Guide](packages/snap/src/vendors/readme.md) for detailed instructions and the [Example Vendor](packages/snap/src/vendors/example.ts) for a template.
+Configuration is defined in `packages/snap/src/config.ts`.
 
-#### Current Vendors
+## Project Structure
 
-- **Revel8** - The primary Intuition explorer and staking interface
+```
+intuition-snap/
+├── packages/
+│   ├── snap/          # The MetaMask Snap
+│   │   ├── src/       # Source code
+│   │   └── dist/      # Built bundle
+│   └── site/          # Development site for testing
+├── docs/              # Documentation
+└── scripts/           # Build scripts
+```
+
+## License
+
+This project is dual-licensed under [Apache 2.0](LICENSE.APACHE2) and [MIT](LICENSE.MIT0).
