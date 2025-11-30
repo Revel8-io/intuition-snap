@@ -65,8 +65,6 @@ const classifyAddress = async (
       params: [destinationAddress, 'latest'],
     });
 
-    console.log('codeResponse', codeResponse);
-
     if (codeResponse === '0x' || codeResponse === null) {
       return { type: 'eoa', certainty: 'definite' };
     } else {
@@ -164,11 +162,6 @@ const selectPrimaryAtom = (
   const caipMarketCap = getTrustMarketCap(caipTrustTriple);
   const plainMarketCap = getTrustMarketCap(plainTrustTriple);
 
-  console.log('Uncertain classification - comparing market caps:', {
-    caipMarketCap: caipMarketCap.toString(),
-    plainMarketCap: plainMarketCap.toString(),
-  });
-
   if (caipMarketCap >= plainMarketCap) {
     return {
       primary: caipAtom,
@@ -204,8 +197,6 @@ export const getAccountData = async (
     configChainId,
   );
 
-  console.log('Address classification:', classification);
-
   // Derive isContract from classification (for backwards compatibility)
   const isContract =
     classification.type === 'contract' ||
@@ -222,11 +213,6 @@ export const getAccountData = async (
     const { plainAtoms, caipAtoms } = atomsResponse.data;
     const plainAtom = plainAtoms?.[0] as Account | undefined;
     const caipAtom = caipAtoms?.[0] as Account | undefined;
-
-    console.log('Atoms found:', {
-      plainAtom: plainAtom?.term_id,
-      caipAtom: caipAtom?.term_id,
-    });
 
     // If neither atom exists, return early
     if (!plainAtom && !caipAtom) {
@@ -278,11 +264,6 @@ export const getAccountData = async (
       trustResults[key] = trustResponses[idx].data.triples[0] || null;
     });
 
-    console.log('Trust triples found:', {
-      plain: trustResults.plain?.term_id,
-      caip: trustResults.caip?.term_id,
-    });
-
     // Step 4: Select primary atom based on classification and trust signal
     const selection = selectPrimaryAtom(
       classification,
@@ -300,8 +281,6 @@ export const getAccountData = async (
       alternateMarketCap: alternateMarketCap.toString(),
       alternateIsCaip: !selection.usedCaip, // If we used CAIP, alternate is plain (and vice versa)
     };
-
-    console.log('Alternate trust data:', alternateTrustData);
 
     // Step 6: Query nickname for the primary atom
     let nickname: string | null = null;

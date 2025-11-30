@@ -41,5 +41,3 @@ export const INTUITION_MAINNET = {
 
 export const CHAIN_CONFIGS = [INTUITION_TESTNET, INTUITION_MAINNET];
 export const chainConfig = process.env.CHAIN === 'mainnet' ? INTUITION_MAINNET : INTUITION_TESTNET;
-
-console.log('chainConfig', chainConfig);

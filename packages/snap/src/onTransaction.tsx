@@ -49,8 +49,6 @@ export const onTransaction: OnTransactionHandler = async ({
   chainId: ChainId;
   transactionOrigin?: string;
 }) => {
-  console.log('onTransaction', JSON.stringify({ transaction, chainId, transactionOrigin }, null, 2));
-
   // Get user's connected wallet address for position checking
   let userAddress: string | undefined;
   try {

@@ -50,7 +50,6 @@ const AlternateTrustNote = ({
 export const NoAtom = (
   params: PropsForAccountType<AccountType.NoAtom>,
 ) => {
-  console.log('😎 NoAtom params', JSON.stringify(params, null, 2));
   const { isContract, alternateTrustData } = params;
   const accountTypeSyntax = isContract ? 'contract' : 'address';
 
@@ -75,7 +74,6 @@ export const NoAtom = (
 export const AtomWithoutTrustTriple = (
   params: PropsForAccountType<AccountType.AtomWithoutTrustTriple>,
 ) => {
-  console.log('😎 AtomWithoutTrustTriple params', JSON.stringify(params, null, 2));
   const { account, nickname, isContract, alternateTrustData } = params;
 
   return (
@@ -104,7 +102,6 @@ export const AtomWithoutTrustTriple = (
 export const AtomWithTrustTriple = (
   params: PropsForAccountType<AccountType.AtomWithTrustTriple>,
 ) => {
-  console.log('😎 AtomWithTrustTriple params', JSON.stringify(params, null, 2));
   const { address, triple, nickname, isContract, alternateTrustData } = params;
   const {
     counter_term: {

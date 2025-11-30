@@ -12,5 +12,5 @@ export type OnUserInputProps = {
 };
 
 export const onUserInput: OnUserInputHandler = async (args) => {
-  console.log('😎 onUserInput args', JSON.stringify(args, null, 2));
+  // Currently inert
 };
