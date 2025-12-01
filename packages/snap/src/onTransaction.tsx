@@ -49,19 +49,24 @@ export const onTransaction: OnTransactionHandler = async ({
   chainId: ChainId;
   transactionOrigin?: string;
 }) => {
-  // Get user's connected wallet address for position checking
+  // Get user's connected wallet address *for position checking*
+  // Note: This is optional - if it fails, we continue without position checking
   let userAddress: string | undefined;
   try {
     const accounts = await ethereum.request({ method: 'eth_accounts' }) as string[];
     userAddress = accounts?.[0];
-  } catch (err) {
-    console.error('Failed to get user accounts', err);
+  } catch (_err) {
+    // eth_accounts failure is non-critical - Snap can function without userAddress
+    // The UI will render without position-specific features (e.g., stake prompt)
+    // Silently continue with userAddress = undefined
+    // Error could be: DisconnectedError, ChainDisconnectedError, or InternalError
+    // but since this is optional data, we don't need to surface it to the user
   }
 
   // Execute both queries in parallel for performance
   const [accountData,] = await Promise.all([
     getAccountData(transaction, chainId),
-    // add more here
+    // add more here, getOriginData?
   ]);
 
   const accountType = getAccountType(accountData);

@@ -1,50 +1,72 @@
-import { expect } from '@jest/globals';
+/**
+ * Main entry point tests for the Revel8 Snap.
+ *
+ * This file contains tests for the snap's exported handlers:
+ * - onHomePage: Renders the snap's home page
+ * - onTransaction: Provides transaction insights (see onTransaction.test.tsx)
+ * - onUserInput: Handles user interactions (currently inert)
+ */
+
+import { expect, describe, it } from '@jest/globals';
 import { installSnap } from '@metamask/snaps-jest';
-import { Box, Text, Bold } from '@metamask/snaps-sdk/jsx';
 
-describe('onRpcRequest', () => {
-  describe('hello', () => {
-    it('shows a confirmation dialog', async () => {
-      const { request } = await installSnap();
+describe('Snap Handlers', () => {
+  describe('onHomePage', () => {
+    it('should render the home page with welcome content', async () => {
+      const snap = await installSnap();
 
-      const origin = 'Jest';
-      const response = request({
-        method: 'hello',
-        origin,
-      });
+      const response = await snap.onHomePage();
 
-      const ui = await response.getInterface();
-      expect(ui.type).toBe('confirmation');
-      expect(ui).toRender(
-        <Box>
-          <Text>
-            Hello, <Bold>{origin}</Bold>!
-          </Text>
-          <Text>This custom confirmation is just for display purposes.</Text>
-          <Text>
-            But you can edit the snap source code to make it do something, if
-            you want to!
-          </Text>
-        </Box>,
-      );
+      // Home page should return a valid interface
+      const ui = response.getInterface();
+      expect(ui).toBeDefined();
+      expect(ui.content).toBeDefined();
 
-      await ui.ok();
+      // Verify the content structure
+      const content = ui.content as { type: string; props: any };
+      expect(content.type).toBe('Box');
 
-      expect(await response).toRespondWith(true);
+      // Check for welcome text
+      const rendered = JSON.stringify(ui.content);
+      expect(rendered).toContain('Revel8');
+      expect(rendered).toContain('trust');
+    });
+
+    it('should include a link to Revel8 and Intuition', async () => {
+      const snap = await installSnap();
+
+      const response = await snap.onHomePage();
+      const ui = response.getInterface();
+      const rendered = JSON.stringify(ui.content);
+
+      expect(rendered).toContain('revel8.io');
+      expect(rendered).toContain('intuition.systems');
+      expect(rendered).toContain('Link');
     });
   });
 
-  it('throws an error if the requested method does not exist', async () => {
-    const { request } = await installSnap();
+  describe('onTransaction', () => {
+    it('should be available and return an interface', async () => {
+      const snap = await installSnap();
 
-    const response = await request({
-      method: 'foo',
-    });
+      snap.mockJsonRpc({
+        method: 'eth_accounts',
+        result: [],
+      });
 
-    expect(response).toRespondWithError({
-      code: -32603,
-      message: 'Method not found.',
-      stack: expect.any(String),
+      snap.mockJsonRpc({
+        method: 'eth_getCode',
+        result: '0x',
+      });
+
+      const response = await snap.onTransaction({
+        to: '0x1234567890123456789012345678901234567890',
+        chainId: 'eip155:1',
+        data: '0x',
+        value: '0x0',
+      });
+
+      expect(response.getInterface()).toBeDefined();
     });
   });
 });

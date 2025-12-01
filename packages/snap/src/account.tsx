@@ -71,7 +71,6 @@ const classifyAddress = async (
       return { type: 'contract', certainty: 'definite' };
     }
   } catch (err) {
-    console.error('eth_getCode error', JSON.stringify(err));
     return { type: 'unknown', certainty: 'uncertain', reason: 'eth_getCode_failed' };
   }
 };
