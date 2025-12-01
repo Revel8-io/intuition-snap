@@ -36,6 +36,7 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "test:integration": "jest --testPathPattern=onTransaction.test",
+    "test:components": "jest --testPathPattern=components",
     "test:coverage": "jest --coverage"
   },
   "dependencies": {
