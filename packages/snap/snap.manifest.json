@@ -7,7 +7,7 @@
     "url": "https://github.com/revel8-io/intuition-snap"
   },
   "source": {
-    "shasum": "ezF2MwdDWJb4KnuiSQgrJrChsW05ycKqnfWB1Lpgf2I=",
+    "shasum": "iWD4hCgowlVMdJqvPZZQL1oH1Z6mzA2puytn/ofcJcw=",
     "location": {
       "npm": {
         "filePath": "dist/bundle.js",
@@ -21,7 +21,7 @@
     "endowment:transaction-insight": {
       "allowTransactionOrigin": true
     },
-    "endowment:ethereum-provider": {},
+    "endowment:page-home": {},
     "endowment:network-access": {},
     "endowment:rpc": {
       "dapps": true,
