@@ -81,6 +81,10 @@ intuition-snap/
 └── scripts/           # Build scripts
 ```
 
+## User Documentation
+
+For end-user documentation and support, see the [User Knowledge Base](docs/USER-KNOWLEDGE-BASE.md).
+
 ## License
 
 This project is dual-licensed under [Apache 2.0](LICENSE.APACHE2) and [MIT](LICENSE.MIT0).
