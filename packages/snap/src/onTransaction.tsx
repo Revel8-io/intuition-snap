@@ -15,18 +15,6 @@ import {
   AlternateTrustData,
 } from './types';
 
-export type OnTransactionContext = {
-  address: string;
-  chainId: ChainId;
-  account: Account | null;
-  triple: TripleWithPositions | null;
-  nickname: string | null;
-  isContract: boolean;
-  accountType: AccountType;
-  classification: AddressClassification;
-  alternateTrustData: AlternateTrustData;
-};
-
 /**
  * Converts props to a JSON-serializable context object.
  * MetaMask Snap context must be Record<string, Json> which doesn't allow undefined.
@@ -63,11 +51,8 @@ export const onTransaction: OnTransactionHandler = async ({
     // but since this is optional data, we don't need to surface it to the user
   }
 
-  // Execute both queries in parallel for performance
-  const [accountData,] = await Promise.all([
-    getAccountData(transaction, chainId),
-    // add more here, getOriginData?
-  ]);
+  // Execute queries in parallel for performance
+  const accountData = await getAccountData(transaction, chainId);
 
   const accountType = getAccountType(accountData);
 

@@ -19,8 +19,7 @@ export type Account = {
  */
 export type ClassificationFailureReason =
   | 'eth_getCode_failed'
-  | 'chain_switch_failed'
-  | 'rpc_error';
+  | 'chain_switch_failed';
 
 /**
  * Classification result indicating whether an address is an EOA or contract.
