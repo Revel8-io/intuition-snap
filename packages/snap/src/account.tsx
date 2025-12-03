@@ -320,24 +320,7 @@ export const getAccountType = (
     return AccountType.AtomWithoutTrustTriple;
   }
 
-  if (triple) {
-    return AccountType.AtomWithTrustTriple;
-  }
-
-  return AccountType.NoAtom; // default
-};
-
-/**
- * Helper to get a human-readable description of the address classification.
- * Used for UI display and logging.
- */
-export const getClassificationLabel = (
-  classification: AddressClassification,
-): string => {
-  if (classification.certainty === 'definite') {
-    return classification.type === 'contract' ? 'Smart Contract' : 'EOA';
-  }
-  return 'Unknown (classification uncertain)';
+  return AccountType.AtomWithTrustTriple;
 };
 
 export const renderOnTransaction = (props: AccountProps) => {
