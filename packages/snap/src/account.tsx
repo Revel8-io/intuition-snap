@@ -54,7 +54,6 @@ const classifyAddress = async (
           params: [{ chainId: chainId }],
         });
       } catch (switchErr) {
-        console.error('chain switch failed', JSON.stringify(switchErr));
         return { type: 'unknown', certainty: 'uncertain', reason: 'chain_switch_failed' };
       }
     }
@@ -301,7 +300,6 @@ export const getAccountData = async (
       alternateTrustData,
     };
   } catch (error: any) {
-    console.error('getAccountData error', JSON.stringify(error));
     throw error;
   }
 };
