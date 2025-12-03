@@ -1,5 +1,5 @@
 {
-  "version": "0.3.0",
+  "version": "1.0.0",
   "description": "Bringing human trust to trustless systems.",
   "proposedName": "Revel8",
   "repository": {
@@ -7,7 +7,7 @@
     "url": "https://github.com/revel8-io/intuition-snap"
   },
   "source": {
-    "shasum": "Aj7YeOxFNwdChuC/RzEmbSnKR94CVHb/Vklhf5Kup34=",
+    "shasum": "lzQm7JM8o7zkUSZzCXnIIiRU6vhgZN5qRaRpnKcg094=",
     "location": {
       "npm": {
         "filePath": "dist/bundle.js",

@@ -1,6 +1,6 @@
 {
   "name": "root",
-  "version": "0.3.0",
+  "version": "1.0.0",
   "private": true,
   "description": "Real-time trust and sentiment insights for every transaction. Powered by Intuition",
   "homepage": "https://github.com/revel8-io/intuition-snap#readme",
