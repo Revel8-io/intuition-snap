@@ -30,7 +30,7 @@
     "lint:misc": "prettier '**/*.json' '**/*.md' '!CHANGELOG.md' --ignore-path .gitignore",
     "prepublishOnly": "mm-snap manifest",
     "serve": "mm-snap serve",
-    "start": "mm-snap watch",
+    "start": "CHAIN=testnet mm-snap watch",
     "start:mainnet": "CHAIN=mainnet mm-snap watch",
     "start:testnet": "CHAIN=testnet mm-snap watch",
     "test": "jest",
