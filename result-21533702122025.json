@@ -1,0 +1,561 @@
+{
+  "ConsoleLog": [
+    {
+      "type": "ConsoleLog",
+      "description": "Presence of console log function detected.",
+      "position": {
+        "filePath": "/Users/kylan/Documents/intuition/intuition-snap/packages/snap/src/account.tsx",
+        "lineNum": 57
+      },
+      "riskRating": 1
+    },
+    {
+      "type": "ConsoleLog",
+      "description": "Presence of console log function detected.",
+      "position": {
+        "filePath": "/Users/kylan/Documents/intuition/intuition-snap/packages/snap/src/account.tsx",
+        "lineNum": 304
+      },
+      "riskRating": 1
+    }
+  ],
+  "ESLinting": [
+    {
+      "type": "ESLinting",
+      "description": "Missing return type on function.",
+      "position": {
+        "filePath": "/Users/kylan/Documents/intuition/intuition-snap/packages/snap/src/queries.ts",
+        "lineNum": 8
+      },
+      "riskRating": 1
+    },
+    {
+      "type": "ESLinting",
+      "description": "All imports in the declaration are only used as types. Use `import type`.",
+      "position": {
+        "filePath": "/Users/kylan/Documents/intuition/intuition-snap/packages/snap/src/types.ts",
+        "lineNum": 1
+      },
+      "riskRating": 1
+    },
+    {
+      "type": "ESLinting",
+      "description": "Type Property name `term_id` must match one of the following formats: camelCase",
+      "position": {
+        "filePath": "/Users/kylan/Documents/intuition/intuition-snap/packages/snap/src/types.ts",
+        "lineNum": 9
+      },
+      "riskRating": 1
+    },
+    {
+      "type": "ESLinting",
+      "description": "Type Property name `term_id` must match one of the following formats: camelCase",
+      "position": {
+        "filePath": "/Users/kylan/Documents/intuition/intuition-snap/packages/snap/src/types.ts",
+        "lineNum": 54
+      },
+      "riskRating": 1
+    },
+    {
+      "type": "ESLinting",
+      "description": "Type Property name `subject_id` must match one of the following formats: camelCase",
+      "position": {
+        "filePath": "/Users/kylan/Documents/intuition/intuition-snap/packages/snap/src/types.ts",
+        "lineNum": 55
+      },
+      "riskRating": 1
+    },
+    {
+      "type": "ESLinting",
+      "description": "Type Property name `predicate_id` must match one of the following formats: camelCase",
+      "position": {
+        "filePath": "/Users/kylan/Documents/intuition/intuition-snap/packages/snap/src/types.ts",
+        "lineNum": 56
+      },
+      "riskRating": 1
+    },
+    {
+      "type": "ESLinting",
+      "description": "Type Property name `object_id` must match one of the following formats: camelCase",
+      "position": {
+        "filePath": "/Users/kylan/Documents/intuition/intuition-snap/packages/snap/src/types.ts",
+        "lineNum": 57
+      },
+      "riskRating": 1
+    },
+    {
+      "type": "ESLinting",
+      "description": "Type Property name `creator_id` must match one of the following formats: camelCase",
+      "position": {
+        "filePath": "/Users/kylan/Documents/intuition/intuition-snap/packages/snap/src/types.ts",
+        "lineNum": 58
+      },
+      "riskRating": 1
+    },
+    {
+      "type": "ESLinting",
+      "description": "Type Property name `counter_term_id` must match one of the following formats: camelCase",
+      "position": {
+        "filePath": "/Users/kylan/Documents/intuition/intuition-snap/packages/snap/src/types.ts",
+        "lineNum": 59
+      },
+      "riskRating": 1
+    },
+    {
+      "type": "ESLinting",
+      "description": "Type Property name `term_id` must match one of the following formats: camelCase",
+      "position": {
+        "filePath": "/Users/kylan/Documents/intuition/intuition-snap/packages/snap/src/types.ts",
+        "lineNum": 62
+      },
+      "riskRating": 1
+    },
+    {
+      "type": "ESLinting",
+      "description": "Type Property name `market_cap` must match one of the following formats: camelCase",
+      "position": {
+        "filePath": "/Users/kylan/Documents/intuition/intuition-snap/packages/snap/src/types.ts",
+        "lineNum": 63
+      },
+      "riskRating": 1
+    },
+    {
+      "type": "ESLinting",
+      "description": "Type Property name `position_count` must match one of the following formats: camelCase",
+      "position": {
+        "filePath": "/Users/kylan/Documents/intuition/intuition-snap/packages/snap/src/types.ts",
+        "lineNum": 64
+      },
+      "riskRating": 1
+    },
+    {
+      "type": "ESLinting",
+      "description": "Type Property name `curve_id` must match one of the following formats: camelCase",
+      "position": {
+        "filePath": "/Users/kylan/Documents/intuition/intuition-snap/packages/snap/src/types.ts",
+        "lineNum": 65
+      },
+      "riskRating": 1
+    },
+    {
+      "type": "ESLinting",
+      "description": "Type Property name `counter_term` must match one of the following formats: camelCase",
+      "position": {
+        "filePath": "/Users/kylan/Documents/intuition/intuition-snap/packages/snap/src/types.ts",
+        "lineNum": 68
+      },
+      "riskRating": 1
+    },
+    {
+      "type": "ESLinting",
+      "description": "Type Property name `term_id` must match one of the following formats: camelCase",
+      "position": {
+        "filePath": "/Users/kylan/Documents/intuition/intuition-snap/packages/snap/src/types.ts",
+        "lineNum": 70
+      },
+      "riskRating": 1
+    },
+    {
+      "type": "ESLinting",
+      "description": "Type Property name `market_cap` must match one of the following formats: camelCase",
+      "position": {
+        "filePath": "/Users/kylan/Documents/intuition/intuition-snap/packages/snap/src/types.ts",
+        "lineNum": 71
+      },
+      "riskRating": 1
+    },
+    {
+      "type": "ESLinting",
+      "description": "Type Property name `position_count` must match one of the following formats: camelCase",
+      "position": {
+        "filePath": "/Users/kylan/Documents/intuition/intuition-snap/packages/snap/src/types.ts",
+        "lineNum": 72
+      },
+      "riskRating": 1
+    },
+    {
+      "type": "ESLinting",
+      "description": "Type Property name `curve_id` must match one of the following formats: camelCase",
+      "position": {
+        "filePath": "/Users/kylan/Documents/intuition/intuition-snap/packages/snap/src/types.ts",
+        "lineNum": 73
+      },
+      "riskRating": 1
+    },
+    {
+      "type": "ESLinting",
+      "description": "Type Property name `triple_term` must match one of the following formats: camelCase",
+      "position": {
+        "filePath": "/Users/kylan/Documents/intuition/intuition-snap/packages/snap/src/types.ts",
+        "lineNum": 76
+      },
+      "riskRating": 1
+    },
+    {
+      "type": "ESLinting",
+      "description": "Type Property name `term_id` must match one of the following formats: camelCase",
+      "position": {
+        "filePath": "/Users/kylan/Documents/intuition/intuition-snap/packages/snap/src/types.ts",
+        "lineNum": 77
+      },
+      "riskRating": 1
+    },
+    {
+      "type": "ESLinting",
+      "description": "Type Property name `counter_term_id` must match one of the following formats: camelCase",
+      "position": {
+        "filePath": "/Users/kylan/Documents/intuition/intuition-snap/packages/snap/src/types.ts",
+        "lineNum": 78
+      },
+      "riskRating": 1
+    },
+    {
+      "type": "ESLinting",
+      "description": "Type Property name `total_market_cap` must match one of the following formats: camelCase",
+      "position": {
+        "filePath": "/Users/kylan/Documents/intuition/intuition-snap/packages/snap/src/types.ts",
+        "lineNum": 79
+      },
+      "riskRating": 1
+    },
+    {
+      "type": "ESLinting",
+      "description": "Type Property name `total_position_count` must match one of the following formats: camelCase",
+      "position": {
+        "filePath": "/Users/kylan/Documents/intuition/intuition-snap/packages/snap/src/types.ts",
+        "lineNum": 80
+      },
+      "riskRating": 1
+    },
+    {
+      "type": "ESLinting",
+      "description": "Type Property name `triple_vault` must match one of the following formats: camelCase",
+      "position": {
+        "filePath": "/Users/kylan/Documents/intuition/intuition-snap/packages/snap/src/types.ts",
+        "lineNum": 82
+      },
+      "riskRating": 1
+    },
+    {
+      "type": "ESLinting",
+      "description": "Type Property name `term_id` must match one of the following formats: camelCase",
+      "position": {
+        "filePath": "/Users/kylan/Documents/intuition/intuition-snap/packages/snap/src/types.ts",
+        "lineNum": 83
+      },
+      "riskRating": 1
+    },
+    {
+      "type": "ESLinting",
+      "description": "Type Property name `counter_term_id` must match one of the following formats: camelCase",
+      "position": {
+        "filePath": "/Users/kylan/Documents/intuition/intuition-snap/packages/snap/src/types.ts",
+        "lineNum": 84
+      },
+      "riskRating": 1
+    },
+    {
+      "type": "ESLinting",
+      "description": "Type Property name `curve_id` must match one of the following formats: camelCase",
+      "position": {
+        "filePath": "/Users/kylan/Documents/intuition/intuition-snap/packages/snap/src/types.ts",
+        "lineNum": 85
+      },
+      "riskRating": 1
+    },
+    {
+      "type": "ESLinting",
+      "description": "Type Property name `position_count` must match one of the following formats: camelCase",
+      "position": {
+        "filePath": "/Users/kylan/Documents/intuition/intuition-snap/packages/snap/src/types.ts",
+        "lineNum": 86
+      },
+      "riskRating": 1
+    },
+    {
+      "type": "ESLinting",
+      "description": "Type Property name `market_cap` must match one of the following formats: camelCase",
+      "position": {
+        "filePath": "/Users/kylan/Documents/intuition/intuition-snap/packages/snap/src/types.ts",
+        "lineNum": 87
+      },
+      "riskRating": 1
+    },
+    {
+      "type": "ESLinting",
+      "description": "Type Property name `positions_aggregate` must match one of the following formats: camelCase",
+      "position": {
+        "filePath": "/Users/kylan/Documents/intuition/intuition-snap/packages/snap/src/types.ts",
+        "lineNum": 89
+      },
+      "riskRating": 1
+    },
+    {
+      "type": "ESLinting",
+      "description": "Type Property name `counter_positions_aggregate` must match one of the following formats: camelCase",
+      "position": {
+        "filePath": "/Users/kylan/Documents/intuition/intuition-snap/packages/snap/src/types.ts",
+        "lineNum": 96
+      },
+      "riskRating": 1
+    },
+    {
+      "type": "ESLinting",
+      "description": "Type Property name `account_id` must match one of the following formats: camelCase",
+      "position": {
+        "filePath": "/Users/kylan/Documents/intuition/intuition-snap/packages/snap/src/types.ts",
+        "lineNum": 105
+      },
+      "riskRating": 1
+    },
+    {
+      "type": "ESLinting",
+      "description": "Type Property name `term_id` must match one of the following formats: camelCase",
+      "position": {
+        "filePath": "/Users/kylan/Documents/intuition/intuition-snap/packages/snap/src/types.ts",
+        "lineNum": 106
+      },
+      "riskRating": 1
+    },
+    {
+      "type": "ESLinting",
+      "description": "Type Property name `curve_id` must match one of the following formats: camelCase",
+      "position": {
+        "filePath": "/Users/kylan/Documents/intuition/intuition-snap/packages/snap/src/types.ts",
+        "lineNum": 107
+      },
+      "riskRating": 1
+    },
+    {
+      "type": "ESLinting",
+      "description": "Type Property name `counter_positions` must match one of the following formats: camelCase",
+      "position": {
+        "filePath": "/Users/kylan/Documents/intuition/intuition-snap/packages/snap/src/types.ts",
+        "lineNum": 113
+      },
+      "riskRating": 1
+    },
+    {
+      "type": "ESLinting",
+      "description": "Type Property name `account_id` must match one of the following formats: camelCase",
+      "position": {
+        "filePath": "/Users/kylan/Documents/intuition/intuition-snap/packages/snap/src/types.ts",
+        "lineNum": 115
+      },
+      "riskRating": 1
+    },
+    {
+      "type": "ESLinting",
+      "description": "Type Property name `term_id` must match one of the following formats: camelCase",
+      "position": {
+        "filePath": "/Users/kylan/Documents/intuition/intuition-snap/packages/snap/src/types.ts",
+        "lineNum": 116
+      },
+      "riskRating": 1
+    },
+    {
+      "type": "ESLinting",
+      "description": "Type Property name `curve_id` must match one of the following formats: camelCase",
+      "position": {
+        "filePath": "/Users/kylan/Documents/intuition/intuition-snap/packages/snap/src/types.ts",
+        "lineNum": 117
+      },
+      "riskRating": 1
+    },
+    {
+      "type": "ESLinting",
+      "description": "Type Parameter name `T` must match the RegExp: /^.{3,}/u",
+      "position": {
+        "filePath": "/Users/kylan/Documents/intuition/intuition-snap/packages/snap/src/types.ts",
+        "lineNum": 168
+      },
+      "riskRating": 1
+    },
+    {
+      "type": "ESLinting",
+      "description": "Expected only 0 line after block description",
+      "position": {
+        "filePath": "/Users/kylan/Documents/intuition/intuition-snap/packages/snap/src/util.ts",
+        "lineNum": 11
+      },
+      "riskRating": 1
+    },
+    {
+      "type": "ESLinting",
+      "description": "There must be no indentation.",
+      "position": {
+        "filePath": "/Users/kylan/Documents/intuition/intuition-snap/packages/snap/src/vendors/vendor.config.ts",
+        "lineNum": 7
+      },
+      "riskRating": 1
+    },
+    {
+      "type": "ESLinting",
+      "description": "All imports in the declaration are only used as types. Use `import type`.",
+      "position": {
+        "filePath": "/Users/kylan/Documents/intuition/intuition-snap/packages/snap/src/vendors/vendor.config.ts",
+        "lineNum": 19
+      },
+      "riskRating": 1
+    },
+    {
+      "type": "ESLinting",
+      "description": "'ChainConfig' is defined but never used.",
+      "position": {
+        "filePath": "/Users/kylan/Documents/intuition/intuition-snap/packages/snap/src/vendors/vendor.config.ts",
+        "lineNum": 20
+      },
+      "riskRating": 1
+    },
+    {
+      "type": "ESLinting",
+      "description": "Missing JSDoc @param \"params\" declaration.",
+      "position": {
+        "filePath": "/Users/kylan/Documents/intuition/intuition-snap/packages/snap/src/vendors/vendor.config.ts",
+        "lineNum": 81
+      },
+      "riskRating": 1
+    },
+    {
+      "type": "ESLinting",
+      "description": "Missing JSDoc @returns declaration.",
+      "position": {
+        "filePath": "/Users/kylan/Documents/intuition/intuition-snap/packages/snap/src/vendors/vendor.config.ts",
+        "lineNum": 81
+      },
+      "riskRating": 1
+    },
+    {
+      "type": "ESLinting",
+      "description": "Missing JSDoc @param \"params\" declaration.",
+      "position": {
+        "filePath": "/Users/kylan/Documents/intuition/intuition-snap/packages/snap/src/vendors/vendor.config.ts",
+        "lineNum": 100
+      },
+      "riskRating": 1
+    },
+    {
+      "type": "ESLinting",
+      "description": "Missing JSDoc @returns declaration.",
+      "position": {
+        "filePath": "/Users/kylan/Documents/intuition/intuition-snap/packages/snap/src/vendors/vendor.config.ts",
+        "lineNum": 100
+      },
+      "riskRating": 1
+    },
+    {
+      "type": "ESLinting",
+      "description": "Missing JSDoc @param \"params\" declaration.",
+      "position": {
+        "filePath": "/Users/kylan/Documents/intuition/intuition-snap/packages/snap/src/vendors/vendor.config.ts",
+        "lineNum": 120
+      },
+      "riskRating": 1
+    },
+    {
+      "type": "ESLinting",
+      "description": "Missing JSDoc @returns declaration.",
+      "position": {
+        "filePath": "/Users/kylan/Documents/intuition/intuition-snap/packages/snap/src/vendors/vendor.config.ts",
+        "lineNum": 120
+      },
+      "riskRating": 1
+    },
+    {
+      "type": "ESLinting",
+      "description": "Missing JSDoc @param \"params\" declaration.",
+      "position": {
+        "filePath": "/Users/kylan/Documents/intuition/intuition-snap/packages/snap/src/vendors/vendor.config.ts",
+        "lineNum": 140
+      },
+      "riskRating": 1
+    },
+    {
+      "type": "ESLinting",
+      "description": "Missing JSDoc @returns declaration.",
+      "position": {
+        "filePath": "/Users/kylan/Documents/intuition/intuition-snap/packages/snap/src/vendors/vendor.config.ts",
+        "lineNum": 140
+      },
+      "riskRating": 1
+    },
+    {
+      "type": "ESLinting",
+      "description": "Missing JSDoc @param \"params\" declaration.",
+      "position": {
+        "filePath": "/Users/kylan/Documents/intuition/intuition-snap/packages/snap/src/vendors/vendor.config.ts",
+        "lineNum": 152
+      },
+      "riskRating": 1
+    },
+    {
+      "type": "ESLinting",
+      "description": "Missing JSDoc @returns declaration.",
+      "position": {
+        "filePath": "/Users/kylan/Documents/intuition/intuition-snap/packages/snap/src/vendors/vendor.config.ts",
+        "lineNum": 152
+      },
+      "riskRating": 1
+    }
+  ],
+  "ImproperTypeUsage": [
+    {
+      "type": "ImproperTypeUsage",
+      "description": "Variable 'error' uses 'any' type, which reduces type safety.",
+      "position": {
+        "filePath": "/Users/kylan/Documents/intuition/intuition-snap/packages/snap/src/account.tsx",
+        "lineNum": 9141
+      },
+      "riskRating": 2
+    },
+    {
+      "type": "ImproperTypeUsage",
+      "description": "Parameter 'variables' in arrow function uses 'any' type, which reduces type safety.",
+      "position": {
+        "filePath": "/Users/kylan/Documents/intuition/intuition-snap/packages/snap/src/queries.ts",
+        "lineNum": 197
+      },
+      "riskRating": 2
+    }
+  ],
+  "UnhandledPromiseRejection": [
+    {
+      "type": "UnhandledPromiseRejection",
+      "description": "Empty or ineffective catch block detected, which can lead to unhandled promise rejections.",
+      "position": {
+        "filePath": "/Users/kylan/Documents/intuition/intuition-snap/packages/snap/src/onTransaction.tsx",
+        "lineNum": 1698
+      },
+      "riskRating": 3
+    }
+  ],
+  "UnusedImports": [
+    {
+      "type": "UnusedImports",
+      "description": "Import 'ClassificationFailureReason' is declared but never used.",
+      "position": {
+        "filePath": "/Users/kylan/Documents/intuition/intuition-snap/packages/snap/src/account.tsx",
+        "lineNum": 8
+      },
+      "riskRating": 1
+    },
+    {
+      "type": "UnusedImports",
+      "description": "Import 'Text' is declared but never used.",
+      "position": {
+        "filePath": "/Users/kylan/Documents/intuition/intuition-snap/packages/snap/src/components/Footer/FooterLink.tsx",
+        "lineNum": 1
+      },
+      "riskRating": 1
+    },
+    {
+      "type": "UnusedImports",
+      "description": "Import 'ChainConfig' is declared but never used.",
+      "position": {
+        "filePath": "/Users/kylan/Documents/intuition/intuition-snap/packages/snap/src/vendors/vendor.config.ts",
+        "lineNum": 20
+      },
+      "riskRating": 1
+    }
+  ]
+}

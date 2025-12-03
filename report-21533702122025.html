@@ -1,0 +1,534 @@
+
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Findings Report</title>
+      <style>
+    body {
+      font-family: Arial, sans-serif;
+      line-height: 1.6;
+      margin: 20px;
+    }
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    th, td {
+      border: 1px solid #ddd;
+      padding: 10px;
+      text-align: left;
+    }
+    th {
+      background-color: #f4f4f4;
+      font-weight: bold;
+      color: #333;
+    }
+    .even-row {
+      background-color: #f9f9f9;
+    }
+    .odd-row {
+      background-color: #fff;
+    }
+    tr:hover {
+      background-color: #f1f1f1;
+    }
+  </style>
+    </head>
+    <body>
+      <h1>Findings Report</h1>
+      <table>
+        <thead>
+          <tr>
+            <th>Type</th>
+            <th>Description</th>
+            <th>File Path</th>
+            <th>Line Numbers</th>
+            <th>Risk Rating</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+        <tr class="even-row">
+          <td>UnhandledPromiseRejection</td>
+          <td>Empty or ineffective catch block detected, which can lead to unhandled promise rejections.</td>
+          <td>/Users/kylan/Documents/intuition/intuition-snap/packages/snap/src/onTransaction.tsx</td>
+          <td>1698</td>
+          <td>High</td>
+        </tr>
+      
+        <tr class="odd-row">
+          <td>ImproperTypeUsage</td>
+          <td>Variable 'error' uses 'any' type, which reduces type safety.</td>
+          <td>/Users/kylan/Documents/intuition/intuition-snap/packages/snap/src/account.tsx</td>
+          <td>9141</td>
+          <td>Medium</td>
+        </tr>
+      
+        <tr class="even-row">
+          <td>ImproperTypeUsage</td>
+          <td>Parameter 'variables' in arrow function uses 'any' type, which reduces type safety.</td>
+          <td>/Users/kylan/Documents/intuition/intuition-snap/packages/snap/src/queries.ts</td>
+          <td>197</td>
+          <td>Medium</td>
+        </tr>
+      
+        <tr class="odd-row">
+          <td>ConsoleLog</td>
+          <td>Presence of console log function detected.</td>
+          <td>/Users/kylan/Documents/intuition/intuition-snap/packages/snap/src/account.tsx</td>
+          <td>57, 304</td>
+          <td>Low</td>
+        </tr>
+      
+        <tr class="even-row">
+          <td>UnusedImports</td>
+          <td>Import 'ClassificationFailureReason' is declared but never used.</td>
+          <td>/Users/kylan/Documents/intuition/intuition-snap/packages/snap/src/account.tsx</td>
+          <td>8</td>
+          <td>Low</td>
+        </tr>
+      
+        <tr class="odd-row">
+          <td>UnusedImports</td>
+          <td>Import 'Text' is declared but never used.</td>
+          <td>/Users/kylan/Documents/intuition/intuition-snap/packages/snap/src/components/Footer/FooterLink.tsx</td>
+          <td>1</td>
+          <td>Low</td>
+        </tr>
+      
+        <tr class="even-row">
+          <td>UnusedImports</td>
+          <td>Import 'ChainConfig' is declared but never used.</td>
+          <td>/Users/kylan/Documents/intuition/intuition-snap/packages/snap/src/vendors/vendor.config.ts</td>
+          <td>20</td>
+          <td>Low</td>
+        </tr>
+      
+        <tr class="odd-row">
+          <td>ESLinting</td>
+          <td>Missing return type on function.</td>
+          <td>/Users/kylan/Documents/intuition/intuition-snap/packages/snap/src/queries.ts</td>
+          <td>8</td>
+          <td>Low</td>
+        </tr>
+      
+        <tr class="even-row">
+          <td>ESLinting</td>
+          <td>All imports in the declaration are only used as types. Use `import type`.</td>
+          <td>/Users/kylan/Documents/intuition/intuition-snap/packages/snap/src/types.ts</td>
+          <td>1</td>
+          <td>Low</td>
+        </tr>
+      
+        <tr class="odd-row">
+          <td>ESLinting</td>
+          <td>Type Property name `term_id` must match one of the following formats: camelCase</td>
+          <td>/Users/kylan/Documents/intuition/intuition-snap/packages/snap/src/types.ts</td>
+          <td>9, 54</td>
+          <td>Low</td>
+        </tr>
+      
+        <tr class="even-row">
+          <td>ESLinting</td>
+          <td>Type Property name `subject_id` must match one of the following formats: camelCase</td>
+          <td>/Users/kylan/Documents/intuition/intuition-snap/packages/snap/src/types.ts</td>
+          <td>55</td>
+          <td>Low</td>
+        </tr>
+      
+        <tr class="odd-row">
+          <td>ESLinting</td>
+          <td>Type Property name `predicate_id` must match one of the following formats: camelCase</td>
+          <td>/Users/kylan/Documents/intuition/intuition-snap/packages/snap/src/types.ts</td>
+          <td>56</td>
+          <td>Low</td>
+        </tr>
+      
+        <tr class="even-row">
+          <td>ESLinting</td>
+          <td>Type Property name `object_id` must match one of the following formats: camelCase</td>
+          <td>/Users/kylan/Documents/intuition/intuition-snap/packages/snap/src/types.ts</td>
+          <td>57</td>
+          <td>Low</td>
+        </tr>
+      
+        <tr class="odd-row">
+          <td>ESLinting</td>
+          <td>Type Property name `creator_id` must match one of the following formats: camelCase</td>
+          <td>/Users/kylan/Documents/intuition/intuition-snap/packages/snap/src/types.ts</td>
+          <td>58</td>
+          <td>Low</td>
+        </tr>
+      
+        <tr class="even-row">
+          <td>ESLinting</td>
+          <td>Type Property name `counter_term_id` must match one of the following formats: camelCase</td>
+          <td>/Users/kylan/Documents/intuition/intuition-snap/packages/snap/src/types.ts</td>
+          <td>59</td>
+          <td>Low</td>
+        </tr>
+      
+        <tr class="odd-row">
+          <td>ESLinting</td>
+          <td>Type Property name `term_id` must match one of the following formats: camelCase</td>
+          <td>/Users/kylan/Documents/intuition/intuition-snap/packages/snap/src/types.ts</td>
+          <td>62</td>
+          <td>Low</td>
+        </tr>
+      
+        <tr class="even-row">
+          <td>ESLinting</td>
+          <td>Type Property name `market_cap` must match one of the following formats: camelCase</td>
+          <td>/Users/kylan/Documents/intuition/intuition-snap/packages/snap/src/types.ts</td>
+          <td>63</td>
+          <td>Low</td>
+        </tr>
+      
+        <tr class="odd-row">
+          <td>ESLinting</td>
+          <td>Type Property name `position_count` must match one of the following formats: camelCase</td>
+          <td>/Users/kylan/Documents/intuition/intuition-snap/packages/snap/src/types.ts</td>
+          <td>64</td>
+          <td>Low</td>
+        </tr>
+      
+        <tr class="even-row">
+          <td>ESLinting</td>
+          <td>Type Property name `curve_id` must match one of the following formats: camelCase</td>
+          <td>/Users/kylan/Documents/intuition/intuition-snap/packages/snap/src/types.ts</td>
+          <td>65</td>
+          <td>Low</td>
+        </tr>
+      
+        <tr class="odd-row">
+          <td>ESLinting</td>
+          <td>Type Property name `counter_term` must match one of the following formats: camelCase</td>
+          <td>/Users/kylan/Documents/intuition/intuition-snap/packages/snap/src/types.ts</td>
+          <td>68</td>
+          <td>Low</td>
+        </tr>
+      
+        <tr class="even-row">
+          <td>ESLinting</td>
+          <td>Type Property name `term_id` must match one of the following formats: camelCase</td>
+          <td>/Users/kylan/Documents/intuition/intuition-snap/packages/snap/src/types.ts</td>
+          <td>70</td>
+          <td>Low</td>
+        </tr>
+      
+        <tr class="odd-row">
+          <td>ESLinting</td>
+          <td>Type Property name `market_cap` must match one of the following formats: camelCase</td>
+          <td>/Users/kylan/Documents/intuition/intuition-snap/packages/snap/src/types.ts</td>
+          <td>71</td>
+          <td>Low</td>
+        </tr>
+      
+        <tr class="even-row">
+          <td>ESLinting</td>
+          <td>Type Property name `position_count` must match one of the following formats: camelCase</td>
+          <td>/Users/kylan/Documents/intuition/intuition-snap/packages/snap/src/types.ts</td>
+          <td>72</td>
+          <td>Low</td>
+        </tr>
+      
+        <tr class="odd-row">
+          <td>ESLinting</td>
+          <td>Type Property name `curve_id` must match one of the following formats: camelCase</td>
+          <td>/Users/kylan/Documents/intuition/intuition-snap/packages/snap/src/types.ts</td>
+          <td>73</td>
+          <td>Low</td>
+        </tr>
+      
+        <tr class="even-row">
+          <td>ESLinting</td>
+          <td>Type Property name `triple_term` must match one of the following formats: camelCase</td>
+          <td>/Users/kylan/Documents/intuition/intuition-snap/packages/snap/src/types.ts</td>
+          <td>76</td>
+          <td>Low</td>
+        </tr>
+      
+        <tr class="odd-row">
+          <td>ESLinting</td>
+          <td>Type Property name `term_id` must match one of the following formats: camelCase</td>
+          <td>/Users/kylan/Documents/intuition/intuition-snap/packages/snap/src/types.ts</td>
+          <td>77</td>
+          <td>Low</td>
+        </tr>
+      
+        <tr class="even-row">
+          <td>ESLinting</td>
+          <td>Type Property name `counter_term_id` must match one of the following formats: camelCase</td>
+          <td>/Users/kylan/Documents/intuition/intuition-snap/packages/snap/src/types.ts</td>
+          <td>78</td>
+          <td>Low</td>
+        </tr>
+      
+        <tr class="odd-row">
+          <td>ESLinting</td>
+          <td>Type Property name `total_market_cap` must match one of the following formats: camelCase</td>
+          <td>/Users/kylan/Documents/intuition/intuition-snap/packages/snap/src/types.ts</td>
+          <td>79</td>
+          <td>Low</td>
+        </tr>
+      
+        <tr class="even-row">
+          <td>ESLinting</td>
+          <td>Type Property name `total_position_count` must match one of the following formats: camelCase</td>
+          <td>/Users/kylan/Documents/intuition/intuition-snap/packages/snap/src/types.ts</td>
+          <td>80</td>
+          <td>Low</td>
+        </tr>
+      
+        <tr class="odd-row">
+          <td>ESLinting</td>
+          <td>Type Property name `triple_vault` must match one of the following formats: camelCase</td>
+          <td>/Users/kylan/Documents/intuition/intuition-snap/packages/snap/src/types.ts</td>
+          <td>82</td>
+          <td>Low</td>
+        </tr>
+      
+        <tr class="even-row">
+          <td>ESLinting</td>
+          <td>Type Property name `term_id` must match one of the following formats: camelCase</td>
+          <td>/Users/kylan/Documents/intuition/intuition-snap/packages/snap/src/types.ts</td>
+          <td>83</td>
+          <td>Low</td>
+        </tr>
+      
+        <tr class="odd-row">
+          <td>ESLinting</td>
+          <td>Type Property name `counter_term_id` must match one of the following formats: camelCase</td>
+          <td>/Users/kylan/Documents/intuition/intuition-snap/packages/snap/src/types.ts</td>
+          <td>84</td>
+          <td>Low</td>
+        </tr>
+      
+        <tr class="even-row">
+          <td>ESLinting</td>
+          <td>Type Property name `curve_id` must match one of the following formats: camelCase</td>
+          <td>/Users/kylan/Documents/intuition/intuition-snap/packages/snap/src/types.ts</td>
+          <td>85</td>
+          <td>Low</td>
+        </tr>
+      
+        <tr class="odd-row">
+          <td>ESLinting</td>
+          <td>Type Property name `position_count` must match one of the following formats: camelCase</td>
+          <td>/Users/kylan/Documents/intuition/intuition-snap/packages/snap/src/types.ts</td>
+          <td>86</td>
+          <td>Low</td>
+        </tr>
+      
+        <tr class="even-row">
+          <td>ESLinting</td>
+          <td>Type Property name `market_cap` must match one of the following formats: camelCase</td>
+          <td>/Users/kylan/Documents/intuition/intuition-snap/packages/snap/src/types.ts</td>
+          <td>87</td>
+          <td>Low</td>
+        </tr>
+      
+        <tr class="odd-row">
+          <td>ESLinting</td>
+          <td>Type Property name `positions_aggregate` must match one of the following formats: camelCase</td>
+          <td>/Users/kylan/Documents/intuition/intuition-snap/packages/snap/src/types.ts</td>
+          <td>89</td>
+          <td>Low</td>
+        </tr>
+      
+        <tr class="even-row">
+          <td>ESLinting</td>
+          <td>Type Property name `counter_positions_aggregate` must match one of the following formats: camelCase</td>
+          <td>/Users/kylan/Documents/intuition/intuition-snap/packages/snap/src/types.ts</td>
+          <td>96</td>
+          <td>Low</td>
+        </tr>
+      
+        <tr class="odd-row">
+          <td>ESLinting</td>
+          <td>Type Property name `account_id` must match one of the following formats: camelCase</td>
+          <td>/Users/kylan/Documents/intuition/intuition-snap/packages/snap/src/types.ts</td>
+          <td>105</td>
+          <td>Low</td>
+        </tr>
+      
+        <tr class="even-row">
+          <td>ESLinting</td>
+          <td>Type Property name `term_id` must match one of the following formats: camelCase</td>
+          <td>/Users/kylan/Documents/intuition/intuition-snap/packages/snap/src/types.ts</td>
+          <td>106</td>
+          <td>Low</td>
+        </tr>
+      
+        <tr class="odd-row">
+          <td>ESLinting</td>
+          <td>Type Property name `curve_id` must match one of the following formats: camelCase</td>
+          <td>/Users/kylan/Documents/intuition/intuition-snap/packages/snap/src/types.ts</td>
+          <td>107</td>
+          <td>Low</td>
+        </tr>
+      
+        <tr class="even-row">
+          <td>ESLinting</td>
+          <td>Type Property name `counter_positions` must match one of the following formats: camelCase</td>
+          <td>/Users/kylan/Documents/intuition/intuition-snap/packages/snap/src/types.ts</td>
+          <td>113</td>
+          <td>Low</td>
+        </tr>
+      
+        <tr class="odd-row">
+          <td>ESLinting</td>
+          <td>Type Property name `account_id` must match one of the following formats: camelCase</td>
+          <td>/Users/kylan/Documents/intuition/intuition-snap/packages/snap/src/types.ts</td>
+          <td>115</td>
+          <td>Low</td>
+        </tr>
+      
+        <tr class="even-row">
+          <td>ESLinting</td>
+          <td>Type Property name `term_id` must match one of the following formats: camelCase</td>
+          <td>/Users/kylan/Documents/intuition/intuition-snap/packages/snap/src/types.ts</td>
+          <td>116</td>
+          <td>Low</td>
+        </tr>
+      
+        <tr class="odd-row">
+          <td>ESLinting</td>
+          <td>Type Property name `curve_id` must match one of the following formats: camelCase</td>
+          <td>/Users/kylan/Documents/intuition/intuition-snap/packages/snap/src/types.ts</td>
+          <td>117</td>
+          <td>Low</td>
+        </tr>
+      
+        <tr class="even-row">
+          <td>ESLinting</td>
+          <td>Type Parameter name `T` must match the RegExp: /^.{3,}/u</td>
+          <td>/Users/kylan/Documents/intuition/intuition-snap/packages/snap/src/types.ts</td>
+          <td>168</td>
+          <td>Low</td>
+        </tr>
+      
+        <tr class="odd-row">
+          <td>ESLinting</td>
+          <td>Expected only 0 line after block description</td>
+          <td>/Users/kylan/Documents/intuition/intuition-snap/packages/snap/src/util.ts</td>
+          <td>11</td>
+          <td>Low</td>
+        </tr>
+      
+        <tr class="even-row">
+          <td>ESLinting</td>
+          <td>There must be no indentation.</td>
+          <td>/Users/kylan/Documents/intuition/intuition-snap/packages/snap/src/vendors/vendor.config.ts</td>
+          <td>7</td>
+          <td>Low</td>
+        </tr>
+      
+        <tr class="odd-row">
+          <td>ESLinting</td>
+          <td>All imports in the declaration are only used as types. Use `import type`.</td>
+          <td>/Users/kylan/Documents/intuition/intuition-snap/packages/snap/src/vendors/vendor.config.ts</td>
+          <td>19</td>
+          <td>Low</td>
+        </tr>
+      
+        <tr class="even-row">
+          <td>ESLinting</td>
+          <td>'ChainConfig' is defined but never used.</td>
+          <td>/Users/kylan/Documents/intuition/intuition-snap/packages/snap/src/vendors/vendor.config.ts</td>
+          <td>20</td>
+          <td>Low</td>
+        </tr>
+      
+        <tr class="odd-row">
+          <td>ESLinting</td>
+          <td>Missing JSDoc @param "params" declaration.</td>
+          <td>/Users/kylan/Documents/intuition/intuition-snap/packages/snap/src/vendors/vendor.config.ts</td>
+          <td>81</td>
+          <td>Low</td>
+        </tr>
+      
+        <tr class="even-row">
+          <td>ESLinting</td>
+          <td>Missing JSDoc @returns declaration.</td>
+          <td>/Users/kylan/Documents/intuition/intuition-snap/packages/snap/src/vendors/vendor.config.ts</td>
+          <td>81</td>
+          <td>Low</td>
+        </tr>
+      
+        <tr class="odd-row">
+          <td>ESLinting</td>
+          <td>Missing JSDoc @param "params" declaration.</td>
+          <td>/Users/kylan/Documents/intuition/intuition-snap/packages/snap/src/vendors/vendor.config.ts</td>
+          <td>100</td>
+          <td>Low</td>
+        </tr>
+      
+        <tr class="even-row">
+          <td>ESLinting</td>
+          <td>Missing JSDoc @returns declaration.</td>
+          <td>/Users/kylan/Documents/intuition/intuition-snap/packages/snap/src/vendors/vendor.config.ts</td>
+          <td>100</td>
+          <td>Low</td>
+        </tr>
+      
+        <tr class="odd-row">
+          <td>ESLinting</td>
+          <td>Missing JSDoc @param "params" declaration.</td>
+          <td>/Users/kylan/Documents/intuition/intuition-snap/packages/snap/src/vendors/vendor.config.ts</td>
+          <td>120</td>
+          <td>Low</td>
+        </tr>
+      
+        <tr class="even-row">
+          <td>ESLinting</td>
+          <td>Missing JSDoc @returns declaration.</td>
+          <td>/Users/kylan/Documents/intuition/intuition-snap/packages/snap/src/vendors/vendor.config.ts</td>
+          <td>120</td>
+          <td>Low</td>
+        </tr>
+      
+        <tr class="odd-row">
+          <td>ESLinting</td>
+          <td>Missing JSDoc @param "params" declaration.</td>
+          <td>/Users/kylan/Documents/intuition/intuition-snap/packages/snap/src/vendors/vendor.config.ts</td>
+          <td>140</td>
+          <td>Low</td>
+        </tr>
+      
+        <tr class="even-row">
+          <td>ESLinting</td>
+          <td>Missing JSDoc @returns declaration.</td>
+          <td>/Users/kylan/Documents/intuition/intuition-snap/packages/snap/src/vendors/vendor.config.ts</td>
+          <td>140</td>
+          <td>Low</td>
+        </tr>
+      
+        <tr class="odd-row">
+          <td>ESLinting</td>
+          <td>Missing JSDoc @param "params" declaration.</td>
+          <td>/Users/kylan/Documents/intuition/intuition-snap/packages/snap/src/vendors/vendor.config.ts</td>
+          <td>152</td>
+          <td>Low</td>
+        </tr>
+      
+        <tr class="even-row">
+          <td>ESLinting</td>
+          <td>Missing JSDoc @returns declaration.</td>
+          <td>/Users/kylan/Documents/intuition/intuition-snap/packages/snap/src/vendors/vendor.config.ts</td>
+          <td>152</td>
+          <td>Low</td>
+        </tr>
+      
+        </tbody>
+      </table>
+    </body>
+    </html>
+  
