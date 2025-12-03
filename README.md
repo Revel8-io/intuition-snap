@@ -57,11 +57,11 @@ pnpm start:mainnet
 
 The Snap queries the Intuition knowledge graph using these predefined atoms:
 
-| Atom | Purpose | Mainnet ID |
+| Atom | Purpose | ID |
 |------|---------|------------|
-| `hasCharacteristic` | Predicate for trust triples | `0x5cc843bd9ba824dbef4e80e7c41ced4ccde30a7b9ac66f0499c5766dc8811801` 
-| `trustworthy` | The "trustworthy" characteristic | `0xe9c0e287737685382bd34d51090148935bdb671c98d20180b2fec15bd263f73a` 
-| `hasNickname` | Predicate for nickname lists | `0x5a52541056e9440e75c7775e66c4efa0d41719f254135579b69520395baab322` 
+| `hasCharacteristic` | Predicate for trust triples | `0x5cc843bd9ba824dbef4e80e7c41ced4ccde30a7b9ac66f0499c5766dc8811801`
+| `trustworthiness` | The "trustworthiness" characteristic | `0xae42e29e99b1f8711da1cac930079b0ce615ca3c4c0392ef8c74c56ef803126b`
+| `hasNickname` | Predicate for nickname lists | `0x5a52541056e9440e75c7775e66c4efa0d41719f254135579b69520395baab322`
 
 **Trust Triple structure:** `[address] - hasCharacteristic - trustworthy`
 **Nickname List structure:** `[address] - hasNickname - [nickname atom]`
