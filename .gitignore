@@ -80,3 +80,6 @@ node_modules/
 .user-prompts
 .user-docs
 .user
+
+# Vendor config
+vendor.config.ts

@@ -3,13 +3,13 @@
   "version": "0.3.0",
   "private": true,
   "description": "Real-time trust and sentiment insights for every transaction. Powered by Intuition",
-  "homepage": "https://github.com/0xIntuition/intuition-snap#readme",
+  "homepage": "https://github.com/revel8-io/intuition-snap#readme",
   "bugs": {
-    "url": "https://github.com/0xIntuition/intuition-snap/issues"
+    "url": "https://github.com/revel8-io/intuition-snap/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/0xintuition/intuition-snap.git"
+    "url": "git+https://github.com/revel8-io/intuition-snap.git"
   },
   "license": "Apache-2.0",
   "author": "",
