@@ -18,7 +18,7 @@ This helps you make informed decisions before interacting with unknown addresses
 | Feature | Description |
 |---------|-------------|
 | **Transaction Insights** | `onTransaction` hook displays trust data before you sign |
-| **Trust Triple Display** | Shows support/oppose positions on `[address] is trustworthy` |
+| **Trust Triple Display** | Shows support/oppose positions on `[address] has tag trustworthy` |
 | **Nickname Display** | Shows community-assigned nicknames for addresses |
 | **Multi-chain Support** | Works on Intuition Testnet (chain ID: 13579) and Mainnet (chain ID: 1155) |
 | **Interactive UI** | Links to create trust signals or view more data on the web |
@@ -133,7 +133,7 @@ The Snap queries the Intuition knowledge graph using these predefined atoms:
 
 | Atom | Purpose |
 |------|---------|
-| `hasCharacteristic` | Predicate for trust triples |
+| `hasTag` | Predicate for trust triples |
 | `trustworthy` | The "trustworthy" characteristic |
 | `hasNickname` | Predicate for nickname relationships |
 

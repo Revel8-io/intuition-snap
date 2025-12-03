@@ -83,7 +83,7 @@ export const vendorConfig: VendorConfig = {
    * Link to create an atom + trust triple.
    *
    * Slim API: Only send address + chain_id.
-   * Explorer derives hasCharacteristicAtomId + trustworthyAtomId from its config.
+   * Explorer derives hasTagAtomId + trustworthyAtomId from its config.
    */
   noAtom: (params) => {
     const { address, chainId, isContract } = params;
@@ -102,7 +102,7 @@ export const vendorConfig: VendorConfig = {
    * Link to create the trust triple.
    *
    * Slim API: Only send atom_id.
-   * Explorer derives hasCharacteristicAtomId + trustworthyAtomId from its config.
+   * Explorer derives hasTagAtomId + trustworthyAtomId from its config.
    */
   atomWithoutTrustTriple: (params) => {
     const { account } = params;

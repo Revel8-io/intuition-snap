@@ -542,26 +542,25 @@ An **extension system** for MetaMask allowing third-party functionality. Intuiti
 
 | Predicate | Description | Config Key |
 |-----------|-------------|------------|
-| `hasNickname` | Links entity to nickname | `hasNicknameAtomId` |
-| `hasCharacteristic` | Links entity to trait | `hasCharacteristicAtomId` |
-| `hasRelatedImage` | Links entity to image | `hasRelatedImageVaultId` |
+| `hasNickname` | Links entity to nickname | `hasAliasAtomId` |
+| `hasTag` | Links entity to trait | `hasTagAtomId` |
 | `trustworthy` | The "trustworthy" trait | `trustworthyAtomId` |
 
 ---
 
 ## Quick Reference: Common Patterns
 
-### "Subject is trustworthy" Triple
+### "Subject has tag trustworthy" Triple
 ```
 Subject: [Any Person/Org Atom]
-Predicate: "has characteristic" (hasCharacteristicAtomId)
+Predicate: "has tag" (hasTagAtomId)
 Object: "trustworthy" (trustworthyAtomId)
 ```
 
-### "Subject has nickname X" Triple
+### "Subject has alias X" Triple
 ```
 Subject: [Any Atom]
-Predicate: "has nickname" (hasNicknameAtomId)
+Predicate: "has alias" (hasAliasAtomId)
 Object: [String Atom with nickname text]
 ```
 

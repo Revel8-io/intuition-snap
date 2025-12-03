@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 #### Core Features
 - **Transaction Insights**: Display real-time trust and reputation data from the Intuition knowledge graph during transaction signing
-- **Trust Triple Display**: Show support and oppose positions on `[address] is trustworthy` assertions
+- **Trust Triple Display**: Show support and oppose positions on `[address] has tag trustworthy` assertions
 - **Nickname Display**: Display community-assigned nicknames for addresses
 - **Stake Amount Visualization**: Show the economic weight (market cap) behind each trust signal
 - **User Position Detection**: Display whether the connected wallet has already staked on an address
@@ -58,7 +58,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Parallel query execution for optimal performance
 
 #### Atoms Used
-- `hasCharacteristic` - Predicate for trust triples
+- `hasTag` - Predicate for trust triples
 - `trustworthy` - The "trustworthy" characteristic
 - `hasNickname` - Predicate for nickname relationships
 

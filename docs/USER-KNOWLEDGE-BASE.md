@@ -1,7 +1,7 @@
 # Revel8 Snap - User Knowledge Base
 
-> **Last Updated:** January 2, 2025  
-> **Snap Version:** 1.0.0  
+> **Last Updated:** January 2, 2025
+> **Snap Version:** 1.0.0
 > **For:** End users of the Revel8 MetaMask Snap
 
 ---
@@ -190,7 +190,7 @@ The Revel8 Snap includes interactive footer links:
 
 ### Trust Triple Display
 
-The Snap displays trust triples in the format: `[address] is trustworthy`
+The Snap displays trust triples in the format: `[address] has tag trustworthy`
 
 **What You See:**
 - Support count: Number of stakers supporting this claim

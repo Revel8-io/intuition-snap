@@ -133,7 +133,7 @@ This is the first draft for a community-driven MetaMask Snap effort for the Intu
 
 #### 4d. Fix "Atoms Used" Section
 **Current problems:**
-- References `config.isAtomId` which doesn't exist (should be `hasCharacteristicAtomId`)
+- References `config.isAtomId` which doesn't exist (should be `hasTagAtomId`)
 - Uses vague references instead of actual atom IDs
 - Outdated date "2025-09-17"
 
@@ -146,11 +146,11 @@ The Snap queries the Intuition knowledge graph using these predefined atoms:
 
 | Atom | Purpose | Testnet ID | Mainnet ID |
 |------|---------|------------|------------|
-| `hasCharacteristic` | Predicate for trust triples | `0x5cc843bd9ba824dbef4e80e7c41ced4ccde30a7b9ac66f0499c5766dc8811801` | `0x5cc843bd9ba824dbef4e80e7c41ced4ccde30a7b9ac66f0499c5766dc8811801` |
+| `hasTag` | Predicate for trust triples | `0x5cc843bd9ba824dbef4e80e7c41ced4ccde30a7b9ac66f0499c5766dc8811801` | `0x5cc843bd9ba824dbef4e80e7c41ced4ccde30a7b9ac66f0499c5766dc8811801` |
 | `trustworthy` | The "trustworthy" characteristic | `0xe9c0e287737685382bd34d51090148935bdb671c98d20180b2fec15bd263f73a` | `0xe9c0e287737685382bd34d51090148935bdb671c98d20180b2fec15bd263f73a` |
 | `hasNickname` | Predicate for nickname lists | `0x5a52541056e9440e75c7775e66c4efa0d41719f254135579b69520395baab322` | `0x5a52541056e9440e75c7775e66c4efa0d41719f254135579b69520395baab322` |
 
-**Trust Triple structure:** `[address] - hasCharacteristic - trustworthy`
+**Trust Triple structure:** `[address] - hasTag - trustworthy`
 **Nickname List structure:** `[address] - hasNickname - [nickname atom]`
 ```
 

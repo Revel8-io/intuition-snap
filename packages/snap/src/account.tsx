@@ -225,7 +225,7 @@ export const getAccountData = async (
     }
 
     // Step 3: Query trust triples for BOTH atom formats (if they exist)
-    const { hasCharacteristicAtomId, trustworthyAtomId, relatedNicknamesAtomId } =
+    const { hasTagAtomId, trustworthyAtomId, hasAliasAtomId } =
       chainConfig as ChainConfig;
 
     // Build parallel queries for trust data
@@ -236,7 +236,7 @@ export const getAccountData = async (
       trustQueries.push(
         graphQLQuery(getTripleWithPositionsDataQuery, {
           subjectId: plainAtom.term_id,
-          predicateId: hasCharacteristicAtomId,
+          predicateId: hasTagAtomId,
           objectId: trustworthyAtomId,
         }),
       );
@@ -247,7 +247,7 @@ export const getAccountData = async (
       trustQueries.push(
         graphQLQuery(getTripleWithPositionsDataQuery, {
           subjectId: caipAtom.term_id,
-          predicateId: hasCharacteristicAtomId,
+          predicateId: hasTagAtomId,
           objectId: trustworthyAtomId,
         }),
       );
@@ -285,7 +285,7 @@ export const getAccountData = async (
     if (selection.primary) {
       const nicknameResponse = await graphQLQuery(getListWithHighestStakeQuery, {
         subjectId: selection.primary.term_id,
-        predicateId: relatedNicknamesAtomId,
+        predicateId: hasAliasAtomId,
       });
       const nicknameTriple = nicknameResponse.data.triples[0];
       nickname = nicknameTriple?.object?.label || null;

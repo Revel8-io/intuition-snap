@@ -230,7 +230,7 @@ The Snap SHALL display an informational note when:
 
 1. The primary atom is displayed (CAIP or 0x format)
 2. An alternate format atom exists with non-zero market cap on the trust triple
-3. The alternate has `market_cap > 0` on `[atom] - has characteristic - trustworthy`
+3. The alternate has `market_cap > 0` on `[atom] - has tag - trustworthy`
 
 ### Display Format
 

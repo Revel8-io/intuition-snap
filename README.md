@@ -16,7 +16,7 @@ This helps you make informed decisions before interacting with unknown addresses
 ## Features
 
 - **Transaction Insights** — `onTransaction` hook displays trust data before you sign
-- **Trust Triple Display** — Shows support/oppose positions on `[address] is trustworthy`
+- **Trust Triple Display** — Shows support/oppose positions on `[address] has tag trustworthy`
 - **Nickname Display** — Shows community-assigned nicknames for addresses
 - **Multi-chain Support** — Works on Intuition Testnet and Mainnet
 
@@ -59,11 +59,11 @@ The Snap queries the Intuition knowledge graph using these predefined atoms:
 
 | Atom | Purpose | ID |
 |------|---------|------------|
-| `hasCharacteristic` | Predicate for trust triples | `0x5cc843bd9ba824dbef4e80e7c41ced4ccde30a7b9ac66f0499c5766dc8811801`
+| `hasTag` | Predicate for trust triples | `0x5cc843bd9ba824dbef4e80e7c41ced4ccde30a7b9ac66f0499c5766dc8811801`
 | `trustworthiness` | The "trustworthiness" characteristic | `0xae42e29e99b1f8711da1cac930079b0ce615ca3c4c0392ef8c74c56ef803126b`
 | `hasNickname` | Predicate for nickname lists | `0x5a52541056e9440e75c7775e66c4efa0d41719f254135579b69520395baab322`
 
-**Trust Triple structure:** `[address] - hasCharacteristic - trustworthy`
+**Trust Triple structure:** `[address] - hasTag - trustworthy`
 **Nickname List structure:** `[address] - hasNickname - [nickname atom]`
 
 Configuration is defined in `packages/snap/src/config.ts`.
