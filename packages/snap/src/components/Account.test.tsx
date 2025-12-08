@@ -125,7 +125,7 @@ describe('NoAtom Component', () => {
     triple: null,
     address: TEST_ADDRESS,
     chainId: TEST_CHAIN_ID,
-    nickname: null,
+    alias: null,
     isContract: false,
     classification: baseClassification,
     alternateTrustData: noAlternateTrustData,
@@ -198,7 +198,7 @@ describe('AtomWithoutTrustTriple Component', () => {
     triple: null,
     address: TEST_ADDRESS,
     chainId: TEST_CHAIN_ID,
-    nickname: null,
+    alias: null,
     isContract: false,
     classification: baseClassification,
     alternateTrustData: noAlternateTrustData,
@@ -230,23 +230,23 @@ describe('AtomWithoutTrustTriple Component', () => {
     expect(rendered).toContain(mockAccount.data);
   });
 
-  it('should display nickname when present', () => {
+  it('should display alias when present', () => {
     const result = AtomWithoutTrustTriple({
       ...baseAtomNoTripleProps,
-      nickname: 'Vitalik',
+      alias: 'Vitalik',
     });
     const rendered = renderToString(result);
 
-    expect(rendered).toContain('Nickname');
+    expect(rendered).toContain('Alias');
     expect(rendered).toContain('Vitalik');
   });
 
-  it('should not display nickname row when nickname is null', () => {
+  it('should not display alias row when alias is null', () => {
     const result = AtomWithoutTrustTriple(baseAtomNoTripleProps);
     const rendered = renderToString(result);
 
-    // Should not have a Row with label "Nickname"
-    expect(rendered).not.toContain('"label":"Nickname"');
+    // Should not have a Row with label "Alias"
+    expect(rendered).not.toContain('"label":"Alias"');
   });
 
   it('should render Footer with StakePrompt CTA', () => {
@@ -256,24 +256,24 @@ describe('AtomWithoutTrustTriple Component', () => {
     expect(rendered).toContain('Is this address trustworthy? Vote');
   });
 
-  it('should render CreateNickname CTA when no nickname', () => {
+  it('should render CreateAlias CTA when no alias', () => {
     const result = AtomWithoutTrustTriple(baseAtomNoTripleProps);
     const rendered = renderToString(result);
 
-    expect(rendered).toContain('Add nickname');
+    expect(rendered).toContain('Add alias');
   });
 
-  it('should not render CreateNickname CTA when nickname exists', () => {
+  it('should not render CreateAlias CTA when alias exists', () => {
     const result = AtomWithoutTrustTriple({
       ...baseAtomNoTripleProps,
-      nickname: 'HasNickname',
+      alias: 'HasAlias',
     });
     const rendered = renderToString(result);
 
-    // The CreateNickname component should return null when nickname exists
-    // This means "Add nickname" should not appear in the Footer
+    // The CreateAlias component should return null when alias exists
+    // This means "Add alias" should not appear in the Footer
     // However, due to component structure, we verify it's not duplicated
-    expect(rendered).toContain('HasNickname');
+    expect(rendered).toContain('HasAlias');
   });
 
   it('should render ViewMore CTA', () => {
@@ -305,7 +305,7 @@ describe('AtomWithTrustTriple Component', () => {
     triple: mockTriple,
     address: TEST_ADDRESS,
     chainId: TEST_CHAIN_ID,
-    nickname: null,
+    alias: null,
     isContract: false,
     classification: baseClassification,
     alternateTrustData: noAlternateTrustData,
@@ -319,14 +319,14 @@ describe('AtomWithTrustTriple Component', () => {
     expect(rendered).toContain(TEST_ADDRESS);
   });
 
-  it('should display nickname when present', () => {
+  it('should display alias when present', () => {
     const result = AtomWithTrustTriple({
       ...baseAtomWithTripleProps,
-      nickname: 'Satoshi',
+      alias: 'Satoshi',
     });
     const rendered = renderToString(result);
 
-    expect(rendered).toContain('Nickname');
+    expect(rendered).toContain('Alias');
     expect(rendered).toContain('Satoshi');
   });
 
@@ -410,11 +410,11 @@ describe('AtomWithTrustTriple Component', () => {
     // Note: This test depends on StakePrompt component logic
   });
 
-  it('should render CreateNickname CTA when no nickname', () => {
+  it('should render CreateAlias CTA when no alias', () => {
     const result = AtomWithTrustTriple(baseAtomWithTripleProps);
     const rendered = renderToString(result);
 
-    expect(rendered).toContain('Add nickname');
+    expect(rendered).toContain('Add alias');
   });
 
   it('should render ViewMore CTA', () => {
@@ -454,7 +454,7 @@ describe('AlternateTrustNote', () => {
       triple: null,
       address: TEST_ADDRESS,
       chainId: TEST_CHAIN_ID,
-      nickname: null,
+      alias: null,
       isContract: true,
       classification: contractClassification,
       alternateTrustData: {
@@ -478,7 +478,7 @@ describe('AlternateTrustNote', () => {
       triple: null,
       address: TEST_ADDRESS,
       chainId: TEST_CHAIN_ID,
-      nickname: null,
+      alias: null,
       isContract: false,
       classification: baseClassification,
       alternateTrustData: {
@@ -508,7 +508,7 @@ describe('Component Structure', () => {
       triple: null,
       address: TEST_ADDRESS,
       chainId: TEST_CHAIN_ID,
-      nickname: null,
+      alias: null,
       isContract: false,
       classification: baseClassification,
       alternateTrustData: noAlternateTrustData,
@@ -526,7 +526,7 @@ describe('Component Structure', () => {
       triple: null,
       address: TEST_ADDRESS,
       chainId: TEST_CHAIN_ID,
-      nickname: null,
+      alias: null,
       isContract: false,
       classification: baseClassification,
       alternateTrustData: noAlternateTrustData,
@@ -544,7 +544,7 @@ describe('Component Structure', () => {
       triple: mockTriple,
       address: TEST_ADDRESS,
       chainId: TEST_CHAIN_ID,
-      nickname: null,
+      alias: null,
       isContract: false,
       classification: baseClassification,
       alternateTrustData: noAlternateTrustData,

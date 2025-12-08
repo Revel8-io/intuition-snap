@@ -67,8 +67,8 @@ export type VendorConfig = {
   /** Generate URL for viewing atom details */
   viewAtom: (props: PropsWithAtom) => UrlResult;
 
-  /** Generate URL for creating a nickname */
-  createNickname: (props: PropsWithAtom) => UrlResult;
+  /** Generate URL for creating an alias */
+  createAlias: (props: PropsWithAtom) => UrlResult;
 };
 
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -150,16 +150,16 @@ export const vendorConfig: VendorConfig = {
   },
 
   /**
-   * Create a nickname for an atom.
+   * Create an alias for an atom.
    */
-  createNickname: (params) => {
+  createAlias: (params) => {
     const { account } = params;
-    if (!account) throw new Error('createNickname: account not found');
+    if (!account) throw new Error('createAlias: account not found');
 
     const { term_id: atomId } = account;
 
     const url = new URL('/snap/action', baseUrl);
-    url.searchParams.set('intent', 'create_nickname');
+    url.searchParams.set('intent', 'create_alias');
     url.searchParams.set('subject_id', atomId);
 
     return { url: url.toString() };

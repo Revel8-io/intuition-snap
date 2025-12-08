@@ -5,7 +5,7 @@ export type Account = {
   data: string;
   label: string;
   image?: string;
-  nickname?: string;
+  alias?: string;
   term_id: string;
 };
 
@@ -135,7 +135,7 @@ type BaseAccountProps = {
   address: string;
   /** The connected user's wallet address (for checking existing positions) */
   userAddress?: string;
-  nickname: string | null;
+  alias: string | null;
   /** Whether the address is a contract (derived from classification) */
   isContract: boolean;
   transactionOrigin?: string;

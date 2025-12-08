@@ -126,7 +126,7 @@ flowchart TD
 **Test scenarios:**
 - `getAddressAtomsQuery` returns both `plainAtoms` and `caipAtoms`
 - `getTripleWithPositionsDataQuery` returns all nested vault data
-- `getListWithHighestStakeQuery` returns nickname data
+- `getListWithHighestStakeQuery` returns alias data
 - Handle empty/null responses gracefully
 
 ---

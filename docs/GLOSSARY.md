@@ -542,7 +542,7 @@ An **extension system** for MetaMask allowing third-party functionality. Intuiti
 
 | Predicate | Description | Config Key |
 |-----------|-------------|------------|
-| `hasNickname` | Links entity to nickname | `hasAliasAtomId` |
+| `hasAlias` | Links entity to alias | `hasAliasAtomId` |
 | `hasTag` | Links entity to trait | `hasTagAtomId` |
 | `trustworthy` | The "trustworthy" trait | `trustworthyAtomId` |
 
@@ -561,7 +561,7 @@ Object: "trustworthy" (trustworthyAtomId)
 ```
 Subject: [Any Atom]
 Predicate: "has alias" (hasAliasAtomId)
-Object: [String Atom with nickname text]
+Object: [String Atom with alias text]
 ```
 
 ---

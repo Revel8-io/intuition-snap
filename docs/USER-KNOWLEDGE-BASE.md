@@ -108,7 +108,7 @@ When you're about to send a transaction, the Revel8 Snap displays an insight pan
 - **Oppose positions**: How many people have staked that the address is untrustworthy
 - **Stake amounts**: The total economic value (market cap) behind each position
 
-**Community Nicknames:**
+**Community Aliases:**
 - Labels that the community has assigned to the address
 - Helps identify known entities and avoid impersonators
 
@@ -141,9 +141,9 @@ Trust signals show community sentiment about an address:
 
 **Remember:** Trust signals are community opinions, not guarantees. Always do your own research.
 
-### Understanding Nicknames
+### Understanding Aliases
 
-Nicknames are community-assigned labels for addresses:
+Aliases are community-assigned labels for addresses:
 
 **What They Show:**
 - Common names or identifiers for the address
@@ -156,9 +156,9 @@ Nicknames are community-assigned labels for addresses:
 - "Known Scam" for addresses flagged by the community
 
 **How to Use:**
-- Verify the nickname matches what you expect
-- Be cautious if nicknames don't match the entity you think you're interacting with
-- Use nicknames as one piece of information, not the only factor
+- Verify the alias matches what you expect
+- Be cautious if aliases don't match the entity you think you're interacting with
+- Use aliases as one piece of information, not the only factor
 
 ### Using Interactive Features
 
@@ -174,10 +174,10 @@ The Revel8 Snap includes interactive footer links:
 - Click to add your own trust signal (support or oppose)
 - Opens the Revel8 Explorer to stake
 
-**Create Nickname:**
-- Appears when an address has no nickname
-- Click to assign a nickname to this address
-- Opens the Revel8 Explorer to create a nickname
+**Create Alias:**
+- Appears when an address has no alias
+- Click to assign an alias to this address
+- Opens the Revel8 Explorer to create an alias
 
 **View More:**
 - Always available

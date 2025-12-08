@@ -20,7 +20,7 @@ export const INTUITION_TESTNET = {
   chainKey: 'intuition-testnet',
   currencySymbol: 'tTRUST',
   decimalPrecision: 18,
-  hasTagAtomId: '0x7ec36d201c842dc787b45cb5bb753bea4cf849be3908fb1b0a7d067c3c3cc1f5',
+  hasTagAtomId: '0x6de69cc0ae3efe4000279b1bf365065096c8715d8180bc2a98046ee07d3356fd',
   trustworthyAtomId: '0xe9c0e287737685382bd34d51090148935bdb671c98d20180b2fec15bd263f73a',
   hasAliasAtomId: '0xf8cfb4e3f1db08f72f255cf7afaceb4b32684a64dac0f423cdca04dd15cf4fd6',
 };
@@ -34,7 +34,7 @@ export const INTUITION_MAINNET = {
   chainKey: 'intuition-mainnet',
   currencySymbol: 'TRUST',
   decimalPrecision: 18,
-  hasTagAtomId: '0x7ec36d201c842dc787b45cb5bb753bea4cf849be3908fb1b0a7d067c3c3cc1f5',
+  hasTagAtomId: '0x6de69cc0ae3efe4000279b1bf365065096c8715d8180bc2a98046ee07d3356fd',
   trustworthyAtomId: '0xe9c0e287737685382bd34d51090148935bdb671c98d20180b2fec15bd263f73a',
   hasAliasAtomId: '0xf8cfb4e3f1db08f72f255cf7afaceb4b32684a64dac0f423cdca04dd15cf4fd6',
 };

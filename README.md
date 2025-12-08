@@ -6,7 +6,7 @@ A MetaMask Snap that displays real-time trust and reputation data from the [Intu
 
 When you're about to send a transaction to an address, the Intuition Snap shows you:
 - **Trust signals** — How many people have staked that the address is trustworthy (or not)
-- **Nicknames** — Community-assigned labels for the address
+- **Aliases** — Community-assigned labels for the address
 - **Stake amounts** — The economic weight behind each trust signal
 
 This helps you make informed decisions before interacting with unknown addresses.
@@ -17,7 +17,7 @@ This helps you make informed decisions before interacting with unknown addresses
 
 - **Transaction Insights** — `onTransaction` hook displays trust data before you sign
 - **Trust Triple Display** — Shows support/oppose positions on `[address] has tag trustworthy`
-- **Nickname Display** — Shows community-assigned nicknames for addresses
+- **Alias Display** — Shows community-assigned aliases for addresses
 - **Multi-chain Support** — Works on Intuition Testnet and Mainnet
 
 ## Requirements
@@ -59,12 +59,12 @@ The Snap queries the Intuition knowledge graph using these predefined atoms:
 
 | Atom | Purpose | ID |
 |------|---------|------------|
-| `hasTag` | Predicate for trust triples | `0x5cc843bd9ba824dbef4e80e7c41ced4ccde30a7b9ac66f0499c5766dc8811801`
-| `trustworthiness` | The "trustworthiness" characteristic | `0xae42e29e99b1f8711da1cac930079b0ce615ca3c4c0392ef8c74c56ef803126b`
-| `hasNickname` | Predicate for nickname lists | `0x5a52541056e9440e75c7775e66c4efa0d41719f254135579b69520395baab322`
+| `hasTag` | Predicate for trust triples | `0x6de69cc0ae3efe4000279b1bf365065096c8715d8180bc2a98046ee07d3356fd`
+| `trustworthy` | The "trustworthiness" characteristic | `0xe9c0e287737685382bd34d51090148935bdb671c98d20180b2fec15bd263f73a`
+| `hasAlias` | Predicate for alias lists | `0xf8cfb4e3f1db08f72f255cf7afaceb4b32684a64dac0f423cdca04dd15cf4fd6`
 
 **Trust Triple structure:** `[address] - hasTag - trustworthy`
-**Nickname List structure:** `[address] - hasNickname - [nickname atom]`
+**Alias List structure:** `[address] - hasAlias - [alias atom]`
 
 Configuration is defined in `packages/snap/src/config.ts`.
 

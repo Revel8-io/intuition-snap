@@ -3,33 +3,33 @@ import { vendor } from '../../../vendors';
 import { FooterLink } from '../FooterLink';
 
 /**
- * CTA to create a nickname triple for an address.
+ * CTA to create an alias triple for an address.
  *
  * Renders when:
  * - Atom exists (AtomWithoutTrustTriple or AtomWithTrustTriple)
- * - AND no nickname is set
+ * - AND no alias is set
  *
  * Returns null when:
  * - AccountType.NoAtom
- * - Nickname already exists
+ * - Alias already exists
  */
-export const CreateNickname = (props: AccountProps) => {
+export const CreateAlias = (props: AccountProps) => {
   // Self-gate: don't render for NoAtom state
   if (props.accountType === AccountType.NoAtom) {
     return null;
   }
 
-  // Don't show if nickname already exists
-  if (props.nickname) {
+  // Don't show if alias already exists
+  if (props.alias) {
     return null;
   }
 
-  const { url } = vendor.createNickname(props);
+  const { url } = vendor.createAlias(props);
 
   return (
     <FooterLink
       href={url}
-      label={`Add nickname`}
+      label={`Add alias`}
       icon="🏷️"
     />
   );

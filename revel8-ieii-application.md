@@ -52,8 +52,8 @@ Users interact with unknown addresses and entities without any trust context. In
 
 | Product | Function |
 |---------|----------|
-| **Snap** | Trust signals during MetaMask transaction signing (support/oppose, nicknames, market cap) |
-| **Explorer** | Create atoms, triples, nicknames; stake on trust signals |
+| **Snap** | Trust signals during MetaMask transaction signing (support/oppose, aliases, market cap) |
+| **Explorer** | Create atoms, triples, aliases; stake on trust signals |
 | **Extension** | Detect entities while browsing (X.com profiles, addresses, URLs) and show Intuition insights in sidepanel |
 
 **Stage of Development:**

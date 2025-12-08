@@ -7,7 +7,7 @@ A MetaMask Snap that displays real-time trust and reputation data from the [Intu
 When you're about to send a transaction to an address, the Revel8 Snap shows you:
 
 - **Trust Signals** — How many people have staked that the address is trustworthy (or not)
-- **Nicknames** — Community-assigned labels for the address
+- **Aliases** — Community-assigned labels for the address
 - **Stake Amounts** — The economic weight behind each trust signal
 - **Your Position** — Whether you've already staked on this address
 
@@ -19,7 +19,7 @@ This helps you make informed decisions before interacting with unknown addresses
 |---------|-------------|
 | **Transaction Insights** | `onTransaction` hook displays trust data before you sign |
 | **Trust Triple Display** | Shows support/oppose positions on `[address] has tag trustworthy` |
-| **Nickname Display** | Shows community-assigned nicknames for addresses |
+| **Alias Display** | Shows community-assigned aliases for addresses |
 | **Multi-chain Support** | Works on Intuition Testnet (chain ID: 13579) and Mainnet (chain ID: 1155) |
 | **Interactive UI** | Links to create trust signals or view more data on the web |
 
@@ -135,7 +135,7 @@ The Snap queries the Intuition knowledge graph using these predefined atoms:
 |------|---------|
 | `hasTag` | Predicate for trust triples |
 | `trustworthy` | The "trustworthy" characteristic |
-| `hasNickname` | Predicate for nickname relationships |
+| `hasAlias` | Predicate for alias relationships |
 
 ## Building
 

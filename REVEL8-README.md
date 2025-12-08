@@ -18,7 +18,7 @@ Users sign transactions to unknown addresses without any context. Scams succeed 
 
 Revel8 displays real-time trust signals from Intuition's knowledge graph:
 - **Trust Signals**: See how many people have staked that an address is trustworthy (or not)
-- **Community Nicknames**: Human-readable labels assigned by the community
+- **Community Aliases**: Human-readable labels assigned by the community
 - **Economic Weight**: The market cap behind each trust position
 - **Your Position**: Whether you've already staked on this address
 
@@ -33,8 +33,8 @@ A MetaMask Snap that displays trust insights during transaction signing.
 **Features:**
 - Transaction insights before you sign
 - Trust triple display (support/oppose positions)
-- Community nicknames
-- Interactive actions (vote, add nickname, view more)
+- Community aliases
+- Interactive actions (vote, add alias, view more)
 - Multi-chain support (Intuition Testnet & Mainnet)
 
 **Install:**
@@ -54,7 +54,7 @@ A web interface for viewing and creating trust data.
 **Features:**
 - Search any address for trust data
 - Create trust triples
-- Add nicknames
+- Add aliases
 - Stake on existing trust signals
 - View trust history and analytics
 
@@ -79,7 +79,7 @@ A web interface for viewing and creating trust data.
 │   │  Trustworthy (2): 9.90 tTRUST                       │   │
 │   │  Not trustworthy (0): 0.00 tTRUST                   │   │
 │   │                                                      │   │
-│   │  [Vote] [Add nickname] [View more]                  │   │
+│   │  [Vote] [Add alias] [View more]                  │   │
 │   └─────────────────────────────────────────────────────┘   │
 └─────────────────────────────────────────────────────────────┘
                               │
@@ -103,12 +103,12 @@ Revel8 queries Intuition for trust triples in the format:
 - **Oppose**: Stakers who believe the address is NOT trustworthy
 - **Market Cap**: Total TRUST staked on each position
 
-### Nicknames
+### Aliases
 
 Community-assigned labels help identify addresses:
 
 ```
-[address] - hasNickname - [nickname]
+[address] - hasAlias - [alias]
 ```
 
 Example: `0x1234...` → "Uniswap Router"
@@ -130,7 +130,7 @@ Example: `0x1234...` → "Uniswap Router"
 1. Visit [Revel8 Explorer](https://revel8.io)
 2. Connect your wallet
 3. Search for an address
-4. Click "Create Trust Triple" or "Add Nickname"
+4. Click "Create Trust Triple" or "Add Alias"
 5. Stake TRUST to add your signal
 
 ---
@@ -179,9 +179,9 @@ revel8/
 
 | Atom | Purpose | ID |
 |------|---------|-----|
-| `hasTag` | Trust triple predicate | `0x5cc843bd9ba824dbef4e80e7c41ced4ccde30a7b9ac66f0499c5766dc8811801` |
+| `hasTag` | Trust triple predicate | `0x6de69cc0ae3efe4000279b1bf365065096c8715d8180bc2a98046ee07d3356fd` |
 | `trustworthy` | Trust characteristic | `0xe9c0e287737685382bd34d51090148935bdb671c98d20180b2fec15bd263f73a` |
-| `hasNickname` | Nickname predicate | `0x5a52541056e9440e75c7775e66c4efa0d41719f254135579b69520395baab322` |
+| `hasAlias` | Alias predicate | `0xf8cfb4e3f1db08f72f255cf7afaceb4b32684a64dac0f423cdca04dd15cf4fd6` |
 
 ---
 

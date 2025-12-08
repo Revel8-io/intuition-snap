@@ -12,7 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 #### Core Features
 - **Transaction Insights**: Display real-time trust and reputation data from the Intuition knowledge graph during transaction signing
 - **Trust Triple Display**: Show support and oppose positions on `[address] has tag trustworthy` assertions
-- **Nickname Display**: Display community-assigned nicknames for addresses
+- **Alias Display**: Display community-assigned aliases for addresses
 - **Stake Amount Visualization**: Show the economic weight (market cap) behind each trust signal
 - **User Position Detection**: Display whether the connected wallet has already staked on an address
 
@@ -26,7 +26,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Transaction Insight UI**: Rich UI components displaying trust data before transaction confirmation
 - **Footer Actions**: Interactive footer with links to:
   - Create trust triples for addresses without trust data
-  - Create nicknames for addresses
+  - Create aliases for addresses
   - Stake on existing trust triples
   - View more details on the Revel8 Explorer
 
@@ -54,13 +54,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 #### GraphQL Integration
 - Integration with Intuition GraphQL API for querying trust data
-- Support for querying atoms, trust triples, and nickname lists
+- Support for querying atoms, trust triples, and alias lists
 - Parallel query execution for optimal performance
 
 #### Atoms Used
 - `hasTag` - Predicate for trust triples
 - `trustworthy` - The "trustworthy" characteristic
-- `hasNickname` - Predicate for nickname relationships
+- `hasAlias` - Predicate for alias relationships
 
 #### Error Handling
 - Graceful error handling for network failures

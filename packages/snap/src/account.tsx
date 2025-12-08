@@ -22,7 +22,7 @@ export type GetAccountDataResult = {
   account: Account | null;
   triple: TripleWithPositions | null;
   isContract: boolean;
-  nickname: string | null;
+  alias: string | null;
   classification: AddressClassification;
   alternateTrustData: AlternateTrustData;
 };
@@ -218,7 +218,7 @@ export const getAccountData = async (
         account: null,
         triple: null,
         isContract,
-        nickname: null,
+        alias: null,
         classification,
         alternateTrustData: { hasAlternateTrustData: false },
       };
@@ -280,22 +280,22 @@ export const getAccountData = async (
       alternateIsCaip: !selection.usedCaip, // If we used CAIP, alternate is plain (and vice versa)
     };
 
-    // Step 6: Query nickname for the primary atom
-    let nickname: string | null = null;
+    // Step 6: Query alias for the primary atom
+    let alias: string | null = null;
     if (selection.primary) {
-      const nicknameResponse = await graphQLQuery(getListWithHighestStakeQuery, {
+      const aliasResponse = await graphQLQuery(getListWithHighestStakeQuery, {
         subjectId: selection.primary.term_id,
         predicateId: hasAliasAtomId,
       });
-      const nicknameTriple = nicknameResponse.data.triples[0];
-      nickname = nicknameTriple?.object?.label || null;
+      const aliasTriple = aliasResponse.data.triples[0];
+      alias = aliasTriple?.object?.label || null;
     }
 
     return {
       account: selection.primary,
       triple: selection.primaryTriple,
       isContract,
-      nickname,
+      alias,
       classification,
       alternateTrustData,
     };

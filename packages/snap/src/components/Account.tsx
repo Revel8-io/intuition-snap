@@ -74,14 +74,14 @@ export const NoAtom = (
 export const AtomWithoutTrustTriple = (
   params: PropsForAccountType<AccountType.AtomWithoutTrustTriple>,
 ) => {
-  const { account, nickname, isContract, alternateTrustData } = params;
+  const { account, alias, isContract, alternateTrustData } = params;
 
   return (
     <Box>
       <Box>
-        {!!nickname && (
-          <Row label="Nickname">
-            <Value value={`"${nickname}"`} extra="" />
+        {!!alias && (
+          <Row label="Alias">
+            <Value value={`"${alias}"`} extra="" />
           </Row>
         )}
         <Text>Atom exists for {account?.label || account?.data}, but it has no trust data yet</Text>
@@ -102,7 +102,7 @@ export const AtomWithoutTrustTriple = (
 export const AtomWithTrustTriple = (
   params: PropsForAccountType<AccountType.AtomWithTrustTriple>,
 ) => {
-  const { address, triple, nickname, isContract, alternateTrustData } = params;
+  const { address, triple, alias, isContract, alternateTrustData } = params;
   const {
     counter_term: {
       vaults: [counterVault],
@@ -125,9 +125,9 @@ export const AtomWithTrustTriple = (
         <Row label="Address">
           <Address address={address as `0x${string}`} />
         </Row>
-        {!!nickname && (
-          <Row label="Nickname">
-            <Value value={`"${nickname}"`} extra="" />
+        {!!alias && (
+          <Row label="Alias">
+            <Value value={`"${alias}"`} extra="" />
           </Row>
         )}
         <Row label={`Trustworthy (${positions.length})`}>
