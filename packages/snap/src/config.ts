@@ -18,7 +18,7 @@ export const INTUITION_TESTNET = {
   chainIdHex: '0x350B',
   chainName: 'Intuition Testnet',
   chainKey: 'intuition-testnet',
-  currencySymbol: 'tTRUST',
+  currencySymbol: 'TTRUST',
   decimalPrecision: 18,
   hasTagAtomId: '0x6de69cc0ae3efe4000279b1bf365065096c8715d8180bc2a98046ee07d3356fd',
   trustworthyAtomId: '0xe9c0e287737685382bd34d51090148935bdb671c98d20180b2fec15bd263f73a',
