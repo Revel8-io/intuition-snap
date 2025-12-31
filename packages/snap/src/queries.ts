@@ -169,6 +169,69 @@ query TripleWithPositionAggregates($subjectId: String!, $predicateId: String!, $
 }
 `;
 
+/**
+ * Query to find an atom by URL (for origin trust signals).
+ * Searches by label or data field matching the origin URL.
+ */
+export const getOriginAtomQuery = `
+query OriginAtom($originUrl: String!) {
+  atoms(where: {
+    _or: [
+      { label: { _ilike: $originUrl } },
+      { data: { _ilike: $originUrl } }
+    ]
+  }, limit: 1) {
+    term_id
+    type
+    label
+    image
+    data
+    emoji
+    creator_id
+  }
+}
+`;
+
+/**
+ * Query for origin trust triple data.
+ * Simplified version of getTripleWithPositionsDataQuery for origin display.
+ */
+export const getOriginTrustTripleQuery = `
+query OriginTrustTriple($subjectId: String!, $predicateId: String!, $objectId: String!) {
+  triples(where: {
+    subject_id: { _eq: $subjectId },
+    predicate_id: { _eq: $predicateId },
+    object_id: { _eq: $objectId }
+  }) {
+    term_id
+
+    term {
+      vaults(where: { curve_id: { _eq: "1" } }) {
+        term_id
+        market_cap
+        position_count
+      }
+    }
+
+    counter_term {
+      vaults(where: { curve_id: { _eq: "1" } }) {
+        term_id
+        market_cap
+        position_count
+      }
+    }
+
+    positions(limit: 1) {
+      id
+    }
+
+    counter_positions(limit: 1) {
+      id
+    }
+  }
+}
+`;
+
 export const getListWithHighestStakeQuery = `
   query GetTriplesWithHighestStake($subjectId: String!, $predicateId: String!) {
     triples(

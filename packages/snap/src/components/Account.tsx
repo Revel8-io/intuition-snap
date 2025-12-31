@@ -4,12 +4,36 @@ import {
   Row,
   Text,
   Value,
-  Italic,
+  Heading,
+  Bold,
+  Section,
 } from '@metamask/snaps-sdk/jsx';
 import { AccountType, PropsForAccountType, AlternateTrustData } from '../types';
 import { stringToDecimal } from '../util';
 import { chainConfig } from '../config';
-import { Footer } from './Footer';
+
+/**
+ * Section header for the destination address.
+ */
+const AddressHeader = () => (
+  <Heading size="sm">Destination</Heading>
+);
+
+/**
+ * Returns a trust badge string and color based on trust ratio.
+ */
+const getTrustInfo = (
+  supportMarketCap: number,
+  opposeMarketCap: number,
+): { badge: string; color: 'success' | 'warning' | 'muted' } => {
+  const total = supportMarketCap + opposeMarketCap;
+  if (total === 0) return { badge: 'No Stakes', color: 'muted' };
+
+  const trustRatio = (supportMarketCap / total) * 100;
+  if (trustRatio >= 70) return { badge: 'Trusted', color: 'success' };
+  if (trustRatio >= 30) return { badge: 'Mixed', color: 'warning' };
+  return { badge: 'Untrusted', color: 'warning' };
+};
 
 /**
  * Displays a note when alternate atom format (CAIP vs 0x) has trust data.
@@ -26,78 +50,80 @@ const AlternateTrustNote = ({
     return null;
   }
 
-  // Determine the appropriate note text based on which format is alternate
   const noteText = alternateTrustData.alternateIsCaip
-    ? `ℹ️ This address also has trust data as a contract on ${chainConfig.chainName}.`
-    : `ℹ️ This address also has trust data as an EOA.`;
+    ? `Also has data as a contract on ${chainConfig.chainName}`
+    : `Also has data as an EOA`;
 
   return (
-    <Box>
-      <Text>
-        <Italic>{noteText}</Italic>
-      </Text>
-      <Text>
-        <Italic>View more to investigate.</Italic>
-      </Text>
-    </Box>
+    <Text color="default">{noteText}</Text>
   );
 };
 
 /**
  * Account display component for addresses with no atom on Intuition.
- * Shows a message indicating no data exists for this address.
+ * Shows a warning indicating no data exists for this address.
  */
 export const NoAtom = (
   params: PropsForAccountType<AccountType.NoAtom>,
 ) => {
-  const { isContract, alternateTrustData } = params;
+  const { address, isContract, alternateTrustData } = params;
   const accountTypeSyntax = isContract ? 'contract' : 'address';
 
   return (
-    <Box>
-      <Box>
-        <Text>No information about this {accountTypeSyntax} on Intuition, yet!</Text>
-        <AlternateTrustNote
-          alternateTrustData={alternateTrustData}
-          isContract={isContract}
-        />
-      </Box>
-      <Footer {...params} />
-    </Box>
+    <Section>
+      <AddressHeader />
+      <Row label="Address">
+        <Address address={address as `0x${string}`} />
+      </Row>
+      <Row label="Status" variant="warning">
+        <Text color="warning">
+          <Bold>Unknown {accountTypeSyntax}</Bold>
+        </Text>
+      </Row>
+      <Text color="default">No community data on Intuition</Text>
+      <AlternateTrustNote
+        alternateTrustData={alternateTrustData}
+        isContract={isContract}
+      />
+    </Section>
   );
 };
 
 /**
  * Account display component for addresses with an atom but no trust triple.
- * Shows the atom data and prompts user to create trust attestation.
+ * Shows the atom info with an info message about missing trust rating.
  */
 export const AtomWithoutTrustTriple = (
   params: PropsForAccountType<AccountType.AtomWithoutTrustTriple>,
 ) => {
-  const { account, alias, isContract, alternateTrustData } = params;
+  const { address, account, alias, isContract, alternateTrustData } = params;
 
   return (
-    <Box>
-      <Box>
-        {!!alias && (
-          <Row label="Alias">
-            <Value value={`"${alias}"`} extra="" />
-          </Row>
-        )}
-        <Text>Atom exists for {account?.label || account?.data}, but it has no trust data yet</Text>
-        <AlternateTrustNote
-          alternateTrustData={alternateTrustData}
-          isContract={isContract}
-        />
-      </Box>
-      <Footer {...params} />
-    </Box>
+    <Section>
+      <AddressHeader />
+      <Row label="Address">
+        <Address address={address as `0x${string}`} />
+      </Row>
+      {!!alias && (
+        <Row label="Alias">
+          <Text><Bold>{alias}</Bold></Text>
+        </Row>
+      )}
+      <Row label="Status">
+        <Text color="default">No trust rating yet</Text>
+      </Row>
+      <Text color="default">Known address, awaiting community votes</Text>
+      <AlternateTrustNote
+        alternateTrustData={alternateTrustData}
+        isContract={isContract}
+      />
+    </Section>
   );
 };
 
 /**
  * Account display component for addresses with an atom and trust triple.
- * Shows full trust data with support/oppose market caps and position counts.
+ * Shows full trust data with support/oppose market caps and a trust badge.
  */
 export const AtomWithTrustTriple = (
   params: PropsForAccountType<AccountType.AtomWithTrustTriple>,
@@ -119,36 +145,39 @@ export const AtomWithTrustTriple = (
   const opposeMarketCap = counterVault?.market_cap || '0';
   const opposeMarketCapNative = stringToDecimal(opposeMarketCap, 18);
 
+  const { badge, color } = getTrustInfo(supportMarketCapNative, opposeMarketCapNative);
+
   return (
-    <Box>
-      <Box>
-        <Row label="Address">
-          <Address address={address as `0x${string}`} />
+    <Section>
+      <AddressHeader />
+      <Row label="Address">
+        <Address address={address as `0x${string}`} />
+      </Row>
+      {!!alias && (
+        <Row label="Alias">
+          <Text><Bold>{alias}</Bold></Text>
         </Row>
-        {!!alias && (
-          <Row label="Alias">
-            <Value value={`"${alias}"`} extra="" />
-          </Row>
-        )}
-        <Row label={`Trustworthy (${positions.length})`}>
-          <Value
-            value={`${supportMarketCapNative.toFixed(2)} ${chainConfig.currencySymbol}`}
-            extra={``}
-          />
-        </Row>
-        <Row label={`Not trustworthy (${counter_positions.length})`}>
-          <Value
-            value={`${opposeMarketCapNative.toFixed(2)} ${chainConfig.currencySymbol}`}
-            extra={``}
-          />
-        </Row>
-        <AlternateTrustNote
-          alternateTrustData={alternateTrustData}
-          isContract={isContract}
+      )}
+      <Row label="Trust">
+        <Text color={color}><Bold>{badge}</Bold></Text>
+      </Row>
+      <Row label={`FOR (${positions.length})`}>
+        <Value
+          value={`${supportMarketCapNative.toFixed(2)} ${chainConfig.currencySymbol}`}
+          extra=""
         />
-      </Box>
-      <Footer {...params} />
-    </Box>
+      </Row>
+      <Row label={`AGAINST (${counter_positions.length})`}>
+        <Value
+          value={`${opposeMarketCapNative.toFixed(2)} ${chainConfig.currencySymbol}`}
+          extra=""
+        />
+      </Row>
+      <AlternateTrustNote
+        alternateTrustData={alternateTrustData}
+        isContract={isContract}
+      />
+    </Section>
   );
 };
 

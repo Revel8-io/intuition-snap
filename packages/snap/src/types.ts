@@ -168,3 +168,88 @@ export type PropsForAccountType<T extends AccountType> = Extract<
   AccountProps,
   { accountType: T }
 >;
+
+// ============================================================================
+// Origin Types (for transaction origin URL trust signals)
+// ============================================================================
+
+/**
+ * Represents an origin (dApp URL) atom from Intuition.
+ * Similar structure to Account but for URLs.
+ */
+export type Origin = {
+  id: string;
+  data: string;
+  label: string;
+  image?: string;
+  term_id: string;
+};
+
+/**
+ * Trust triple data for an origin URL.
+ * Simplified version of TripleWithPositions for display purposes.
+ */
+export type OriginTriple = {
+  term_id: string;
+  term: {
+    vaults: {
+      term_id: string;
+      market_cap: string;
+      position_count: number;
+    }[];
+  };
+  counter_term: {
+    vaults: {
+      term_id: string;
+      market_cap: string;
+      position_count: number;
+    }[];
+  };
+  positions: { id: string }[];
+  counter_positions: { id: string }[];
+};
+
+// OriginType enum - mirrors AccountType pattern
+export enum OriginType {
+  NoOrigin = 'NoOrigin',
+  NoAtom = 'OriginNoAtom',
+  AtomWithoutTrustTriple = 'OriginAtomWithoutTrustTriple',
+  AtomWithTrustTriple = 'OriginAtomWithTrustTriple',
+}
+
+/** Common props shared across all origin states */
+type BaseOriginProps = {
+  /** The raw origin URL from the transaction */
+  originUrl: string | undefined;
+  /** Extracted hostname for display */
+  hostname: string | undefined;
+};
+
+// Discriminated union types for proper OriginProps typing
+export type OriginProps =
+  | (BaseOriginProps & {
+      originType: OriginType.NoOrigin;
+      origin: null;
+      triple: null;
+    })
+  | (BaseOriginProps & {
+      originType: OriginType.NoAtom;
+      origin: null;
+      triple: null;
+    })
+  | (BaseOriginProps & {
+      originType: OriginType.AtomWithoutTrustTriple;
+      origin: Origin;
+      triple: null;
+    })
+  | (BaseOriginProps & {
+      originType: OriginType.AtomWithTrustTriple;
+      origin: Origin;
+      triple: OriginTriple;
+    });
+
+// Helper type to extract props for a specific origin type
+export type PropsForOriginType<T extends OriginType> = Extract<
+  OriginProps,
+  { originType: T }
+>;
