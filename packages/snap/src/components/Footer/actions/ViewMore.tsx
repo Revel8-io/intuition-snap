@@ -20,8 +20,7 @@ export const ViewMore = (props: AccountProps) => {
   return (
     <FooterLink
       href={url}
-      label={`View more about this address`}
-      icon="🔍"
+      label="View more about this address"
     />
   );
 };

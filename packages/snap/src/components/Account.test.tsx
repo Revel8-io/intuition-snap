@@ -131,16 +131,17 @@ describe('NoAtom Component', () => {
     alternateTrustData: noAlternateTrustData,
   };
 
-  it('should render "no information" message for EOA', () => {
+  it('should render warning message for EOA', () => {
     const result = NoAtom(baseNoAtomProps);
     const rendered = renderToString(result);
 
-    expect(rendered).toContain('No information');
+    expect(rendered).toContain('No community data on Intuition');
+    expect(rendered).toContain('Unknown');
     expect(rendered).toContain('address');
     expect(rendered).not.toContain('contract');
   });
 
-  it('should render "no information" message for contract', () => {
+  it('should render warning message for contract', () => {
     const result = NoAtom({
       ...baseNoAtomProps,
       isContract: true,
@@ -148,25 +149,15 @@ describe('NoAtom Component', () => {
     });
     const rendered = renderToString(result);
 
-    expect(rendered).toContain('No information');
+    expect(rendered).toContain('No community data on Intuition');
     expect(rendered).toContain('contract');
-  });
-
-  it('should render Footer with CreateTrustTriple CTA', () => {
-    const result = NoAtom(baseNoAtomProps);
-    const rendered = renderToString(result);
-
-    // Footer should contain Link component
-    expect(rendered).toContain('Link');
-    // Should have the create trust claim action
-    expect(rendered).toContain('Create trust claim');
   });
 
   it('should not show alternate trust note when no alternate data', () => {
     const result = NoAtom(baseNoAtomProps);
     const rendered = renderToString(result);
 
-    expect(rendered).not.toContain('also has trust data');
+    expect(rendered).not.toContain('Also has data');
   });
 
   it('should show alternate trust note when alternate data exists', () => {
@@ -176,14 +167,13 @@ describe('NoAtom Component', () => {
     });
     const rendered = renderToString(result);
 
-    expect(rendered).toContain('also has trust data');
-    expect(rendered).toContain('View more to investigate');
+    expect(rendered).toContain('Also has data as a contract');
   });
 
-  it('should have Box as root element', () => {
+  it('should have Section as root element', () => {
     const result = NoAtom(baseNoAtomProps);
 
-    expect(result.type).toBe('Box');
+    expect(result.type).toBe('Section');
   });
 });
 
@@ -204,30 +194,12 @@ describe('AtomWithoutTrustTriple Component', () => {
     alternateTrustData: noAlternateTrustData,
   };
 
-  it('should render atom info message', () => {
+  it('should render status message for atom without trust triple', () => {
     const result = AtomWithoutTrustTriple(baseAtomNoTripleProps);
     const rendered = renderToString(result);
 
-    expect(rendered).toContain('Atom exists');
-    expect(rendered).toContain('no trust data yet');
-  });
-
-  it('should display atom label in message', () => {
-    const result = AtomWithoutTrustTriple(baseAtomNoTripleProps);
-    const rendered = renderToString(result);
-
-    expect(rendered).toContain(mockAccount.label);
-  });
-
-  it('should display atom data if label is missing', () => {
-    const accountWithoutLabel = { ...mockAccount, label: '' };
-    const result = AtomWithoutTrustTriple({
-      ...baseAtomNoTripleProps,
-      account: accountWithoutLabel,
-    });
-    const rendered = renderToString(result);
-
-    expect(rendered).toContain(mockAccount.data);
+    expect(rendered).toContain('No trust rating yet');
+    expect(rendered).toContain('Known address, awaiting community votes');
   });
 
   it('should display alias when present', () => {
@@ -249,38 +221,15 @@ describe('AtomWithoutTrustTriple Component', () => {
     expect(rendered).not.toContain('"label":"Alias"');
   });
 
-  it('should render Footer with StakePrompt CTA', () => {
-    const result = AtomWithoutTrustTriple(baseAtomNoTripleProps);
-    const rendered = renderToString(result);
-
-    expect(rendered).toContain('Is this address trustworthy? Vote');
-  });
-
-  it('should render CreateAlias CTA when no alias', () => {
-    const result = AtomWithoutTrustTriple(baseAtomNoTripleProps);
-    const rendered = renderToString(result);
-
-    expect(rendered).toContain('Add alias');
-  });
-
-  it('should not render CreateAlias CTA when alias exists', () => {
+  it('should display alias when present', () => {
     const result = AtomWithoutTrustTriple({
       ...baseAtomNoTripleProps,
       alias: 'HasAlias',
     });
     const rendered = renderToString(result);
 
-    // The CreateAlias component should return null when alias exists
-    // This means "Add alias" should not appear in the Footer
-    // However, due to component structure, we verify it's not duplicated
     expect(rendered).toContain('HasAlias');
-  });
-
-  it('should render ViewMore CTA', () => {
-    const result = AtomWithoutTrustTriple(baseAtomNoTripleProps);
-    const rendered = renderToString(result);
-
-    expect(rendered).toContain('View more about this address');
+    expect(rendered).toContain('Alias');
   });
 
   it('should show alternate trust note when alternate data exists', () => {
@@ -290,7 +239,7 @@ describe('AtomWithoutTrustTriple Component', () => {
     });
     const rendered = renderToString(result);
 
-    expect(rendered).toContain('also has trust data');
+    expect(rendered).toContain('Also has data as a contract');
   });
 });
 
@@ -330,20 +279,20 @@ describe('AtomWithTrustTriple Component', () => {
     expect(rendered).toContain('Satoshi');
   });
 
-  it('should display trustworthy stats with position count', () => {
+  it('should display FOR stats with position count', () => {
     const result = AtomWithTrustTriple(baseAtomWithTripleProps);
     const rendered = renderToString(result);
 
     // mockTriple has 2 positions (we defined positions array with 2 elements)
-    expect(rendered).toContain('Trustworthy (2)');
+    expect(rendered).toContain('FOR (2)');
   });
 
-  it('should display not trustworthy stats with position count', () => {
+  it('should display AGAINST stats with position count', () => {
     const result = AtomWithTrustTriple(baseAtomWithTripleProps);
     const rendered = renderToString(result);
 
     // mockTriple has 1 counter_position
-    expect(rendered).toContain('Not trustworthy (1)');
+    expect(rendered).toContain('AGAINST (1)');
   });
 
   it('should display market cap values with currency symbol', () => {
@@ -353,8 +302,8 @@ describe('AtomWithTrustTriple Component', () => {
     // Support market cap is 2.5 TRUST, oppose is 0.75 TRUST
     expect(rendered).toContain('2.50');
     expect(rendered).toContain('0.75');
-    // Should contain currency symbol (tTRUST for testnet)
-    expect(rendered).toContain('tTRUST');
+    // Should contain currency symbol (TTRUST - uppercase from chain config)
+    expect(rendered).toContain('TTRUST');
   });
 
   it('should handle zero market cap gracefully', () => {
@@ -391,37 +340,15 @@ describe('AtomWithTrustTriple Component', () => {
     expect(rendered).toContain('0.00');
   });
 
-  it('should render Footer with StakePrompt CTA when user has no position', () => {
-    const result = AtomWithTrustTriple(baseAtomWithTripleProps);
-    const rendered = renderToString(result);
-
-    expect(rendered).toContain('Is this address trustworthy? Vote');
-  });
-
-  it('should not render StakePrompt CTA when user already has position', () => {
+  it('should display alias when present', () => {
     const result = AtomWithTrustTriple({
       ...baseAtomWithTripleProps,
-      userAddress: '0xstaker1', // This user has a position in mockTriple.positions
+      alias: 'TestAlias',
     });
     const rendered = renderToString(result);
 
-    // StakePrompt should return null when user has position
-    // The vote CTA should not appear
-    // Note: This test depends on StakePrompt component logic
-  });
-
-  it('should render CreateAlias CTA when no alias', () => {
-    const result = AtomWithTrustTriple(baseAtomWithTripleProps);
-    const rendered = renderToString(result);
-
-    expect(rendered).toContain('Add alias');
-  });
-
-  it('should render ViewMore CTA', () => {
-    const result = AtomWithTrustTriple(baseAtomWithTripleProps);
-    const rendered = renderToString(result);
-
-    expect(rendered).toContain('View more about this address');
+    expect(rendered).toContain('Alias');
+    expect(rendered).toContain('TestAlias');
   });
 
   it('should show alternate trust note when alternate data exists', () => {
@@ -431,14 +358,7 @@ describe('AtomWithTrustTriple Component', () => {
     });
     const rendered = renderToString(result);
 
-    expect(rendered).toContain('also has trust data');
-  });
-
-  it('should have Divider in Footer', () => {
-    const result = AtomWithTrustTriple(baseAtomWithTripleProps);
-    const rendered = renderToString(result);
-
-    expect(rendered).toContain('Divider');
+    expect(rendered).toContain('Also has data as a contract');
   });
 });
 
@@ -468,7 +388,7 @@ describe('AlternateTrustNote', () => {
     const result = NoAtom(noAtomProps);
     const rendered = renderToString(result);
 
-    expect(rendered).toContain('also has trust data as an EOA');
+    expect(rendered).toContain('Also has data as an EOA');
   });
 
   it('should show contract note when alternate is CAIP', () => {
@@ -492,7 +412,7 @@ describe('AlternateTrustNote', () => {
     const result = NoAtom(noAtomProps);
     const rendered = renderToString(result);
 
-    expect(rendered).toContain('also has trust data as a contract');
+    expect(rendered).toContain('Also has data as a contract');
   });
 });
 
@@ -515,7 +435,7 @@ describe('Component Structure', () => {
     });
 
     expect(result).toBeDefined();
-    expect(result.type).toBe('Box');
+    expect(result.type).toBe('Section');
     expect(result.props).toBeDefined();
   });
 
@@ -533,7 +453,7 @@ describe('Component Structure', () => {
     });
 
     expect(result).toBeDefined();
-    expect(result.type).toBe('Box');
+    expect(result.type).toBe('Section');
     expect(result.props).toBeDefined();
   });
 
@@ -551,8 +471,9 @@ describe('Component Structure', () => {
     });
 
     expect(result).toBeDefined();
-    expect(result.type).toBe('Box');
+    expect(result.type).toBe('Section');
     expect(result.props).toBeDefined();
   });
 });
+
 

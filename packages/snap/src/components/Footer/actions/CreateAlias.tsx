@@ -29,8 +29,7 @@ export const CreateAlias = (props: AccountProps) => {
   return (
     <FooterLink
       href={url}
-      label={`Add alias`}
-      icon="🏷️"
+      label="Add alias"
     />
   );
 };

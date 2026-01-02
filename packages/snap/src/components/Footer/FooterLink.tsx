@@ -1,12 +1,10 @@
-import { Box, Link, Text } from '@metamask/snaps-sdk/jsx';
+import { Box, Link } from '@metamask/snaps-sdk/jsx';
 
 export type FooterLinkProps = {
   /** The URL to link to */
   href: string;
   /** The display text for the link */
   label: string;
-  /** Optional emoji/icon prefix */
-  icon?: string;
 };
 
 /**

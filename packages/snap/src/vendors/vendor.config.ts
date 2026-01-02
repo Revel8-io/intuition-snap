@@ -16,7 +16,7 @@
  * or use completely different URL structures for your explorer.
  */
 
-import { AccountType, PropsForAccountType } from '../types';
+import { AccountType, PropsForAccountType, OriginType, PropsForOriginType } from '../types';
 import { chainConfig, type ChainConfig } from '../config';
 import { addressToCaip10 } from '../util';
 
@@ -47,9 +47,18 @@ type PropsWithAtom =
   | PropsForAccountType<AccountType.AtomWithoutTrustTriple>
   | PropsForAccountType<AccountType.AtomWithTrustTriple>;
 
+/** Props for origin actions that require an origin atom to exist */
+type OriginPropsWithAtom =
+  | PropsForOriginType<OriginType.AtomWithoutTrustTriple>
+  | PropsForOriginType<OriginType.AtomWithTrustTriple>;
+
 export type VendorConfig = {
   name: string;
   logo?: string;
+
+  // ─────────────────────────────────────────────────────────────────────────
+  // Destination Address Actions
+  // ─────────────────────────────────────────────────────────────────────────
 
   /** Generate URL when no atom exists for the address */
   noAtom: (props: PropsForAccountType<AccountType.NoAtom>) => UrlResult;
@@ -69,6 +78,23 @@ export type VendorConfig = {
 
   /** Generate URL for creating an alias */
   createAlias: (props: PropsWithAtom) => UrlResult;
+
+  // ─────────────────────────────────────────────────────────────────────────
+  // dApp Origin Actions
+  // ─────────────────────────────────────────────────────────────────────────
+
+  /** Generate URL when origin atom exists but no trust triple */
+  originAtomWithoutTrustTriple: (
+    props: PropsForOriginType<OriginType.AtomWithoutTrustTriple>
+  ) => UrlResult;
+
+  /** Generate URL when origin trust triple exists (for staking) */
+  originAtomWithTrustTriple: (
+    props: PropsForOriginType<OriginType.AtomWithTrustTriple>
+  ) => UrlResult;
+
+  /** Generate URL for viewing origin atom details */
+  viewOriginAtom: (props: OriginPropsWithAtom) => UrlResult;
 };
 
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -163,6 +189,56 @@ export const vendorConfig: VendorConfig = {
     url.searchParams.set('subject_id', atomId);
 
     return { url: url.toString() };
+  },
+
+  // ─────────────────────────────────────────────────────────────────────────
+  // dApp Origin URL Builders
+  // ─────────────────────────────────────────────────────────────────────────
+
+  /**
+   * Origin atom exists but no trust triple.
+   * Link to create the trust triple for the dApp.
+   */
+  originAtomWithoutTrustTriple: (params) => {
+    const { origin } = params;
+    if (!origin) throw new Error('originAtomWithoutTrustTriple: origin not found');
+
+    const { term_id: atomId } = origin;
+
+    const url = new URL('/snap/action', baseUrl);
+    url.searchParams.set('intent', 'create_trust_triple');
+    url.searchParams.set('atom_id', atomId);
+
+    return { url: url.toString() };
+  },
+
+  /**
+   * Origin trust triple exists.
+   * Link to stake on the dApp's trust triple.
+   */
+  originAtomWithTrustTriple: (params) => {
+    const { triple } = params;
+    if (!triple) throw new Error('originAtomWithTrustTriple: triple not found');
+
+    const { term_id: tripleId } = triple;
+
+    const url = new URL('/snap/action', baseUrl);
+    url.searchParams.set('intent', 'stake_trust_triple');
+    url.searchParams.set('triple_id', tripleId);
+
+    return { url: url.toString() };
+  },
+
+  /**
+   * View origin atom details page.
+   */
+  viewOriginAtom: (params) => {
+    const { origin } = params;
+    if (!origin) throw new Error('viewOriginAtom: origin not found');
+
+    const { term_id: atomId } = origin;
+
+    return { url: new URL(`/atoms/${atomId}`, baseUrl).toString() };
   },
 };
 

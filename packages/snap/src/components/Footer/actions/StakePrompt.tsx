@@ -25,8 +25,7 @@ export const StakePrompt = (props: AccountProps) => {
     return (
       <FooterLink
         href={url}
-        label={`Is this address trustworthy? Vote`}
-        icon="🗳️"
+        label="Is this address trustworthy? Vote"
       />
     );
   }
@@ -51,8 +50,7 @@ export const StakePrompt = (props: AccountProps) => {
     return (
       <FooterLink
         href={url}
-        label={`Is this address trustworthy? Vote`}
-        icon="🗳️"
+        label="Is this address trustworthy? Vote"
       />
     );
   }

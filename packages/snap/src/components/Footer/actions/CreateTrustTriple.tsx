@@ -19,8 +19,7 @@ export const CreateTrustTriple = (props: AccountProps) => {
   return (
     <FooterLink
       href={url}
-      label={`Create trust claim`}
-      icon="✨"
+      label="Create trust claim"
     />
   );
 };
