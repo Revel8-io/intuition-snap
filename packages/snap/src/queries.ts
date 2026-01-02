@@ -136,6 +136,7 @@ query TripleWithPositionAggregates($subjectId: String!, $predicateId: String!, $
       account_id
       term_id
       curve_id
+      shares
       account {
         id
         label
@@ -150,6 +151,7 @@ query TripleWithPositionAggregates($subjectId: String!, $predicateId: String!, $
       account_id
       term_id
       curve_id
+      shares
       account {
         id
         label
@@ -221,12 +223,14 @@ query OriginTrustTriple($subjectId: String!, $predicateId: String!, $objectId: S
       }
     }
 
-    positions(limit: 1) {
+    positions(order_by: { shares: desc }, limit: 10) {
       id
+      shares
     }
 
-    counter_positions(limit: 1) {
+    counter_positions(order_by: { shares: desc }, limit: 10) {
       id
+      shares
     }
   }
 }

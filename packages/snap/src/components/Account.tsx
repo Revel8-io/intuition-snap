@@ -1,6 +1,5 @@
 import {
   Address,
-  Box,
   Row,
   Text,
   Value,
@@ -11,6 +10,11 @@ import {
 import { AccountType, PropsForAccountType, AlternateTrustData } from '../types';
 import { stringToDecimal } from '../util';
 import { chainConfig } from '../config';
+import {
+  analyzeTrustDistribution,
+  TrustDistributionAnalysis,
+  SnapColor,
+} from '../distribution';
 
 /**
  * Section header for the destination address.
@@ -33,6 +37,41 @@ const getTrustInfo = (
   if (trustRatio >= 70) return { badge: 'Trusted', color: 'success' };
   if (trustRatio >= 30) return { badge: 'Mixed', color: 'warning' };
   return { badge: 'Untrusted', color: 'warning' };
+};
+
+/**
+ * Converts position data to shares array for distribution analysis.
+ */
+const positionsToShares = (
+  positions: { shares: string }[],
+): { shares: number }[] => {
+  return positions.map((p) => ({
+    shares: parseFloat(p.shares) || 0,
+  }));
+};
+
+/**
+ * Returns distribution indicator label.
+ * The color is used internally for the 4-tier system:
+ * - success (green): Well distributed
+ * - warning (yellow/orange): Moderate, Concentrated, or Whale dominated
+ */
+const getDistributionLabel = (
+  analysis: TrustDistributionAnalysis,
+): { label: string; color: SnapColor } => {
+  const { forDistribution } = analysis;
+
+  // Ensure color is valid (fallback to 'default' if somehow invalid)
+  const validColors: SnapColor[] = ['success', 'warning', 'muted', 'default'];
+  const color: SnapColor = validColors.includes(forDistribution.snapColor as SnapColor)
+    ? forDistribution.snapColor
+    : 'default';
+
+  // For display, we only show the FOR distribution since that's what matters for trust
+  return {
+    label: forDistribution.shortLabel,
+    color,
+  };
 };
 
 /**
@@ -123,7 +162,8 @@ export const AtomWithoutTrustTriple = (
 
 /**
  * Account display component for addresses with an atom and trust triple.
- * Shows full trust data with support/oppose market caps and a trust badge.
+ * Shows full trust data with support/oppose market caps, trust badge,
+ * and distribution indicator.
  */
 export const AtomWithTrustTriple = (
   params: PropsForAccountType<AccountType.AtomWithTrustTriple>,
@@ -138,6 +178,8 @@ export const AtomWithTrustTriple = (
     },
     positions,
     counter_positions,
+    positions_aggregate,
+    counter_positions_aggregate,
   } = triple;
 
   const supportMarketCap = vault?.market_cap || '0';
@@ -146,6 +188,21 @@ export const AtomWithTrustTriple = (
   const opposeMarketCapNative = stringToDecimal(opposeMarketCap, 18);
 
   const { badge, color } = getTrustInfo(supportMarketCapNative, opposeMarketCapNative);
+
+  // Perform distribution analysis
+  const forPositions = positionsToShares(positions);
+  const againstPositions = positionsToShares(counter_positions);
+
+  const distributionAnalysis = analyzeTrustDistribution(
+    supportMarketCapNative,
+    opposeMarketCapNative,
+    forPositions,
+    againstPositions,
+    positions_aggregate?.aggregate,
+    counter_positions_aggregate?.aggregate,
+  );
+
+  const distribution = getDistributionLabel(distributionAnalysis);
 
   return (
     <Section>
@@ -160,6 +217,9 @@ export const AtomWithTrustTriple = (
       )}
       <Row label="Trust">
         <Text color={color}><Bold>{badge}</Bold></Text>
+      </Row>
+      <Row label="Distribution">
+        <Text color={distribution.color}><Bold>{distribution.label}</Bold></Text>
       </Row>
       <Row label={`FOR (${positions.length})`}>
         <Value

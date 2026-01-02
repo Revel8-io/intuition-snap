@@ -1,5 +1,4 @@
 import {
-  Box,
   Row,
   Text,
   Heading,
@@ -10,6 +9,11 @@ import {
 import { OriginType, PropsForOriginType } from '../types';
 import { stringToDecimal } from '../util';
 import { chainConfig } from '../config';
+import {
+  analyzeTrustDistribution,
+  TrustDistributionAnalysis,
+  SnapColor,
+} from '../distribution';
 
 /**
  * Section header for the dApp origin.
@@ -27,11 +31,42 @@ const getTrustInfo = (
 ): { badge: string; color: 'success' | 'warning' | 'muted' } => {
   const total = supportMarketCap + opposeMarketCap;
   if (total === 0) return { badge: 'No Stakes', color: 'muted' };
-  
+
   const trustRatio = (supportMarketCap / total) * 100;
   if (trustRatio >= 70) return { badge: 'Trusted', color: 'success' };
   if (trustRatio >= 30) return { badge: 'Mixed', color: 'warning' };
   return { badge: 'Untrusted', color: 'warning' };
+};
+
+/**
+ * Converts position data to shares array for distribution analysis.
+ */
+const positionsToShares = (
+  positions: { shares: string }[],
+): { shares: number }[] => {
+  return positions.map((p) => ({
+    shares: parseFloat(p.shares) || 0,
+  }));
+};
+
+/**
+ * Returns distribution indicator label.
+ */
+const getDistributionLabel = (
+  analysis: TrustDistributionAnalysis,
+): { label: string; color: SnapColor } => {
+  const { forDistribution } = analysis;
+
+  // Ensure color is valid (fallback to 'default' if somehow invalid)
+  const validColors: SnapColor[] = ['success', 'warning', 'muted', 'default'];
+  const color: SnapColor = validColors.includes(forDistribution.snapColor as SnapColor)
+    ? forDistribution.snapColor
+    : 'default';
+
+  return {
+    label: forDistribution.shortLabel,
+    color,
+  };
 };
 
 /**
@@ -94,7 +129,8 @@ export const OriginAtomWithoutTrustTriple = (
 
 /**
  * Origin display when atom and trust triple both exist.
- * Shows full trust data with support/oppose market caps and trust badge.
+ * Shows full trust data with support/oppose market caps, trust badge,
+ * and distribution indicator.
  */
 export const OriginAtomWithTrustTriple = (
   params: PropsForOriginType<OriginType.AtomWithTrustTriple>,
@@ -114,6 +150,19 @@ export const OriginAtomWithTrustTriple = (
 
   const { badge, color } = getTrustInfo(supportMarketCapNative, opposeMarketCapNative);
 
+  // Perform distribution analysis
+  const forPositions = positionsToShares(triple.positions || []);
+  const againstPositions = positionsToShares(triple.counter_positions || []);
+
+  const distributionAnalysis = analyzeTrustDistribution(
+    supportMarketCapNative,
+    opposeMarketCapNative,
+    forPositions,
+    againstPositions,
+  );
+
+  const distribution = getDistributionLabel(distributionAnalysis);
+
   return (
     <Section>
       <OriginHeader />
@@ -122,6 +171,9 @@ export const OriginAtomWithTrustTriple = (
       </Row>
       <Row label="Trust">
         <Text color={color}><Bold>{badge}</Bold></Text>
+      </Row>
+      <Row label="Distribution">
+        <Text color={distribution.color}><Bold>{distribution.label}</Bold></Text>
       </Row>
       <Row label={`FOR (${supportCount})`}>
         <Value

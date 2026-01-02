@@ -55,15 +55,9 @@ export const UnifiedFooter = ({
          * Origin CTAs - dApp Actions (only for known dApps)
          * ───────────────────────────────────────────────────────────────── */}
 
-        {showOriginCtas && (
-          <>
-            {/* Vote on dApp trustworthiness */}
-            <OriginStakePrompt {...originProps} />
-
-            {/* View more about dApp */}
-            <OriginViewMore {...originProps} />
-          </>
-        )}
+        {/* Origin CTAs - only show for known dApps */}
+        {showOriginCtas && <OriginStakePrompt {...originProps} />}
+        {showOriginCtas && <OriginViewMore {...originProps} />}
       </Box>
     </Box>
   );

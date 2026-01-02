@@ -104,6 +104,7 @@ export type TripleWithPositions = {
     account_id: string;
     term_id: string;
     curve_id: string;
+    shares: string;
     account?: {
       id: string;
       label: string;
@@ -114,6 +115,7 @@ export type TripleWithPositions = {
     account_id: string;
     term_id: string;
     curve_id: string;
+    shares: string;
     account?: {
       id: string;
       label: string;
@@ -205,8 +207,8 @@ export type OriginTriple = {
       position_count: number;
     }[];
   };
-  positions: { id: string }[];
-  counter_positions: { id: string }[];
+  positions: { id: string; shares: string }[];
+  counter_positions: { id: string; shares: string }[];
 };
 
 // OriginType enum - mirrors AccountType pattern

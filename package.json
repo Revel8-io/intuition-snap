@@ -22,7 +22,9 @@
     "lint:eslint": "eslint . --cache --ext js,jsx,ts,tsx",
     "lint:fix": "yarn lint:eslint --fix && yarn lint:misc --write",
     "lint:misc": "prettier '**/*.json' '**/*.md' '!**/CHANGELOG.md' '**/*.yml' --ignore-path .gitignore",
-    "start": "yarn workspaces foreach --parallel --interlaced --verbose run start:testnet",
+    "start": "yarn workspaces foreach --parallel --interlaced --verbose run start:mainnet",
+    "start:mainnet": "yarn workspaces foreach --parallel --interlaced --verbose run start:mainnet",
+    "start:testnet": "yarn workspaces foreach --parallel --interlaced --verbose run start:testnet",
     "test": "yarn workspace snap run test"
   },
   "dependencies": {
