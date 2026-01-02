@@ -28,9 +28,9 @@ const VENDOR_NAME = 'Revel8 Explorer';
 
 const EXPLORER_ORIGINS: Record<number, string> = {
   // Intuition Mainnet
-  1155: 'https:/testnet.explorer.revel8.io',
+  1155: 'https://explorer.revel8.io',
   // Intuition Testnet
-  13579: 'https://explorer.revel8.io',
+  13579: 'https://testnet.explorer.revel8.io',
 };
 
 // Get the base URL for the current chain
