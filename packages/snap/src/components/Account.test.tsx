@@ -103,11 +103,11 @@ const mockTriple: TripleWithPositions = {
     aggregate: { count: 2, sum: { shares: 750 }, avg: { shares: 375 } },
   },
   positions: [
-    { id: 'pos1', account_id: '0xstaker1', term_id: '0xtriple123', curve_id: '1' },
-    { id: 'pos2', account_id: '0xstaker2', term_id: '0xtriple123', curve_id: '1' },
+    { id: 'pos1', account_id: '0xstaker1', term_id: '0xtriple123', curve_id: '1', shares: '1000000000000000000' },
+    { id: 'pos2', account_id: '0xstaker2', term_id: '0xtriple123', curve_id: '1', shares: '500000000000000000' },
   ],
   counter_positions: [
-    { id: 'cpos1', account_id: '0xopposer1', term_id: '0xcounter123', curve_id: '1' },
+    { id: 'cpos1', account_id: '0xopposer1', term_id: '0xcounter123', curve_id: '1', shares: '250000000000000000' },
   ],
 };
 

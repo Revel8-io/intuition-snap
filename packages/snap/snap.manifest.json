@@ -7,7 +7,7 @@
     "url": "https://github.com/revel8-io/intuition-snap"
   },
   "source": {
-    "shasum": "rfY8tEfbYN2/26alTUUwFfsJrFWhW4IGtmHMOBtd++U=",
+    "shasum": "/V0uwC4BlF6E4dw7OUKrcypcf0OheqWjsC4QSmDuG1M=",
     "location": {
       "npm": {
         "filePath": "dist/bundle.js",
@@ -26,7 +26,8 @@
     "endowment:rpc": {
       "dapps": true,
       "snaps": false
-    }
+    },
+    "snap_manageState": {}
   },
   "manifestVersion": "0.1"
 }

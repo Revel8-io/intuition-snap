@@ -14,6 +14,7 @@ import {
   TrustDistributionAnalysis,
   SnapColor,
 } from '../distribution';
+import { TrustedCircleSection } from './TrustedCircle';
 
 /**
  * Section header for the dApp origin.
@@ -135,7 +136,7 @@ export const OriginAtomWithoutTrustTriple = (
 export const OriginAtomWithTrustTriple = (
   params: PropsForOriginType<OriginType.AtomWithTrustTriple>,
 ) => {
-  const { hostname, origin, triple } = params;
+  const { hostname, origin, triple, trustedCircle } = params;
 
   const supportVault = triple.term?.vaults?.[0];
   const counterVault = triple.counter_term?.vaults?.[0];
@@ -187,6 +188,12 @@ export const OriginAtomWithTrustTriple = (
           extra=""
         />
       </Row>
+      {trustedCircle ? (
+        <TrustedCircleSection
+          forContacts={trustedCircle.forContacts}
+          againstContacts={trustedCircle.againstContacts}
+        />
+      ) : null}
     </Section>
   );
 };

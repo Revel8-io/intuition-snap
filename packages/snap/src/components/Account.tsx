@@ -15,6 +15,7 @@ import {
   TrustDistributionAnalysis,
   SnapColor,
 } from '../distribution';
+import { TrustedCircleSection } from './TrustedCircle';
 
 /**
  * Section header for the destination address.
@@ -168,7 +169,7 @@ export const AtomWithoutTrustTriple = (
 export const AtomWithTrustTriple = (
   params: PropsForAccountType<AccountType.AtomWithTrustTriple>,
 ) => {
-  const { address, triple, alias, isContract, alternateTrustData } = params;
+  const { address, triple, alias, isContract, alternateTrustData, trustedCircle } = params;
   const {
     counter_term: {
       vaults: [counterVault],
@@ -237,6 +238,12 @@ export const AtomWithTrustTriple = (
         alternateTrustData={alternateTrustData}
         isContract={isContract}
       />
+      {trustedCircle ? (
+        <TrustedCircleSection
+          forContacts={trustedCircle.forContacts}
+          againstContacts={trustedCircle.againstContacts}
+        />
+      ) : null}
     </Section>
   );
 };

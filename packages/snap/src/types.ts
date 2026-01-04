@@ -1,4 +1,5 @@
 import { ChainId } from '@metamask/snaps-sdk';
+import type { TrustedCirclePositions } from './trusted-circle/types';
 
 export type Account = {
   id: string;
@@ -145,6 +146,8 @@ type BaseAccountProps = {
   classification: AddressClassification;
   /** Info about trust data in alternate atom format (CAIP vs 0x) */
   alternateTrustData: AlternateTrustData;
+  /** Trusted contacts who have positions on this address's trust triple */
+  trustedCircle?: TrustedCirclePositions;
 };
 
 // Discriminated union types for proper AccountProps typing
@@ -207,8 +210,8 @@ export type OriginTriple = {
       position_count: number;
     }[];
   };
-  positions: { id: string; shares: string }[];
-  counter_positions: { id: string; shares: string }[];
+  positions: { id: string; shares: string; account_id: string }[];
+  counter_positions: { id: string; shares: string; account_id: string }[];
 };
 
 // OriginType enum - mirrors AccountType pattern
@@ -225,6 +228,8 @@ type BaseOriginProps = {
   originUrl: string | undefined;
   /** Extracted hostname for display */
   hostname: string | undefined;
+  /** Trusted contacts who have positions on this origin's trust triple */
+  trustedCircle?: TrustedCirclePositions;
 };
 
 // Discriminated union types for proper OriginProps typing

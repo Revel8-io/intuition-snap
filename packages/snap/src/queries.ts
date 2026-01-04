@@ -226,11 +226,41 @@ query OriginTrustTriple($subjectId: String!, $predicateId: String!, $objectId: S
     positions(order_by: { shares: desc }, limit: 10) {
       id
       shares
+      account_id
     }
 
     counter_positions(order_by: { shares: desc }, limit: 10) {
       id
       shares
+      account_id
+    }
+  }
+}
+`;
+
+/**
+ * Query to get the user's trusted circle.
+ * Returns accounts that the user has staked FOR on trust triples.
+ * Minimal data for bandwidth efficiency - only subject_id and label.
+ */
+export const getUserTrustedCircleQuery = `
+query UserTrustedCircle($userAddress: String!, $predicateId: String!, $objectId: String!) {
+  positions(
+    where: {
+      account_id: { _ilike: $userAddress },
+      triple: {
+        predicate_id: { _eq: $predicateId },
+        object_id: { _eq: $objectId }
+      }
+    },
+    order_by: { shares: desc },
+    limit: 200
+  ) {
+    triple {
+      subject_id
+      subject {
+        label
+      }
     }
   }
 }

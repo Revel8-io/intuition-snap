@@ -15,6 +15,11 @@ import {
   OriginProps,
 } from './types';
 import { UnifiedFooter } from './components';
+import {
+  getTrustedCircle,
+  getTrustedContactsWithPositions,
+  TrustedCirclePositions,
+} from './trusted-circle';
 
 /** Combined context for both account and origin data */
 type TransactionContext = {
@@ -59,14 +64,53 @@ export const onTransaction: OnTransactionHandler = async ({
   }
 
   // Execute queries in parallel for performance
-  // Fetch both account (destination) and origin (dApp) data simultaneously
-  const [accountData, originData] = await Promise.all([
+  // Fetch account data, origin data, and trusted circle simultaneously
+  const [accountData, originData, trustedCircle] = await Promise.all([
     getAccountData(transaction, chainId),
     getOriginData(transactionOrigin),
+    userAddress ? getTrustedCircle(userAddress) : Promise.resolve([]),
   ]);
 
   const accountType = getAccountType(accountData);
   const originType = getOriginType(originData, transactionOrigin);
+
+  // Calculate trusted circle positions for account trust triple
+  let accountTrustedCircle: TrustedCirclePositions | undefined;
+  if (trustedCircle.length > 0 && accountData.triple) {
+    const positions = accountData.triple.positions || [];
+    const counterPositions = accountData.triple.counter_positions || [];
+    accountTrustedCircle = getTrustedContactsWithPositions(
+      trustedCircle,
+      positions,
+      counterPositions,
+    );
+    // Only include if there are contacts with positions
+    if (
+      accountTrustedCircle.forContacts.length === 0 &&
+      accountTrustedCircle.againstContacts.length === 0
+    ) {
+      accountTrustedCircle = undefined;
+    }
+  }
+
+  // Calculate trusted circle positions for origin trust triple
+  let originTrustedCircle: TrustedCirclePositions | undefined;
+  if (trustedCircle.length > 0 && originData.triple) {
+    const positions = originData.triple.positions || [];
+    const counterPositions = originData.triple.counter_positions || [];
+    originTrustedCircle = getTrustedContactsWithPositions(
+      trustedCircle,
+      positions,
+      counterPositions,
+    );
+    // Only include if there are contacts with positions
+    if (
+      originTrustedCircle.forContacts.length === 0 &&
+      originTrustedCircle.againstContacts.length === 0
+    ) {
+      originTrustedCircle = undefined;
+    }
+  }
 
   // Create properly typed props based on account type
   const accountProps: AccountProps = {
@@ -76,6 +120,7 @@ export const onTransaction: OnTransactionHandler = async ({
     userAddress,
     chainId,
     transactionOrigin,
+    trustedCircle: accountTrustedCircle,
   } as AccountProps; // Type assertion needed due to the discriminated union
 
   // Create origin props
@@ -83,6 +128,7 @@ export const onTransaction: OnTransactionHandler = async ({
     ...originData,
     originType,
     originUrl: transactionOrigin,
+    trustedCircle: originTrustedCircle,
   } as OriginProps; // Type assertion needed due to the discriminated union
 
   // Render both account and origin insights (information sections only)
