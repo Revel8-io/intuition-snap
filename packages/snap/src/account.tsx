@@ -30,12 +30,14 @@ export type GetAccountDataResult = {
 /**
  * Classifies an address as EOA, contract, or unknown.
  * Tracks certainty level so we can handle uncertain cases appropriately.
+ *
+ * Uses the configured Intuition chain's RPC to check for bytecode.
+ * The transaction's chain is irrelevant - we always check on our configured chain
+ * because that's where trust data lives.
  */
 const classifyAddress = async (
   destinationAddress: string,
   transactionData: string,
-  chainId: ChainId,
-  configChainId: number,
 ): Promise<AddressClassification> => {
   // If transaction has data, it's definitely a contract interaction
   if (transactionData !== '0x') {
@@ -43,26 +45,25 @@ const classifyAddress = async (
   }
 
   // Transaction data is empty, but could still be a contract receiving tokens
-  // Need to check eth_getCode
+  // Check eth_getCode on our configured Intuition chain via direct RPC call
   try {
-    // Switch chain if needed (only if different)
-    const txChainId = chainId.split(':')[1];
-    if (txChainId !== configChainId.toString()) {
-      try {
-        await ethereum.request({
-          method: 'wallet_switchEthereumChain',
-          params: [{ chainId: chainId }],
-        });
-      } catch (switchErr) {
-        return { type: 'unknown', certainty: 'uncertain', reason: 'chain_switch_failed' };
-      }
+    const response = await fetch(chainConfig.rpcUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        jsonrpc: '2.0',
+        method: 'eth_getCode',
+        params: [destinationAddress, 'latest'],
+        id: 1,
+      }),
+    });
+
+    if (!response.ok) {
+      return { type: 'unknown', certainty: 'uncertain', reason: 'eth_getCode_failed' };
     }
 
-    // Get code to determine if it's a contract
-    const codeResponse = await ethereum.request({
-      method: 'eth_getCode',
-      params: [destinationAddress, 'latest'],
-    });
+    const data = await response.json();
+    const codeResponse = data.result;
 
     if (codeResponse === '0x' || codeResponse === null) {
       return { type: 'eoa', certainty: 'definite' };
@@ -184,15 +185,13 @@ export const getAccountData = async (
   chainId: ChainId,
 ): Promise<GetAccountDataResult> => {
   const { to: destinationAddress, data: transactionData } = transaction;
-  const { chainId: configChainId } = chainConfig;
   const caipAddress = addressToCaip10(destinationAddress, chainId);
 
   // Step 1: Classify the address with certainty tracking
+  // Uses the configured Intuition chain's RPC (transaction chain is irrelevant)
   const classification = await classifyAddress(
     destinationAddress,
     transactionData,
-    chainId,
-    configChainId,
   );
 
   // Derive isContract from classification (for backwards compatibility)

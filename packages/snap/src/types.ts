@@ -18,9 +18,7 @@ export type Account = {
  * Reasons why address classification may be uncertain.
  * Used to track why we couldn't definitively determine if address is EOA or contract.
  */
-export type ClassificationFailureReason =
-  | 'eth_getCode_failed'
-  | 'chain_switch_failed';
+export type ClassificationFailureReason = 'eth_getCode_failed';
 
 /**
  * Classification result indicating whether an address is an EOA or contract.
