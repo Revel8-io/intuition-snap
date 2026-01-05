@@ -89,9 +89,8 @@ export const getOriginData = async (
 
     // Found atom via full URL, now query for trust triple
     return await fetchTrustTriple(originAtom, hostname);
-  } catch (error) {
-    // Log error but don't fail the transaction insight
-    console.error('Error fetching origin data:', error);
+  } catch {
+    // Don't fail the transaction insight on origin fetch errors
     return {
       origin: null,
       triple: null,
@@ -123,9 +122,8 @@ const fetchTrustTriple = async (
       triple: triple || null,
       hostname,
     };
-  } catch (error) {
+  } catch {
     // If trust triple query fails, still return the atom
-    console.error('Error fetching origin trust triple:', error);
     return {
       origin: originAtom,
       triple: null,

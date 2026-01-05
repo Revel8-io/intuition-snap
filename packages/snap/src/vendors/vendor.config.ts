@@ -1,7 +1,7 @@
 /**
  * VENDOR CONFIGURATION - Reference Implementation
  *
- * This is a complete working example for Revel8 Explorer.
+ * This is a complete working example for Hive Mind Explorer.
  * To customize for your own explorer:
  *
  *   1. Copy this file:
@@ -24,13 +24,13 @@ import { addressToCaip10 } from '../util';
  * CONFIGURATION - Customize these values for your explorer
  * ═══════════════════════════════════════════════════════════════════════════ */
 
-const VENDOR_NAME = 'Revel8 Explorer';
+const VENDOR_NAME = 'Hive Mind Explorer';
 
 const EXPLORER_ORIGINS: Record<number, string> = {
   // Intuition Mainnet
-  1155: 'https://explorer.revel8.io',
+  1155: 'https://explorer.hivemindhq.io',
   // Intuition Testnet
-  13579: 'https://testnet.explorer.revel8.io',
+  13579: 'https://testnet.explorer.hivemindhq.io',
 };
 
 // Get the base URL for the current chain

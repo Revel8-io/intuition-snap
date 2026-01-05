@@ -44,7 +44,7 @@ npm:@hivemindhq/snap
 
 **Links:**
 - [npm Package](https://www.npmjs.com/package/@hivemindhq/snap)
-- [GitHub Repository](https://github.com/hivemindhq-io/intuition-snap)
+- [GitHub Repository](https://github.com/hivemindhq-io/snap)
 - [User Knowledge Base](docs/USER-KNOWLEDGE-BASE.md)
 
 ### 🔍 Hive Mind Explorer
@@ -141,7 +141,7 @@ Example: `0x1234...` → "Uniswap Router"
 
 ```bash
 # Clone the repository
-git clone https://github.com/hivemindhq-io/intuition-snap.git
+git clone https://github.com/hivemindhq-io/snap.git
 cd intuition-snap
 
 # Install dependencies
@@ -230,7 +230,7 @@ We welcome contributions! See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 
 - **Website:** https://hivemindhq.io
 - **Snap npm:** https://www.npmjs.com/package/@hivemindhq/snap
-- **GitHub:** https://github.com/hivemindhq-io/intuition-snap
+- **GitHub:** https://github.com/hivemindhq-io/snap
 - **Intuition Protocol:** https://intuition.systems
 
 ---

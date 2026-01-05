@@ -425,8 +425,8 @@ A: Yes. Anyone can create trust signals for any address, including their own.
 - **Hive Mind Website:** https://hivemindhq.io
 - **Intuition Protocol:** https://intuition.systems
 - **Hive Mind Explorer:** https://hivemindhq.io/explorer (for detailed trust data)
-- **GitHub Repository:** https://github.com/hivemindhq-io/intuition-snap
-- **Report Issues:** https://github.com/hivemindhq-io/intuition-snap/issues
+- **GitHub Repository:** https://github.com/hivemindhq-io/snap
+- **Report Issues:** https://github.com/hivemindhq-io/snap/issues
 
 **For Technical Issues:**
 - Check this knowledge base first

@@ -59,9 +59,8 @@ export async function getTrustedCircleCache(
     }
 
     return cached.contacts;
-  } catch (error) {
+  } catch {
     // If state retrieval fails, return null to proceed without cache
-    console.error('Failed to get trusted circle cache:', error);
     return null;
   }
 }
@@ -102,9 +101,8 @@ export async function setTrustedCircleCache(
         newState,
       },
     });
-  } catch (error) {
-    // Cache write failure is non-critical, log and continue
-    console.error('Failed to set trusted circle cache:', error);
+  } catch {
+    // Cache write failure is non-critical, continue silently
   }
 }
 
@@ -148,8 +146,8 @@ export async function clearTrustedCircleCache(
         newState: rest,
       },
     });
-  } catch (error) {
-    console.error('Failed to clear trusted circle cache:', error);
+  } catch {
+    // Clear cache failure is non-critical, continue silently
   }
 }
 

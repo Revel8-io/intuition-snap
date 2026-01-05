@@ -1,15 +1,15 @@
 {
   "name": "root",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "private": false,
   "description": "Real-time trust and sentiment insights for every transaction. Powered by Intuition",
-  "homepage": "https://github.com/hivemindhq-io/intuition-snap#readme",
+  "homepage": "https://github.com/hivemindhq-io/snap#readme",
   "bugs": {
-    "url": "https://github.com/hivemindhq-io/intuition-snap/issues"
+    "url": "https://github.com/hivemindhq-io/snap/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/hivemindhq-io/intuition-snap.git"
+    "url": "git+https://github.com/hivemindhq-io/snap.git"
   },
   "license": "Apache-2.0",
   "author": "",
@@ -25,7 +25,7 @@
     "start": "yarn workspaces foreach --parallel --interlaced --verbose run start:mainnet",
     "start:mainnet": "yarn workspaces foreach --parallel --interlaced --verbose run start:mainnet",
     "start:testnet": "yarn workspaces foreach --parallel --interlaced --verbose run start:testnet",
-    "test": "yarn workspace snap run test"
+    "test": "yarn workspace @hivemindhq/snap run test"
   },
   "dependencies": {
     "viem": "^2.20.1"

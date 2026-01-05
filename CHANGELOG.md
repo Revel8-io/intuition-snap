@@ -5,12 +5,47 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.0] - 2026-01-05
+
+### Added
+
+#### dApp Origin Insights
+- **Origin Trust Display**: Show trust data for the dApp origin (transaction source) in addition to the destination address
+- **Origin Trust Triple**: Display support/oppose positions on `[dApp URL] has tag trustworthy` assertions
+- **Origin Footer Actions**: CTAs to stake on dApp trust triples or view more details
+
+#### Trusted Circle Feature
+- **Trusted Circle Detection**: Cross-reference your trusted contacts with positions on the current triple
+- **Social Proof Display**: See which of your trusted contacts have staked FOR or AGAINST the address/dApp
+- **Persistent Cache**: Trusted circle data cached for 1 hour using `snap_manageState` for optimal performance
+
+#### Trust Distribution Analysis
+- **Distribution Analysis**: Analyze stake distribution health (concentrated vs. distributed)
+- **Whale Detection**: Identify when a single staker dominates the vault
+- **Distribution Indicators**: Visual indicators showing distribution health (healthy, concentrated, whale-dominated)
+
+### Changed
+- **Branding**: Updated brand name from "Revel8" to "Hive Mind" throughout
+- **Layout Improvements**: Enhanced UI layout for better readability
+- **Currency Symbol**: Correct testnet currency symbol (tTRUST)
+
+### Fixed
+- **Chain Switch Issue**: Fixed bug where chain switching failed in certain edge cases
+- **Mainnet vs Testnet Detection**: Improved detection of which network configuration to use
+
+### Technical
+- **New Components**: Added `Origin.tsx`, `TrustedCircle.tsx`, `UnifiedFooter.tsx`
+- **New Modules**: Added `trusted-circle/` module with cache, service, and type definitions
+- **Distribution Module**: Added `distribution.ts` for stake distribution analysis
+- **Extended Types**: Added `OriginType`, `OriginProps`, `TrustedContact`, `TrustedCirclePositions`
+
+### Permissions
+- `snap_manageState` - Persist trusted circle cache across sessions (new in v1.1.0)
+
 ## [1.0.1] - 2025-12-07
 
-### Modified
-
-### Config
-- **Atoms Used**: changed 'has nickname' atom to 'has alias' atom, and 'has characteristic' to 'has tag'
+### Changed
+- **Atoms Used**: Changed 'has nickname' atom to 'has alias' atom, and 'has characteristic' to 'has tag'
 
 ## [1.0.0] - 2025-12-03
 
@@ -91,5 +126,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
-[1.0.0]: https://github.com/hivemindhq-io/intuition-snap/releases/tag/v1.0.0
-[1.0.1]: https://github.com/hivemindhq-io/intuition-snap/releases/tag/v1.0.1
+[1.0.0]: https://github.com/hivemindhq-io/snap/releases/tag/v1.0.0
+[1.0.1]: https://github.com/hivemindhq-io/snap/releases/tag/v1.0.1
+[1.1.0]: https://github.com/hivemindhq-io/snap/releases/tag/v1.1.0

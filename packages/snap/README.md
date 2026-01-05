@@ -10,8 +10,10 @@ When you're about to send a transaction to an address, the Hive Mind Snap shows 
 - **Aliases** — Community-assigned labels for the address
 - **Stake Amounts** — The economic weight behind each trust signal
 - **Your Position** — Whether you've already staked on this address
+- **dApp Origin Trust** — Trust data for the dApp you're interacting with
+- **Trusted Circle** — See which of your trusted contacts have staked on this address
 
-This helps you make informed decisions before interacting with unknown addresses.
+This helps you make informed decisions before interacting with unknown addresses or dApps.
 
 ## Features
 
@@ -19,9 +21,13 @@ This helps you make informed decisions before interacting with unknown addresses
 |---------|-------------|
 | **Transaction Insights** | `onTransaction` hook displays trust data before you sign |
 | **Trust Triple Display** | Shows support/oppose positions on `[address] has tag trustworthy` |
+| **dApp Origin Trust** | Shows trust data for the dApp origin (transaction source) |
+| **Trusted Circle** | Highlights when your trusted contacts have staked on an address |
+| **Distribution Analysis** | Analyzes stake distribution health (concentrated vs. distributed) |
 | **Alias Display** | Shows community-assigned aliases for addresses |
 | **Multi-chain Support** | Works on Intuition Testnet (chain ID: 13579) and Mainnet (chain ID: 1155) |
 | **Interactive UI** | Links to create trust signals or view more data on the web |
+| **Persistent Cache** | Trusted circle cached for 1 hour for optimal performance |
 
 ## Installation
 
@@ -43,9 +49,10 @@ This Snap requires the following permissions:
 | Permission | Purpose |
 |------------|---------|
 | `endowment:transaction-insight` | Display insights before transaction signing |
-| `endowment:ethereum-provider` | Access the connected wallet address |
+| `endowment:page-home` | Custom home page in MetaMask |
 | `endowment:network-access` | Query the Intuition GraphQL API |
 | `endowment:rpc` | Communicate with dapps |
+| `snap_manageState` | Cache trusted circle data for performance |
 
 ## Development
 
@@ -59,7 +66,7 @@ This Snap requires the following permissions:
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/hivemindhq-io/intuition-snap.git
+   git clone https://github.com/hivemindhq-io/snap.git
    cd intuition-snap
    ```
 
@@ -106,14 +113,24 @@ src/
 ├── index.tsx           # Entry point, exports handlers
 ├── onTransaction.tsx   # Transaction insight handler
 ├── onUserInput.tsx     # User interaction handler
-├── account.tsx         # Account data fetching and rendering
+├── account.tsx         # Account (destination) data fetching
+├── origin.tsx          # dApp origin data fetching
+├── distribution.ts     # Stake distribution analysis
 ├── queries.ts          # GraphQL queries for Intuition API
 ├── config.ts           # Chain configuration (testnet/mainnet)
 ├── types.ts            # TypeScript type definitions
 ├── util.ts             # Utility functions
 ├── components/         # JSX UI components
-│   ├── Account.tsx     # Main account display component
-│   └── Footer/         # Footer links and actions
+│   ├── Account.tsx     # Destination address display
+│   ├── Origin.tsx      # dApp origin display
+│   ├── TrustedCircle.tsx  # Trusted contacts display
+│   ├── UnifiedFooter.tsx  # Combined footer CTAs
+│   ├── Footer/         # Account footer actions
+│   └── OriginFooter/   # Origin footer actions
+├── trusted-circle/     # Trusted circle module
+│   ├── service.ts      # API & business logic
+│   ├── cache.ts        # Persistent cache
+│   └── types.ts        # Type definitions
 ├── images/             # Snap icon assets
 └── vendors/            # Vendor configuration (git-ignored)
 ```
@@ -180,4 +197,4 @@ This project is dual-licensed under [Apache 2.0](../../LICENSE.APACHE2) and [MIT
 
 - [Intuition Documentation](https://docs.intuition.systems)
 - [MetaMask Snaps Documentation](https://docs.metamask.io/snaps/)
-- [Repository](https://github.com/hivemindhq-io/intuition-snap)
+- [Repository](https://github.com/hivemindhq-io/snap)
