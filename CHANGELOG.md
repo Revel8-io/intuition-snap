@@ -29,13 +29,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Alternate Format Detection**: Detect and notify users when trust data exists in alternate address formats (CAIP vs 0x)
 
 #### User Interface
-- **Home Page**: Custom home page in MetaMask with welcome message and links to Revel8 and Intuition
+- **Home Page**: Custom home page in MetaMask with welcome message and links to Hive Mind and Intuition
 - **Transaction Insight UI**: Rich UI components displaying trust data before transaction confirmation
 - **Footer Actions**: Interactive footer with links to:
   - Create trust triples for addresses without trust data
   - Create aliases for addresses
   - Stake on existing trust triples
-  - View more details on the Revel8 Explorer
+  - View more details on the Hive Mind Explorer
 
 #### Multi-Chain Support
 - **Intuition Testnet**: Full support for Intuition Testnet (chain ID: 13579)
@@ -91,5 +91,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
-[1.0.0]: https://github.com/revel8-io/intuition-snap/releases/tag/v1.0.0
-[1.0.1]: https://github.com/revel8-io/intuition-snap/releases/tag/v1.0.1
+[1.0.0]: https://github.com/hivemindhq-io/intuition-snap/releases/tag/v1.0.0
+[1.0.1]: https://github.com/hivemindhq-io/intuition-snap/releases/tag/v1.0.1

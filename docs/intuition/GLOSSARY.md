@@ -1,6 +1,6 @@
-# Revel8 Explorer Glossary
+# Hive Mind Explorer Glossary
 
-> A comprehensive glossary of terms used in the Revel8 Explorer and Intuition Protocol ecosystem.
+> A comprehensive glossary of terms used in the Hive Mind Explorer and Intuition Protocol ecosystem.
 
 **Last Updated:** November 29, 2025
 
@@ -248,7 +248,7 @@ A **popular IPFS pinning service** used by Intuition for reliable IPFS storage.
 ---
 
 ### GraphQL
-A **query language for APIs** that allows clients to request exactly the data they need. Revel8 uses GraphQL to fetch atom, triple, and position data.
+A **query language for APIs** that allows clients to request exactly the data they need. Hive Mind uses GraphQL to fetch atom, triple, and position data.
 
 ---
 
@@ -336,7 +336,7 @@ The **semantic web standard** that Intuition's triple structure follows. Subject
 ---
 
 ### Fragment (GraphQL)
-A **reusable piece** of a GraphQL query. Revel8 uses fragments for consistent field selection across queries.
+A **reusable piece** of a GraphQL query. Hive Mind uses fragments for consistent field selection across queries.
 
 ---
 
@@ -351,7 +351,7 @@ A GraphQL operation that **modifies data**. Example: pinning data to IPFS.
 ---
 
 ### Result<T, E>
-A **type pattern** used in Revel8 services for explicit error handling:
+A **type pattern** used in Hive Mind services for explicit error handling:
 ```typescript
 type Result<T> = { ok: true; value: T } | { ok: false; error: E }
 ```
@@ -368,7 +368,7 @@ A **runtime validation schema** used to ensure API responses match expected shap
 ### Modal
 A **dialog overlay** that appears over the main content. Used for forms, confirmations, and focused tasks.
 
-**Modal Types in Revel8:**
+**Modal Types in Hive Mind:**
 - **Destination**: Can be opened via URL
 - **Transient**: Standard modal without URL state
 - **Overlay**: Can stack on other modals
@@ -401,7 +401,7 @@ A **component collection** built on Radix UI primitives. Provides accessible, cu
 ---
 
 ### TanStack Router
-A **type-safe routing library** for React. Revel8 uses file-based routing with TanStack Router.
+A **type-safe routing library** for React. Hive Mind uses file-based routing with TanStack Router.
 
 ---
 
@@ -411,7 +411,7 @@ A **data fetching library** that handles caching, synchronization, and server st
 ---
 
 ### Zustand
-A **lightweight state management** library. Revel8 uses Zustand for client-side state (theme, currency, dialogs).
+A **lightweight state management** library. Hive Mind uses Zustand for client-side state (theme, currency, dialogs).
 
 ---
 

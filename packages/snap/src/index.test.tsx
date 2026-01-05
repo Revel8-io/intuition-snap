@@ -1,5 +1,5 @@
 /**
- * Main entry point tests for the Revel8 Snap.
+ * Main entry point tests for the Hive Mind Snap.
  *
  * This file contains tests for the snap's exported handlers:
  * - onHomePage: Renders the snap's home page
@@ -28,18 +28,18 @@ describe('Snap Handlers', () => {
 
       // Check for welcome text
       const rendered = JSON.stringify(ui.content);
-      expect(rendered).toContain('Revel8');
+      expect(rendered).toContain('Hive Mind');
       expect(rendered).toContain('trust');
     });
 
-    it('should include a link to Revel8 and Intuition', async () => {
+    it('should include a link to Hive Mind and Intuition', async () => {
       const snap = await installSnap();
 
       const response = await snap.onHomePage();
       const ui = response.getInterface();
       const rendered = JSON.stringify(ui.content);
 
-      expect(rendered).toContain('revel8.io');
+      expect(rendered).toContain('hivemindhq.io');
       expect(rendered).toContain('intuition.systems');
       expect(rendered).toContain('Link');
     });

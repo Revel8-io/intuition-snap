@@ -2,8 +2,7 @@ import styled, { useTheme } from 'styled-components';
 
 import { getThemePreference } from '../utils';
 import { HeaderButtons } from './Buttons';
-import { SnapLogo } from './SnapLogo';
-import Revel8Logo from '../assets/logo.svg';
+import HiveMindLogo from '../assets/logo.svg';
 import { Toggle } from './Toggle';
 
 const HeaderWrapper = styled.header`
@@ -47,8 +46,8 @@ export const Header = ({
   return (
     <HeaderWrapper>
       <LogoWrapper>
-        <img src={Revel8Logo} height={36} width={36} alt="Revel8 Logo" color={theme.colors.icon?.default} />
-        <Title>Revel8 Snap</Title>
+        <img src={HiveMindLogo} height={36} width={36} alt="Hive Mind Logo" color={theme.colors.icon?.default} />
+        <Title>Hive Mind Snap</Title>
       </LogoWrapper>
       <RightContainer>
         <Toggle

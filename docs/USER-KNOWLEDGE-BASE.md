@@ -1,14 +1,14 @@
-# Revel8 Snap - User Knowledge Base
+# Hive Mind Snap - User Knowledge Base
 
 > **Last Updated:** January 2, 2025
 > **Snap Version:** 1.0.0
-> **For:** End users of the Revel8 MetaMask Snap
+> **For:** End users of the Hive Mind MetaMask Snap
 
 ---
 
 ## Table of Contents
 
-- [Revel8 Snap - User Knowledge Base](#revel8-snap---user-knowledge-base)
+- [Hive Mind Snap - User Knowledge Base](#hive-mind-snap---user-knowledge-base)
   - [Table of Contents](#table-of-contents)
   - [Getting Started](#getting-started)
     - [Installing the Snap](#installing-the-snap)
@@ -43,7 +43,7 @@
 
 ### Installing the Snap
 
-The Revel8 Snap can be installed directly from MetaMask once it's available in the Snaps Directory.
+The Hive Mind Snap can be installed directly from MetaMask once it's available in the Snaps Directory.
 
 **Installation Steps:**
 
@@ -51,7 +51,7 @@ The Revel8 Snap can be installed directly from MetaMask once it's available in t
 2. Click the three-dot menu (⋮) in the top right
 3. Navigate to **Settings** → **Snaps**
 4. Click **"Add Snap"** or **"Browse Snaps"**
-5. Search for **"Revel8"** or enter the Snap ID: `npm:revel8-snap`
+5. Search for **"Hive Mind"** or enter the Snap ID: `npm:@hivemindhq/snap`
 6. Click **"Add to MetaMask"**
 7. Review and approve the permissions requested by the Snap
 
@@ -59,29 +59,29 @@ The Revel8 Snap can be installed directly from MetaMask once it's available in t
 
 If you have the Snap ID, you can install it directly by entering:
 ```
-npm:revel8-snap
+npm:@hivemindhq/snap
 ```
 
 ### First Time Setup
 
-After installation, the Revel8 Snap is ready to use immediately. No additional configuration is required.
+After installation, the Hive Mind Snap is ready to use immediately. No additional configuration is required.
 
 **What Happens Next:**
 
 - The Snap will automatically activate when you initiate transactions
 - You'll see trust insights appear before confirming transactions
-- You can access the Snap's home page from MetaMask Settings → Snaps → Revel8
+- You can access the Snap's home page from MetaMask Settings → Snaps → Hive Mind
 
 ### Permissions Explained
 
-The Revel8 Snap requests the following permissions:
+The Hive Mind Snap requests the following permissions:
 
 | Permission | Purpose | Why It's Needed |
 |------------|---------|-----------------|
 | **Transaction Insights** | Display trust data before you sign transactions | Shows trust signals at the critical moment when you're deciding whether to proceed |
 | **Network Access** | Query the Intuition knowledge graph | Fetches real-time trust data from the decentralized knowledge graph |
 | **RPC Communication** | Communicate with dapps | Allows the Snap to work seamlessly with web3 applications |
-| **Home Page** | Display custom Snap interface | Provides a welcome page and links to Revel8 resources |
+| **Home Page** | Display custom Snap interface | Provides a welcome page and links to Hive Mind resources |
 
 **Privacy Note:** The Snap does not collect or store your personal data. It only queries public trust data from the Intuition knowledge graph.
 
@@ -91,21 +91,21 @@ The Revel8 Snap requests the following permissions:
 
 ### How It Works
 
-The Revel8 Snap works automatically—no manual activation needed.
+The Hive Mind Snap works automatically—no manual activation needed.
 
 **When You Send a Transaction:**
 
 1. You initiate a transaction to any Ethereum address
-2. Before you confirm, MetaMask shows a **Revel8 insight panel**
+2. Before you confirm, MetaMask shows a **Hive Mind insight panel**
 3. The panel displays trust data for the destination address
 4. You review the information and decide whether to proceed
 5. Confirm or cancel the transaction as usual
 
-**The insight appears automatically**—you don't need to do anything special. Just use MetaMask normally, and Revel8 will show trust data when available.
+**The insight appears automatically**—you don't need to do anything special. Just use MetaMask normally, and Hive Mind will show trust data when available.
 
 ### Understanding Transaction Insights
 
-When you're about to send a transaction, the Revel8 Snap displays an insight panel with:
+When you're about to send a transaction, the Hive Mind Snap displays an insight panel with:
 
 **Trust Signals:**
 - **Support positions**: How many people have staked that the address is trustworthy
@@ -166,26 +166,26 @@ Aliases are community-assigned labels for addresses:
 
 ### Using Interactive Features
 
-The Revel8 Snap includes interactive footer links:
+The Hive Mind Snap includes interactive footer links:
 
 **Create Trust Triple:**
 - Appears when an address has no trust data
 - Click to create the first trust signal for this address
-- Opens the Revel8 Explorer to create a trust triple
+- Opens the Hive Mind Explorer to create a trust triple
 
 **Stake on Trust Triple:**
 - Appears when trust data exists but you haven't staked yet
 - Click to add your own trust signal (support or oppose)
-- Opens the Revel8 Explorer to stake
+- Opens the Hive Mind Explorer to stake
 
 **Create Alias:**
 - Appears when an address has no alias
 - Click to assign an alias to this address
-- Opens the Revel8 Explorer to create an alias
+- Opens the Hive Mind Explorer to create an alias
 
 **View More:**
 - Always available
-- Opens the full address page on the Revel8 Explorer
+- Opens the full address page on the Hive Mind Explorer
 - See detailed trust data, history, and more information
 
 ---
@@ -228,7 +228,7 @@ The Snap automatically detects address types:
 
 ### Multi-Chain Support
 
-The Revel8 Snap supports:
+The Hive Mind Snap supports:
 
 **Intuition Testnet:**
 - Chain ID: 13579
@@ -248,11 +248,11 @@ The Revel8 Snap supports:
 ### Home Page
 
 Access the Snap's home page from:
-**MetaMask Settings → Snaps → Revel8 → Open**
+**MetaMask Settings → Snaps → Hive Mind → Open**
 
 **What's There:**
 - Welcome message
-- Links to Revel8 product suite
+- Links to Hive Mind product suite
 - Links to learn more about Intuition
 - Quick access to Snap information
 
@@ -268,12 +268,12 @@ Access the Snap's home page from:
 
 1. **Verify Snap is Installed:**
    - Go to MetaMask Settings → Snaps
-   - Confirm "Revel8" appears in your installed Snaps list
+   - Confirm "Hive Mind" appears in your installed Snaps list
    - If not installed, reinstall from the Snaps Directory
 
 2. **Check Permissions:**
    - Ensure all permissions were approved during installation
-   - Go to Settings → Snaps → Revel8 → Permissions
+   - Go to Settings → Snaps → Hive Mind → Permissions
    - Re-approve if needed
 
 3. **Refresh MetaMask:**
@@ -309,7 +309,7 @@ Access the Snap's home page from:
 **What to Do:**
 - If no trust data exists, proceed with caution
 - Use the footer links to create trust data
-- Check the Revel8 Explorer for more information
+- Check the Hive Mind Explorer for more information
 
 ### Common Error Messages
 
@@ -353,13 +353,13 @@ Access the Snap's home page from:
 
 ### Privacy & Security
 
-**Q: Does Revel8 Snap collect my personal data?**
+**Q: Does Hive Mind Snap collect my personal data?**
 A: No. The Snap only queries public trust data from the Intuition knowledge graph. It does not collect, store, or transmit your personal information.
 
 **Q: Can the Snap see my transaction history?**
 A: The Snap only sees the transaction you're currently signing. It does not access your transaction history or wallet balance.
 
-**Q: Is my wallet address shared with Revel8?**
+**Q: Is my wallet address shared with Hive Mind?**
 A: The Snap uses your connected wallet address only to check if you've staked on addresses (to show "Your Position"). This is optional and the Snap works without it.
 
 **Q: How secure is the trust data?**
@@ -393,8 +393,8 @@ A: The Snap doesn't store personal data. Trust data remains on the Intuition blo
 **Q: How often is trust data updated?**
 A: Trust data is updated in real-time. The Snap queries the latest data each time you initiate a transaction.
 
-**Q: What happens if Revel8 shuts down?**
-A: Trust data is stored on the Intuition blockchain, not on Revel8 servers. The data remains accessible even if Revel8 services are unavailable.
+**Q: What happens if Hive Mind shuts down?**
+A: Trust data is stored on the Intuition blockchain, not on Hive Mind servers. The data remains accessible even if Hive Mind services are unavailable.
 
 **Q: Can I use the Snap without internet?**
 A: No. The Snap requires internet connectivity to query the Intuition knowledge graph.
@@ -405,7 +405,7 @@ A: No. The Snap requires internet connectivity to query the Intuition knowledge 
 A: Yes. The Snap works with any dapp that uses MetaMask for transactions.
 
 **Q: Can I disable the Snap temporarily?**
-A: Yes. Go to MetaMask Settings → Snaps → Revel8 and toggle it off. Re-enable when needed.
+A: Yes. Go to MetaMask Settings → Snaps → Hive Mind and toggle it off. Re-enable when needed.
 
 **Q: Does the Snap slow down transactions?**
 A: The Snap adds minimal delay (typically less than a second) to fetch trust data. This is usually imperceptible.
@@ -422,11 +422,11 @@ A: Yes. Anyone can create trust signals for any address, including their own.
 
 **Support Resources:**
 
-- **Revel8 Website:** https://revel8.io
+- **Hive Mind Website:** https://hivemindhq.io
 - **Intuition Protocol:** https://intuition.systems
-- **Revel8 Explorer:** https://revel8.io/explorer (for detailed trust data)
-- **GitHub Repository:** https://github.com/revel8-io/intuition-snap
-- **Report Issues:** https://github.com/revel8-io/intuition-snap/issues
+- **Hive Mind Explorer:** https://hivemindhq.io/explorer (for detailed trust data)
+- **GitHub Repository:** https://github.com/hivemindhq-io/intuition-snap
+- **Report Issues:** https://github.com/hivemindhq-io/intuition-snap/issues
 
 **For Technical Issues:**
 - Check this knowledge base first
@@ -434,11 +434,11 @@ A: Yes. Anyone can create trust signals for any address, including their own.
 - Create a new issue with details about your problem
 
 **For Trust Data Questions:**
-- Visit the Revel8 Explorer to see detailed trust data
+- Visit the Hive Mind Explorer to see detailed trust data
 - Learn more about Intuition at https://intuition.systems
 - Check the Intuition documentation for protocol details
 
 ---
 
-*This knowledge base is specific to the Revel8 MetaMask Snap. For information about the broader Intuition protocol or Revel8 products, please visit the respective websites.*
+*This knowledge base is specific to the Hive Mind MetaMask Snap. For information about the broader Intuition protocol or Hive Mind products, please visit the respective websites.*
 

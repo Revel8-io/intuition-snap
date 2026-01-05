@@ -3,13 +3,13 @@
   "version": "1.0.1",
   "private": false,
   "description": "Real-time trust and sentiment insights for every transaction. Powered by Intuition",
-  "homepage": "https://github.com/revel8-io/intuition-snap#readme",
+  "homepage": "https://github.com/hivemindhq-io/intuition-snap#readme",
   "bugs": {
-    "url": "https://github.com/revel8-io/intuition-snap/issues"
+    "url": "https://github.com/hivemindhq-io/intuition-snap/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/revel8-io/intuition-snap.git"
+    "url": "git+https://github.com/hivemindhq-io/intuition-snap.git"
   },
   "license": "Apache-2.0",
   "author": "",

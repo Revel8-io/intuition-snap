@@ -1,10 +1,10 @@
-# Revel8 Snap
+# Hive Mind Snap
 
 A MetaMask Snap that displays real-time trust and reputation data from the [Intuition](https://intuition.systems) knowledge graph during transaction signing.
 
 ## What Does This Snap Do?
 
-When you're about to send a transaction to an address, the Revel8 Snap shows you:
+When you're about to send a transaction to an address, the Hive Mind Snap shows you:
 
 - **Trust Signals** — How many people have staked that the address is trustworthy (or not)
 - **Aliases** — Community-assigned labels for the address
@@ -29,7 +29,7 @@ This helps you make informed decisions before interacting with unknown addresses
 
 ```bash
 # The snap will be installable directly through MetaMask
-# Package name: revel8-snap
+# Package name: @hivemindhq/snap
 ```
 
 ### For Development
@@ -59,7 +59,7 @@ This Snap requires the following permissions:
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/revel8-io/intuition-snap.git
+   git clone https://github.com/hivemindhq-io/intuition-snap.git
    cd intuition-snap
    ```
 
@@ -180,4 +180,4 @@ This project is dual-licensed under [Apache 2.0](../../LICENSE.APACHE2) and [MIT
 
 - [Intuition Documentation](https://docs.intuition.systems)
 - [MetaMask Snaps Documentation](https://docs.metamask.io/snaps/)
-- [Repository](https://github.com/revel8-io/intuition-snap)
+- [Repository](https://github.com/hivemindhq-io/intuition-snap)

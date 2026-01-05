@@ -192,7 +192,7 @@ describe('onTransaction Integration Tests', () => {
       const ui = response.getInterface();
       const rendered = JSON.stringify(ui.content);
 
-      // Footer should contain links (Revel8 explorer link or action links)
+      // Footer should contain links (Hive Mind explorer link or action links)
       expect(rendered).toContain('Link');
     });
 
