@@ -1,7 +1,6 @@
 {
   "name": "site",
   "version": "0.1.0",
-  "private": false,
   "license": "(MIT-0 OR Apache-2.0)",
   "scripts": {
     "allow-scripts": "yarn workspace root allow-scripts",

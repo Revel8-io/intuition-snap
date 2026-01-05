@@ -98,6 +98,8 @@ yarn start:testnet
 
 ## Testing
 
+### Automated Tests
+
 Run the test suite:
 
 ```bash
@@ -105,6 +107,22 @@ yarn test
 ```
 
 Tests use [`@metamask/snaps-jest`](https://github.com/MetaMask/snaps/tree/main/packages/snaps-jest) for Snap-specific testing utilities.
+
+**What's tested:**
+- `onHomePage` handler — Renders correctly with expected content
+- `Account.tsx` components — All UI rendering variations (26 tests)
+
+### Manual E2E Testing
+
+The `onTransaction` handler requires network access to the Intuition GraphQL API. Because `@metamask/snaps-jest` runs the Snap in an isolated worker process, network requests cannot be mocked from the test process.
+
+**To test transaction insights:**
+
+1. Start the development server: `yarn start`
+2. Open http://localhost:8000 in a browser with MetaMask Flask
+3. Install the Snap
+4. Initiate a transaction on Intuition Testnet/Mainnet
+5. Verify trust data displays correctly in the transaction confirmation
 
 ## Architecture
 

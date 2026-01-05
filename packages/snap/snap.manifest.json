@@ -7,7 +7,7 @@
     "url": "https://github.com/hivemindhq-io/snap"
   },
   "source": {
-    "shasum": "XSqeuQHwDWwwavXa97Tla2fwVSZMEeJUgztwg2S0Zv8=",
+    "shasum": "DhUCOikLoYzSyQ6wFZOQCMMtlqvTppsIjyJPn3bPmEQ=",
     "location": {
       "npm": {
         "filePath": "dist/bundle.js",

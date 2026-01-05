@@ -1,16 +1,36 @@
-import axios from 'axios';
 import { chainConfig } from './config';
 
-export const i7nAxios = axios.create({
-  baseURL: chainConfig.backendUrl,
-});
-
-export const graphQLQuery = async (query: string, variables: any) => {
-  const { data } = await i7nAxios.post('', {
-    query,
-    variables,
+/**
+ * Executes a GraphQL query against the Intuition API.
+ * Uses native fetch for Snap compatibility (Snaps run in a hardened SES environment
+ * where axios may not work correctly).
+ *
+ * @param query - The GraphQL query string
+ * @param variables - Query variables object
+ * @returns The GraphQL response data
+ * @throws Error if the request fails or returns GraphQL errors
+ */
+export const graphQLQuery = async (query: string, variables: Record<string, unknown>) => {
+  const response = await fetch(chainConfig.backendUrl, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ query, variables }),
   });
-  return data;
+
+  if (!response.ok) {
+    throw new Error(`GraphQL request failed: ${response.status} ${response.statusText}`);
+  }
+
+  const result = await response.json();
+
+  // Handle GraphQL-level errors
+  if (result.errors && result.errors.length > 0) {
+    throw new Error(`GraphQL error: ${result.errors[0].message}`);
+  }
+
+  return result;
 };
 
 export const getAddressAtomsQuery = `
