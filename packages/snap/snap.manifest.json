@@ -1,5 +1,5 @@
 {
-  "version": "1.2.3",
+  "version": "1.2.4",
   "description": "Community trust signals for every transaction, powered by Intuition.",
   "proposedName": "Hive Mind",
   "repository": {
@@ -7,7 +7,7 @@
     "url": "https://github.com/hivemindhq-io/snap"
   },
   "source": {
-    "shasum": "ka34X3pSHSU8ygfq/qRD3pjXuueh1zbSSN3kAp0AbmI=",
+    "shasum": "ffdfxK4L0hmiIj8b93NQUVFhLcSqm8PZKpTTWea+0XU=",
     "location": {
       "npm": {
         "filePath": "dist/bundle.js",
