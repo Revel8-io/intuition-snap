@@ -33,15 +33,23 @@ export const graphQLQuery = async (query: string, variables: Record<string, unkn
   return result;
 };
 
+/**
+ * Query to find atoms by address (plain or CAIP format).
+ * Orders by total_market_cap to prefer the most-staked (canonical) atom.
+ */
 export const getAddressAtomsQuery = `
 query AddressAtoms($plainAddress: String!, $caipAddress: String!) {
   # Atoms matching plain address format (for EOAs)
-  plainAtoms: atoms(where: {
-    _or: [
-      { label: { _ilike: $plainAddress } },
-      { data: { _ilike: $plainAddress } }
-    ]
-  }, limit: 1) {
+  plainAtoms: atoms(
+    where: {
+      _or: [
+        { label: { _ilike: $plainAddress } },
+        { data: { _ilike: $plainAddress } }
+      ]
+    },
+    order_by: { term: { total_market_cap: desc_nulls_last } },
+    limit: 1
+  ) {
     term_id
     type
     label
@@ -52,12 +60,16 @@ query AddressAtoms($plainAddress: String!, $caipAddress: String!) {
   }
 
   # Atoms matching CAIP format (for smart contracts)
-  caipAtoms: atoms(where: {
-    _or: [
-      { label: { _ilike: $caipAddress } },
-      { data: { _ilike: $caipAddress } }
-    ]
-  }, limit: 1) {
+  caipAtoms: atoms(
+    where: {
+      _or: [
+        { label: { _ilike: $caipAddress } },
+        { data: { _ilike: $caipAddress } }
+      ]
+    },
+    order_by: { term: { total_market_cap: desc_nulls_last } },
+    limit: 1
+  ) {
     term_id
     type
     label
@@ -194,15 +206,20 @@ query TripleWithPositionAggregates($subjectId: String!, $predicateId: String!, $
 /**
  * Query to find an atom by URL (for origin trust signals).
  * Searches by label or data field matching the origin URL.
+ * Orders by total_market_cap to prefer the most-staked (canonical) atom.
  */
 export const getOriginAtomQuery = `
 query OriginAtom($originUrl: String!) {
-  atoms(where: {
-    _or: [
-      { label: { _ilike: $originUrl } },
-      { data: { _ilike: $originUrl } }
-    ]
-  }, limit: 1) {
+  atoms(
+    where: {
+      _or: [
+        { label: { _ilike: $originUrl } },
+        { data: { _ilike: $originUrl } }
+      ]
+    },
+    order_by: { term: { total_market_cap: desc_nulls_last } },
+    limit: 1
+  ) {
     term_id
     type
     label
