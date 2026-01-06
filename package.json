@@ -1,6 +1,6 @@
 {
   "name": "root",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Real-time trust and sentiment insights for every transaction. Powered by Intuition",
   "homepage": "https://github.com/hivemindhq-io/snap#readme",
   "bugs": {
