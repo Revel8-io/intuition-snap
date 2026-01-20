@@ -18,6 +18,7 @@ import { UnifiedFooter } from './components';
 import {
   getTrustedCircle,
   getTrustedContactsWithPositions,
+  enrichContactLabels,
   TrustedCirclePositions,
 } from './trusted-circle';
 
@@ -49,22 +50,9 @@ export const onTransaction: OnTransactionHandler = async ({
   chainId: ChainId;
   transactionOrigin?: string;
 }) => {
-  // Get user's connected wallet address *for position checking*
-  // Note: This is optional - if it fails, we continue without position checking
-  let userAddress: string | undefined;
-  try {
-    const accounts = await ethereum.request({ method: 'eth_accounts' }) as string[];
-    userAddress = accounts?.[0];
-  } catch (_err) {
-    // eth_accounts failure is non-critical - Snap can function without userAddress
-    // The UI will render without position-specific features (e.g., stake prompt)
-    // Silently continue with userAddress = undefined
-    // Error could be: DisconnectedError, ChainDisconnectedError, or InternalError
-    // but since this is optional data, we don't need to surface it to the user
-  }
+  // "to" ENS addresses arrive here as EVM addresses, EVM addresses arrive as EVM addresses
+  const userAddress: string | undefined = transaction.from;
 
-  // Execute queries in parallel for performance
-  // Fetch account data, origin data, and trusted circle simultaneously
   const [accountData, originData, trustedCircle] = await Promise.all([
     getAccountData(transaction, chainId),
     getOriginData(transactionOrigin),
@@ -79,6 +67,7 @@ export const onTransaction: OnTransactionHandler = async ({
   if (trustedCircle.length > 0 && accountData.triple) {
     const positions = accountData.triple.positions || [];
     const counterPositions = accountData.triple.counter_positions || [];
+
     accountTrustedCircle = getTrustedContactsWithPositions(
       trustedCircle,
       positions,
@@ -90,6 +79,9 @@ export const onTransaction: OnTransactionHandler = async ({
       accountTrustedCircle.againstContacts.length === 0
     ) {
       accountTrustedCircle = undefined;
+    } else {
+      // Enrich with resolved labels (ENS names, etc.)
+      accountTrustedCircle = await enrichContactLabels(accountTrustedCircle);
     }
   }
 
@@ -109,6 +101,9 @@ export const onTransaction: OnTransactionHandler = async ({
       originTrustedCircle.againstContacts.length === 0
     ) {
       originTrustedCircle = undefined;
+    } else {
+      // Enrich with resolved labels (ENS names, etc.)
+      originTrustedCircle = await enrichContactLabels(originTrustedCircle);
     }
   }
 

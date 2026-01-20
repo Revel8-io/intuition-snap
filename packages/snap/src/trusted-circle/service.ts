@@ -7,21 +7,24 @@
  * @module trusted-circle/service
  */
 
-import { graphQLQuery, getUserTrustedCircleQuery } from '../queries';
+import { graphQLQuery, getUserTrustedCircleQuery, getAtomsForAddressesQuery } from '../queries';
 import { chainConfig, ChainConfig } from '../config';
 import { getTrustedCircleCache, setTrustedCircleCache } from './cache';
 import type { TrustedContact, TrustedCirclePositions } from './types';
 
 /**
  * Response shape from the trusted circle GraphQL query.
+ * Note: Path is positions → term → triple (not positions → triple directly).
  */
 interface TrustedCircleQueryResponse {
   data: {
     positions: {
-      triple: {
-        subject_id: string;
-        subject: {
-          label: string;
+      term: {
+        triple: {
+          subject_id: string;
+          subject: {
+            label: string;
+          };
         };
       };
     }[];
@@ -40,6 +43,7 @@ async function fetchTrustedCircleFromAPI(
 ): Promise<TrustedContact[]> {
   const { hasTagAtomId, trustworthyAtomId } = chainConfig as ChainConfig;
 
+
   const response = (await graphQLQuery(getUserTrustedCircleQuery, {
     userAddress,
     predicateId: hasTagAtomId,
@@ -48,20 +52,34 @@ async function fetchTrustedCircleFromAPI(
 
   const positions = response?.data?.positions || [];
 
+
   // Extract unique contacts (user might have multiple positions on same triple)
+  // IMPORTANT: Use the wallet address from subject.label, NOT the term_id (subject_id)
+  // Positions have account_id as wallet addresses, so we need to match on that
   const contactMap = new Map<string, TrustedContact>();
 
   for (const position of positions) {
-    const { subject_id, subject } = position.triple;
-    if (!contactMap.has(subject_id)) {
-      contactMap.set(subject_id, {
-        accountId: subject_id,
-        label: subject?.label || subject_id,
+    const triple = position.term?.triple;
+    if (!triple) continue; // Skip positions that aren't on triples
+
+    const { subject } = triple;
+    // The subject.label contains the wallet address (e.g., "0xb14f...")
+    // We use this as the accountId since positions use wallet addresses
+    const walletAddress = subject?.label;
+    if (!walletAddress) continue;
+
+    const normalizedAddress = walletAddress.toLowerCase();
+    if (!contactMap.has(normalizedAddress)) {
+      contactMap.set(normalizedAddress, {
+        accountId: walletAddress,
+        label: walletAddress,
       });
     }
   }
 
-  return Array.from(contactMap.values());
+  const contacts = Array.from(contactMap.values());
+
+  return contacts;
 }
 
 /**
@@ -93,6 +111,7 @@ export async function getTrustedCircle(
  */
 interface PositionWithAccount {
   account_id: string;
+  shares?: string;
   account?: {
     id: string;
     label: string;
@@ -113,6 +132,7 @@ export function getTrustedContactsWithPositions(
   forPositions: PositionWithAccount[],
   againstPositions: PositionWithAccount[],
 ): TrustedCirclePositions {
+
   // Create a Set for O(1) lookup of trusted account IDs
   const trustedIds = new Set(
     trustedCircle.map((c) => c.accountId.toLowerCase()),
@@ -127,13 +147,15 @@ export function getTrustedContactsWithPositions(
   const forContacts: TrustedContact[] = [];
   for (const position of forPositions) {
     const accountId = position.account_id?.toLowerCase();
-    if (accountId && trustedIds.has(accountId)) {
+    const isTrusted = accountId && trustedIds.has(accountId);
+    if (isTrusted) {
       forContacts.push({
         accountId: position.account_id,
         label:
           trustedLabels.get(accountId) ||
           position.account?.label ||
           formatAddress(position.account_id),
+        shares: position.shares || '0',
       });
     }
   }
@@ -142,16 +164,36 @@ export function getTrustedContactsWithPositions(
   const againstContacts: TrustedContact[] = [];
   for (const position of againstPositions) {
     const accountId = position.account_id?.toLowerCase();
-    if (accountId && trustedIds.has(accountId)) {
+    const isTrusted = accountId && trustedIds.has(accountId);
+    if (isTrusted) {
       againstContacts.push({
         accountId: position.account_id,
         label:
           trustedLabels.get(accountId) ||
           position.account?.label ||
           formatAddress(position.account_id),
+        shares: position.shares || '0',
       });
     }
   }
+
+  // Sort by shares (highest stake first)
+  forContacts.sort((a, b) => {
+    const sharesA = BigInt(a.shares ?? '0');
+    const sharesB = BigInt(b.shares ?? '0');
+    if (sharesB > sharesA) return 1;
+    if (sharesB < sharesA) return -1;
+    return 0;
+  });
+
+  againstContacts.sort((a, b) => {
+    const sharesA = BigInt(a.shares ?? '0');
+    const sharesB = BigInt(b.shares ?? '0');
+    if (sharesB > sharesA) return 1;
+    if (sharesB < sharesA) return -1;
+    return 0;
+  });
+
 
   return { forContacts, againstContacts };
 }
@@ -169,3 +211,109 @@ function formatAddress(address: string): string {
   return `${address.slice(0, 6)}...${address.slice(-4)}`;
 }
 
+/**
+ * Response shape from the atoms for addresses query.
+ */
+interface AtomsForAddressesResponse {
+  data: {
+    atoms: {
+      term_id: string;
+      label: string;
+      data: string;
+      image: string | null;
+    }[];
+  };
+}
+
+/**
+ * Enriches trusted contacts with resolved labels (ENS names, etc.).
+ * The Intuition backend resolves ENS names automatically, so we just need
+ * to fetch the atom data for the addresses.
+ *
+ * @param positions - The trusted circle positions to enrich
+ * @returns Enriched positions with resolved labels
+ */
+export async function enrichContactLabels(
+  positions: TrustedCirclePositions,
+): Promise<TrustedCirclePositions> {
+  // Collect all unique addresses from both FOR and AGAINST contacts
+  const allContacts = [...positions.forContacts, ...positions.againstContacts];
+  if (allContacts.length === 0) {
+    return positions;
+  }
+
+  // Collect unique addresses (both lowercase for query flexibility)
+  const addresses = [...new Set(allContacts.map(c => c.accountId))];
+  const lowercaseAddresses = addresses.map(a => a.toLowerCase());
+
+  // Query for all addresses in one batch
+  const allAddresses = [...addresses, ...lowercaseAddresses];
+
+  try {
+    const response = (await graphQLQuery(getAtomsForAddressesQuery, {
+      addresses: allAddresses,
+    })) as AtomsForAddressesResponse;
+
+    const atoms = response?.data?.atoms || [];
+
+    // Build a map of address -> resolved label
+    // Priority: atom with ENS-like label > atom with address label > original address
+    const labelMap = new Map<string, string>();
+
+    for (const atom of atoms) {
+      // The atom's data or label contains the address
+      const addressFromData = atom.data?.toLowerCase();
+      const addressFromLabel = atom.label?.toLowerCase();
+
+      // Check if this atom's label is a resolved name (not an address)
+      const isResolvedName = atom.label && !/^0x[a-fA-F0-9]{40}$/iu.test(atom.label);
+
+      // Map both possible address sources to the label
+      if (addressFromData && isResolvedName) {
+        // Prefer resolved name over existing entry
+        labelMap.set(addressFromData, atom.label);
+      }
+      if (addressFromLabel && isResolvedName && addressFromLabel !== addressFromData) {
+        labelMap.set(addressFromLabel, atom.label);
+      }
+    }
+
+
+    // Update contacts with resolved labels
+    const enrichContact = (contact: TrustedContact): TrustedContact => {
+      const normalizedAddress = contact.accountId.toLowerCase();
+      const resolvedLabel = labelMap.get(normalizedAddress);
+
+      if (resolvedLabel) {
+        return { ...contact, label: resolvedLabel };
+      }
+
+      // Fallback to formatted address if no resolved name
+      if (/^0x[a-fA-F0-9]{40}$/iu.test(contact.label)) {
+        return { ...contact, label: formatAddress(contact.label) };
+      }
+
+      return contact;
+    };
+
+    return {
+      forContacts: positions.forContacts.map(enrichContact),
+      againstContacts: positions.againstContacts.map(enrichContact),
+    };
+  } catch (error) {
+    // If enrichment fails, return original positions with formatted addresses
+    console.error('[TrustedCircle] Label enrichment failed:', error);
+
+    const formatContact = (contact: TrustedContact): TrustedContact => ({
+      ...contact,
+      label: /^0x[a-fA-F0-9]{40}$/iu.test(contact.label)
+        ? formatAddress(contact.label)
+        : contact.label,
+    });
+
+    return {
+      forContacts: positions.forContacts.map(formatContact),
+      againstContacts: positions.againstContacts.map(formatContact),
+    };
+  }
+}

@@ -11,10 +11,12 @@
  * A trusted contact with minimal display information.
  */
 export interface TrustedContact {
-  /** The account's term_id (subject_id from the trust triple) */
+  /** The account's wallet address */
   accountId: string;
   /** Display label (address, ENS, or other identifier) */
   label: string;
+  /** Shares staked as string (for sorting by stake amount, stored as string for JSON serialization) */
+  shares?: string;
 }
 
 /**
@@ -38,7 +40,7 @@ export interface TrustedCircleState {
 
 /**
  * Contacts from the trusted circle who have positions on a triple.
- * Used to display "Your Trusted Contacts" section.
+ * Used to display "Your Trust Circle" section.
  */
 export interface TrustedCirclePositions {
   /** Trusted contacts who staked FOR */
