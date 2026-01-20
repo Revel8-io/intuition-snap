@@ -90,7 +90,7 @@ export const TrustedCircleSection = ({
 
   return (
     <Section>
-      <Heading size="sm">Your Trusted Contacts</Heading>
+      <Heading size="sm">Your Trust Circle</Heading>
 
       {forContacts.length > 0 && (
         <Row label="FOR">
