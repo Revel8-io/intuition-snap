@@ -98,7 +98,7 @@ export async function setTrustedCircleCache(
       method: 'snap_manageState',
       params: {
         operation: 'update',
-        newState,
+        newState: JSON.parse(JSON.stringify(newState)), // Ensure newState is serializable as Json
       },
     });
   } catch {
@@ -143,7 +143,7 @@ export async function clearTrustedCircleCache(
       method: 'snap_manageState',
       params: {
         operation: 'update',
-        newState: rest,
+        newState: JSON.parse(JSON.stringify(rest)), // Ensure newState is serializable as Json
       },
     });
   } catch {
