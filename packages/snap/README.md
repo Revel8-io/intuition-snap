@@ -9,9 +9,9 @@ When you're about to send a transaction to an address, the Hive Mind Snap shows 
 - **Trust Signals** — How many people have staked that the address is trustworthy (or not)
 - **Aliases** — Community-assigned labels for the address
 - **Stake Amounts** — The economic weight behind each trust signal
-- **Your Position** — Whether you've already staked on this address
+- **Your Position** — Your own trust/distrust stake displayed prominently as the strongest signal
 - **dApp Origin Trust** — Trust data for the dApp you're interacting with
-- **Trusted Circle** — See which of your trusted contacts have staked on this address
+- **Your Trust Circle** — See which of your trusted contacts have staked on this address (sorted by stake)
 
 This helps you make informed decisions before interacting with unknown addresses or dApps.
 
@@ -20,14 +20,15 @@ This helps you make informed decisions before interacting with unknown addresses
 | Feature | Description |
 |---------|-------------|
 | **Transaction Insights** | `onTransaction` hook displays trust data before you sign |
+| **Your Position** | Prominently displays your own trust/distrust stake as the strongest signal |
 | **Trust Triple Display** | Shows support/oppose positions on `[address] has tag trustworthy` |
 | **dApp Origin Trust** | Shows trust data for the dApp origin (transaction source) |
-| **Trusted Circle** | Highlights when your trusted contacts have staked on an address |
+| **Your Trust Circle** | Highlights when your trusted contacts have staked on an address (sorted by stake) |
 | **Distribution Analysis** | Analyzes stake distribution health (concentrated vs. distributed) |
 | **Alias Display** | Shows community-assigned aliases for addresses |
 | **Multi-chain Support** | Works on Intuition Testnet (chain ID: 13579) and Mainnet (chain ID: 1155) |
 | **Interactive UI** | Links to create trust signals or view more data on the web |
-| **Persistent Cache** | Trusted circle cached for 1 hour for optimal performance |
+| **Persistent Cache** | Trust circle cached for 1 hour for optimal performance |
 
 ## Installation
 
@@ -141,7 +142,8 @@ src/
 ├── components/         # JSX UI components
 │   ├── Account.tsx     # Destination address display
 │   ├── Origin.tsx      # dApp origin display
-│   ├── TrustedCircle.tsx  # Trusted contacts display
+│   ├── TrustedCircle.tsx  # Trust circle display
+│   ├── UserPosition.tsx   # User's own position display
 │   ├── UnifiedFooter.tsx  # Combined footer CTAs
 │   ├── Footer/         # Account footer actions
 │   └── OriginFooter/   # Origin footer actions

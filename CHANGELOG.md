@@ -5,6 +5,41 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.0] - 2026-01-20
+
+### Added
+
+#### User Position Display
+- **Your Position Section**: Prominently displays the user's own trust/distrust position as the strongest signal
+- **User Position Detection**: GraphQL queries now fetch user's specific positions using aliases (`user_position` and `user_counter_position`)
+- **Position Prominence**: User's own position displayed at the top of trust insights, before aggregate data
+
+### Changed
+
+#### Trust Circle Improvements
+- **Renamed Feature**: "Your Trusted Contacts" → "Your Trust Circle" for clearer terminology
+- **Stake-Based Sorting**: Trust circle contacts now sorted by stake amount (highest first) for both FOR and AGAINST positions
+- **ENS Label Enrichment**: Trust circle contacts display ENS names or Intuition aliases when available via pre-resolved atom labels
+
+### Fixed
+
+#### Critical Bug Fixes
+- **ENS Address Matching**: Fixed trust circle filtering to correctly extract wallet addresses from ENS-resolved atoms (`subject.data` instead of `subject.label`)
+- **JSON Serialization**: Fixed `snap_manageState` errors by ensuring trusted circle state is fully JSON-serializable
+- **ID Type Mismatch**: Fixed trusted circle contact matching by using wallet addresses instead of atom `term_id`s
+
+#### GraphQL Query Improvements
+- **User Position Queries**: Added `$userAddress` parameter to trust triple queries (`getTripleWithPositionsDataQuery` and `getOriginTrustTripleQuery`)
+- **GraphQL Aliases**: Used aliases to fetch user's specific positions alongside aggregate data without extra network calls
+- **Query Schema**: Updated trusted circle query to correctly navigate `positions → term → triple` schema path
+
+### Technical
+
+- **New Component**: Added `UserPosition.tsx` component for displaying user's own stake
+- **Type Updates**: Added `UserPositionData` type and extended `TripleWithPositions` and `OriginTriple` interfaces
+- **Data Flow**: Updated `getAccountData()` and `getOriginData()` to accept and pass `userAddress` parameter
+- **Transaction Handler**: Modified `onTransaction` to extract `userAddress` from `transaction.from` (most reliable source in Snaps)
+
 ## [1.2.2] - 2026-01-06
 
 ### Changed
