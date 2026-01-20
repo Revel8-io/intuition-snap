@@ -15,6 +15,7 @@ import {
   SnapColor,
 } from '../distribution';
 import { TrustedCircleSection } from './TrustedCircle';
+import { UserPositionSection } from './UserPosition';
 
 /**
  * Section header for the dApp origin.
@@ -164,12 +165,23 @@ export const OriginAtomWithTrustTriple = (
 
   const distribution = getDistributionLabel(distributionAnalysis);
 
+  // Check if user has their own position (strongest signal)
+  const { user_position, user_counter_position } = triple;
+  const hasUserPosition = (user_position?.length ?? 0) > 0 || (user_counter_position?.length ?? 0) > 0;
+
   return (
     <Section>
       <OriginHeader />
       <Row label="From">
         <Text><Bold>{hostname || origin?.label || 'Unknown'}</Bold></Text>
       </Row>
+      {/* User's own position - displayed first as the strongest signal */}
+      {hasUserPosition && (
+        <UserPositionSection
+          userPosition={user_position ?? []}
+          userCounterPosition={user_counter_position ?? []}
+        />
+      )}
       <Row label="Trust">
         <Text color={color}><Bold>{badge}</Bold></Text>
       </Row>
