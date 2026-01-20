@@ -32,12 +32,12 @@ This helps you make informed decisions before interacting with unknown addresses
 
 ## Installation
 
-### From npm (once published)
+### From npm
 
-```bash
-# The snap will be installable directly through MetaMask
-# Package name: @hivemindhq/snap
-```
+The Snap is published to npm and can be installed directly through MetaMask:
+
+- **Package name**: `@hivemindhq/snap`
+- **npm**: https://www.npmjs.com/package/@hivemindhq/snap
 
 ### For Development
 
@@ -168,11 +168,13 @@ Chain settings are defined in `src/config.ts`:
 
 The Snap queries the Intuition knowledge graph using these predefined atoms:
 
-| Atom | Purpose |
-|------|---------|
-| `hasTag` | Predicate for trust triples |
-| `trustworthy` | The "trustworthy" characteristic |
-| `hasAlias` | Predicate for alias relationships |
+| Atom Name | Atom ID (term_id) | Purpose |
+|-----------|-------------------|---------|
+| `hasTag` | `0x6de69cc0ae3efe4000279b1bf365065096c8715d8180bc2a98046ee07d3356fd` | Predicate for trust triples |
+| `trustworthy` | `0xe9c0e287737685382bd34d51090148935bdb671c98d20180b2fec15bd263f73a` | The "trustworthy" characteristic |
+| `hasAlias` | `0xf8cfb4e3f1db08f72f255cf7afaceb4b32684a64dac0f423cdca04dd15cf4fd6` | Predicate for alias relationships |
+
+**Note**: These atom IDs are the same on both Intuition Testnet and Mainnet, as atoms are chain-agnostic identifiers in the Intuition protocol.
 
 ## Building
 
