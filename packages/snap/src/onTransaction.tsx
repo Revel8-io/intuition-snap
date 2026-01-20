@@ -54,8 +54,8 @@ export const onTransaction: OnTransactionHandler = async ({
   const userAddress: string | undefined = transaction.from;
 
   const [accountData, originData, trustedCircle] = await Promise.all([
-    getAccountData(transaction, chainId),
-    getOriginData(transactionOrigin),
+    getAccountData(transaction, chainId, userAddress),
+    getOriginData(transactionOrigin, userAddress),
     userAddress ? getTrustedCircle(userAddress) : Promise.resolve([]),
   ]);
 
@@ -128,7 +128,6 @@ export const onTransaction: OnTransactionHandler = async ({
 
   // Render both account and origin insights (information sections only)
   const accountUI = renderOnTransaction(accountProps);
-  console.log('originProps', JSON.stringify(originProps, null, 2));
   // only render origin if originProps.originUrl !== 'metamask'
   let originUI = null;
   if (originProps?.originUrl !== 'metamask') {
