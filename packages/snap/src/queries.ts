@@ -303,6 +303,7 @@ query UserTrustedCircle($userAddress: String!, $predicateId: String!, $objectId:
         subject_id
         subject {
           label
+          data
         }
       }
     }

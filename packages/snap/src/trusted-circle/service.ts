@@ -24,11 +24,19 @@ interface TrustedCircleQueryResponse {
           subject_id: string;
           subject: {
             label: string;
+            data: string;
           };
         };
       };
     }[];
   };
+}
+
+/**
+ * Checks if a string is a valid EVM address.
+ */
+function isEvmAddress(value: string | null | undefined): value is string {
+  return !!value && /^0x[a-fA-F0-9]{40}$/i.test(value);
 }
 
 /**
@@ -54,8 +62,9 @@ async function fetchTrustedCircleFromAPI(
 
 
   // Extract unique contacts (user might have multiple positions on same triple)
-  // IMPORTANT: Use the wallet address from subject.label, NOT the term_id (subject_id)
-  // Positions have account_id as wallet addresses, so we need to match on that
+  // IMPORTANT: Use the wallet address for matching against positions.
+  // For ENS-resolved atoms: label = "smilingkylan.eth", data = "0xCF806..."
+  // For plain address atoms: label = "0xb14f...", data = "0xb14f..."
   const contactMap = new Map<string, TrustedContact>();
 
   for (const position of positions) {
@@ -63,16 +72,22 @@ async function fetchTrustedCircleFromAPI(
     if (!triple) continue; // Skip positions that aren't on triples
 
     const { subject } = triple;
-    // The subject.label contains the wallet address (e.g., "0xb14f...")
-    // We use this as the accountId since positions use wallet addresses
-    const walletAddress = subject?.label;
+    if (!subject) continue;
+
+    // Extract wallet address: prefer data if it's an EVM address, else try label
+    const walletAddress = isEvmAddress(subject.data)
+      ? subject.data
+      : isEvmAddress(subject.label)
+        ? subject.label
+        : null;
+
     if (!walletAddress) continue;
 
     const normalizedAddress = walletAddress.toLowerCase();
     if (!contactMap.has(normalizedAddress)) {
       contactMap.set(normalizedAddress, {
         accountId: walletAddress,
-        label: walletAddress,
+        label: subject.label || walletAddress, // Keep ENS name for display
       });
     }
   }
