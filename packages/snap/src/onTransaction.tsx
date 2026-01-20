@@ -128,7 +128,12 @@ export const onTransaction: OnTransactionHandler = async ({
 
   // Render both account and origin insights (information sections only)
   const accountUI = renderOnTransaction(accountProps);
-  const originUI = renderOriginInsight(originProps);
+  console.log('originProps', JSON.stringify(originProps, null, 2));
+  // only render origin if originProps.originUrl !== 'metamask'
+  let originUI = null;
+  if (originProps?.originUrl !== 'metamask') {
+    originUI = renderOriginInsight(originProps);
+  }
 
   // Render unified footer with all CTAs at the bottom
   const footerUI = (
