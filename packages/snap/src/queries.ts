@@ -86,7 +86,7 @@ query AddressAtoms($plainAddress: String!, $caipAddress: String!) {
 // as the subject for the triple and select the triple with the highest
 // total market cap
 export const getTripleWithPositionsDataQuery = `
-query TripleWithPositionAggregates($subjectId: String!, $predicateId: String!, $objectId: String!) {
+query TripleWithPositionAggregates($subjectId: String!, $predicateId: String!, $objectId: String!, $userAddress: String!) {
   triples(where: {
     subject_id: { _eq: $subjectId },
     predicate_id: { _eq: $predicateId },
@@ -189,6 +189,18 @@ query TripleWithPositionAggregates($subjectId: String!, $predicateId: String!, $
         label
       }
     }
+
+    # User's specific position (if any)
+    user_position: positions(where: { account_id: { _ilike: $userAddress } }) {
+      account_id
+      shares
+    }
+
+    # User's specific counter-position (if any)
+    user_counter_position: counter_positions(where: { account_id: { _ilike: $userAddress } }) {
+      account_id
+      shares
+    }
   }
   chainlink_prices(limit: 1, order_by: { id: desc }) {
     usd
@@ -236,7 +248,7 @@ query OriginAtom($originUrl: String!) {
  * Simplified version of getTripleWithPositionsDataQuery for origin display.
  */
 export const getOriginTrustTripleQuery = `
-query OriginTrustTriple($subjectId: String!, $predicateId: String!, $objectId: String!) {
+query OriginTrustTriple($subjectId: String!, $predicateId: String!, $objectId: String!, $userAddress: String!) {
   triples(where: {
     subject_id: { _eq: $subjectId },
     predicate_id: { _eq: $predicateId },
@@ -270,6 +282,18 @@ query OriginTrustTriple($subjectId: String!, $predicateId: String!, $objectId: S
       id
       shares
       account_id
+    }
+
+    # User's specific position (if any)
+    user_position: positions(where: { account_id: { _ilike: $userAddress } }) {
+      account_id
+      shares
+    }
+
+    # User's specific counter-position (if any)
+    user_counter_position: counter_positions(where: { account_id: { _ilike: $userAddress } }) {
+      account_id
+      shares
     }
   }
 }

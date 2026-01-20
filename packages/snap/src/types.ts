@@ -10,6 +10,15 @@ export type Account = {
   term_id: string;
 };
 
+/**
+ * User's position data from a trust triple query.
+ * Represents the user's own stake on a triple.
+ */
+export type UserPositionData = {
+  account_id: string;
+  shares: string;
+};
+
 // ============================================================================
 // Address Classification Types
 // ============================================================================
@@ -120,6 +129,10 @@ export type TripleWithPositions = {
       label: string;
     };
   }[];
+  /** User's own position on this triple (FOR side) */
+  user_position?: UserPositionData[];
+  /** User's own counter-position on this triple (AGAINST side) */
+  user_counter_position?: UserPositionData[];
 };
 
 // AccountType enum
@@ -210,6 +223,10 @@ export type OriginTriple = {
   };
   positions: { id: string; shares: string; account_id: string }[];
   counter_positions: { id: string; shares: string; account_id: string }[];
+  /** User's own position on this triple (FOR side) */
+  user_position?: UserPositionData[];
+  /** User's own counter-position on this triple (AGAINST side) */
+  user_counter_position?: UserPositionData[];
 };
 
 // OriginType enum - mirrors AccountType pattern
