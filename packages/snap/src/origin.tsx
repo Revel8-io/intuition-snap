@@ -48,6 +48,7 @@ const extractHostname = (originUrl: string | undefined): string | undefined => {
  */
 export const getOriginData = async (
   transactionOrigin: string | undefined,
+  userAddress?: string,
 ): Promise<GetOriginDataResult> => {
   const hostname = extractHostname(transactionOrigin);
 
@@ -84,11 +85,11 @@ export const getOriginData = async (
       }
 
       // Found atom via hostname, now query for trust triple
-      return await fetchTrustTriple(hostnameAtom, hostname);
+      return await fetchTrustTriple(hostnameAtom, hostname, userAddress);
     }
 
     // Found atom via full URL, now query for trust triple
-    return await fetchTrustTriple(originAtom, hostname);
+    return await fetchTrustTriple(originAtom, hostname, userAddress);
   } catch {
     // Don't fail the transaction insight on origin fetch errors
     return {
@@ -105,14 +106,19 @@ export const getOriginData = async (
 const fetchTrustTriple = async (
   originAtom: Origin,
   hostname: string,
+  userAddress?: string,
 ): Promise<GetOriginDataResult> => {
   const { hasTagAtomId, trustworthyAtomId } = chainConfig as ChainConfig;
+
+  // Use empty string if userAddress is undefined (GraphQL will match nothing)
+  const userAddressParam = userAddress || '';
 
   try {
     const tripleResponse = await graphQLQuery(getOriginTrustTripleQuery, {
       subjectId: originAtom.term_id,
       predicateId: hasTagAtomId,
       objectId: trustworthyAtomId,
+      userAddress: userAddressParam,
     });
 
     const triple = tripleResponse.data.triples?.[0] as OriginTriple | undefined;

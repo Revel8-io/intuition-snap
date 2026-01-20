@@ -183,6 +183,7 @@ const selectPrimaryAtom = (
 export const getAccountData = async (
   transaction: Transaction,
   chainId: ChainId,
+  userAddress?: string,
 ): Promise<GetAccountDataResult> => {
   const { to: destinationAddress, data: transactionData } = transaction;
   const caipAddress = addressToCaip10(destinationAddress, chainId);
@@ -231,12 +232,16 @@ export const getAccountData = async (
     const trustQueries: Promise<any>[] = [];
     const queryKeys: ('plain' | 'caip')[] = [];
 
+    // Use empty string if userAddress is undefined (GraphQL will match nothing)
+    const userAddressParam = userAddress || '';
+
     if (plainAtom) {
       trustQueries.push(
         graphQLQuery(getTripleWithPositionsDataQuery, {
           subjectId: plainAtom.term_id,
           predicateId: hasTagAtomId,
           objectId: trustworthyAtomId,
+          userAddress: userAddressParam,
         }),
       );
       queryKeys.push('plain');
@@ -248,6 +253,7 @@ export const getAccountData = async (
           subjectId: caipAtom.term_id,
           predicateId: hasTagAtomId,
           objectId: trustworthyAtomId,
+          userAddress: userAddressParam,
         }),
       );
       queryKeys.push('caip');
