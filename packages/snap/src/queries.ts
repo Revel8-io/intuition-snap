@@ -279,26 +279,57 @@ query OriginTrustTriple($subjectId: String!, $predicateId: String!, $objectId: S
  * Query to get the user's trusted circle.
  * Returns accounts that the user has staked FOR on trust triples.
  * Minimal data for bandwidth efficiency - only subject_id and label.
+ *
+ * Note: Path is positions → term → triple (not positions → triple directly).
+ * The term table is a unified view of both atoms and triples.
  */
 export const getUserTrustedCircleQuery = `
 query UserTrustedCircle($userAddress: String!, $predicateId: String!, $objectId: String!) {
   positions(
     where: {
       account_id: { _ilike: $userAddress },
-      triple: {
-        predicate_id: { _eq: $predicateId },
-        object_id: { _eq: $objectId }
+      term: {
+        triple: {
+          predicate_id: { _eq: $predicateId },
+          object_id: { _eq: $objectId }
+        }
       }
     },
     order_by: { shares: desc },
     limit: 200
   ) {
-    triple {
-      subject_id
-      subject {
-        label
+    term {
+      triple {
+        subject_id
+        subject {
+          label
+        }
       }
     }
+  }
+}
+`;
+
+/**
+ * Query to fetch atom data for multiple addresses.
+ * Used to enrich trusted circle contacts with ENS names/labels.
+ * The backend resolves ENS names automatically, so atom.label will contain
+ * the ENS name if available.
+ */
+export const getAtomsForAddressesQuery = `
+query AtomsForAddresses($addresses: [String!]!) {
+  atoms(
+    where: {
+      _or: [
+        { label: { _in: $addresses } },
+        { data: { _in: $addresses } }
+      ]
+    }
+  ) {
+    term_id
+    label
+    data
+    image
   }
 }
 `;
