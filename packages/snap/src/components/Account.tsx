@@ -229,7 +229,7 @@ export const AtomWithTrustTriple = (
           userCounterPosition={user_counter_position ?? []}
         />
       )}
-      <Row label="Trust">
+      <Row label="Community">
         <Text color={color}><Bold>{badge}</Bold></Text>
       </Row>
       <Row label="Distribution">
