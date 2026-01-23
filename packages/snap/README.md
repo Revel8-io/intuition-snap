@@ -176,6 +176,33 @@ The Snap queries the Intuition knowledge graph using these predefined atoms:
 
 **Note**: These atom IDs are the same on both Intuition Testnet and Mainnet, as atoms are chain-agnostic identifiers in the Intuition protocol.
 
+### Community & Distribution Indicators
+
+The Snap displays two key indicators to help users assess trust signals:
+
+#### Community (Trust Level)
+
+Based on FOR vs AGAINST market cap ratio:
+
+| Badge | Threshold |
+|-------|-----------|
+| **Trusted** 🟢 | ≥70% FOR |
+| **Mixed** 🟡 | 30-70% FOR |
+| **Untrusted** 🟡 | <30% FOR |
+
+#### Distribution Status
+
+Uses Gini coefficient + top-1 concentration:
+
+| Status | Criteria |
+|--------|----------|
+| **Distributed** 🟢 | Gini ≤0.35 and top holder <30% |
+| **Moderate** 🟡 | Gini 0.35-0.55 |
+| **Concentrated** ⚠️ | Gini 0.55-0.75 or top holder 50-80% |
+| **Whale** ⛔️ | Top holder ≥80% (always triggers) |
+
+*Minimum 3 stakers needed for meaningful Gini analysis.*
+
 ## Building
 
 ```bash
