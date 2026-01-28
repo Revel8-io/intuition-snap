@@ -4,6 +4,7 @@ import { CreateTrustTriple } from './Footer/actions/CreateTrustTriple';
 import { StakePrompt } from './Footer/actions/StakePrompt';
 import { CreateAlias } from './Footer/actions/CreateAlias';
 import { ViewMore } from './Footer/actions/ViewMore';
+import { OriginCreateAtom } from './OriginFooter/actions/OriginCreateAtom';
 import { OriginStakePrompt } from './OriginFooter/actions/OriginStakePrompt';
 import { OriginViewMore } from './OriginFooter/actions/OriginViewMore';
 
@@ -25,11 +26,11 @@ export const UnifiedFooter = ({
   accountProps: AccountProps;
   originProps: OriginProps;
 }) => {
-  // Check if we should show origin CTAs
-  // Only show for origins that have atoms (known dApps)
-  const showOriginCtas =
+  // Check origin state for CTA rendering
+  const hasOriginAtom =
     originProps.originType === OriginType.AtomWithoutTrustTriple ||
     originProps.originType === OriginType.AtomWithTrustTriple;
+  const isUnknownDapp = originProps.originType === OriginType.NoAtom;
 
   return (
     <Box>
@@ -52,12 +53,15 @@ export const UnifiedFooter = ({
         <ViewMore {...accountProps} />
 
         {/* ─────────────────────────────────────────────────────────────────
-         * Origin CTAs - dApp Actions (only for known dApps)
+         * Origin CTAs - dApp Actions
          * ───────────────────────────────────────────────────────────────── */}
 
-        {/* Origin CTAs - only show for known dApps */}
-        {showOriginCtas && <OriginStakePrompt {...originProps} />}
-        {showOriginCtas && <OriginViewMore {...originProps} />}
+        {/* Unknown dApp - prompt to add to knowledge graph */}
+        {isUnknownDapp && <OriginCreateAtom {...originProps} />}
+
+        {/* Known dApp - stake or view */}
+        {hasOriginAtom && <OriginStakePrompt {...originProps} />}
+        {hasOriginAtom && <OriginViewMore {...originProps} />}
       </Box>
     </Box>
   );

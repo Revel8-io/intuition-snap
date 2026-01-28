@@ -83,6 +83,9 @@ export type VendorConfig = {
   // dApp Origin Actions
   // ─────────────────────────────────────────────────────────────────────────
 
+  /** Generate URL when no atom exists for the origin URL (unknown dApp) */
+  originNoAtom: (props: PropsForOriginType<OriginType.NoAtom>) => UrlResult;
+
   /** Generate URL when origin atom exists but no trust triple */
   originAtomWithoutTrustTriple: (
     props: PropsForOriginType<OriginType.AtomWithoutTrustTriple>
@@ -194,6 +197,24 @@ export const vendorConfig: VendorConfig = {
   // ─────────────────────────────────────────────────────────────────────────
   // dApp Origin URL Builders
   // ─────────────────────────────────────────────────────────────────────────
+
+  /**
+   * No atom exists for this origin URL (unknown dApp).
+   * Link to create an atom + trust triple for the dApp.
+   *
+   * Uses the hostname/originUrl to create the atom.
+   */
+  originNoAtom: (params) => {
+    const { originUrl, hostname } = params;
+    // Use hostname if available, fall back to originUrl
+    const urlToUse = hostname || originUrl || '';
+
+    const url = new URL('/snap/action', baseUrl);
+    url.searchParams.set('intent', 'complete_trust_triple');
+    url.searchParams.set('origin_url', urlToUse);
+
+    return { url: url.toString() };
+  },
 
   /**
    * Origin atom exists but no trust triple.
